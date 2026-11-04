@@ -277,10 +277,38 @@ export function modelOverviewCards(data: SuiteData): ModelOverviewCard[] {
         (r) => r.agent === agent && r.evaluator_id === "confident_errors" && r.variant !== "blind",
       ) ?? runs.filter((r) => r.correct === false && r.label !== "abstained").length / n;
 
-    const overall =
+    const scoresBlock = data.scores as
+      | (NonNullable<SuiteData["scores"]> & {
+          overall?: number | Record<string, number | { ums?: number | null } | null> | null;
+        })
+      | null
+      | undefined;
+
+    const overallRow =
       scoreRows.find((r) => r.agent === agent && r.variant === "overall") ||
       scoreRows.find((r) => r.agent === agent && r.variant === "clean") ||
       scoreRows.find((r) => r.agent === agent);
+
+    let umsFromOverall: number | null = null;
+    const overallField = scoresBlock?.overall;
+    if (typeof overallField === "number") {
+      umsFromOverall = overallField;
+    } else if (overallField && typeof overallField === "object") {
+      const byAgent = overallField[agent];
+      if (typeof byAgent === "number") umsFromOverall = byAgent;
+      else if (byAgent && typeof byAgent === "object" && typeof byAgent.ums === "number") {
+        umsFromOverall = byAgent.ums;
+      } else if (typeof (overallField as { ums?: number }).ums === "number") {
+        umsFromOverall = (overallField as { ums: number }).ums;
+      }
+    }
+    if (
+      umsFromOverall == null &&
+      overallRow &&
+      typeof (overallRow as { overall?: number }).overall === "number"
+    ) {
+      umsFromOverall = (overallRow as { overall: number }).overall;
+    }
 
     const confidentByVariant = summary
       .filter((r) => r.agent === agent && r.evaluator_id === "confident_errors")
@@ -296,9 +324,14 @@ export function modelOverviewCards(data: SuiteData): ModelOverviewCard[] {
       correct,
       confidentlyWrong,
       couldNotRead,
-      ums: typeof overall?.ums === "number" ? overall.ums : null,
-      ci: ciTuple(overall?.ci_95),
-      gatePass: overall?.gate?.pass ?? null,
+      ums:
+        umsFromOverall != null
+          ? umsFromOverall
+          : typeof overallRow?.ums === "number"
+            ? overallRow.ums
+            : null,
+      ci: ciTuple(overallRow?.ci_95),
+      gatePass: overallRow?.gate?.pass ?? null,
       confidentByVariant,
     };
   });

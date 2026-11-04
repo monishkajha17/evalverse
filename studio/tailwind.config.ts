@@ -14,15 +14,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#101B2D",
-        paper: "#F4F6F9",
-        teal: "#0B8F7A",
-        amber: "#C98512",
-        slateish: "#6A7B93",
-        crimson: "#D4285C",
-        grey: "#A9B3C1",
-        border: "#D7DDE7",
-        muted: "#EEF1F5",
+        ink: "var(--st-ink)",
+        paper: "var(--st-bg)",
+        surface: "var(--st-surface)",
+        raised: "var(--st-raised)",
+        teal: "var(--st-teal)",
+        amber: "var(--st-amber)",
+        slateish: "var(--st-slate)",
+        crimson: "var(--st-crimson)",
+        grey: "var(--st-subtle)",
+        border: "var(--st-border)",
+        muted: "var(--st-muted-bg)",
+        accent: {
+          DEFAULT: "var(--st-accent)",
+          hover: "var(--st-accent-hover)",
+        },
+        "ink-muted": "var(--st-muted)",
+        "ink-subtle": "var(--st-subtle)",
+        hairline: "var(--st-hairline)",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],

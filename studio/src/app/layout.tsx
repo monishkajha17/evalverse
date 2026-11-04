@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { ApiModeProvider } from "@/context/api-mode";
+import { ThemeProvider } from "@/context/theme-context";
+import { THEME_BOOT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 const inter = Inter({
@@ -25,9 +27,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       <body className={`${inter.variable} ${jetbrains.variable} font-sans antialiased`}>
-        <ApiModeProvider>{children}</ApiModeProvider>
+        <ThemeProvider>
+          <ApiModeProvider>{children}</ApiModeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

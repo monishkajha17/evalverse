@@ -254,6 +254,18 @@ class AuthService:
         raw_key, _meta = self._create_api_key_row(
             user_id=user_id, project=project, name="default"
         )
+        # Optional onboarding seed — never fail registration if the pack is missing.
+        from evalverse.sample_workspace import seed_demo, seed_on_register_enabled
+
+        if seed_on_register_enabled():
+            try:
+                seed_demo(self.svc, project)
+            except HTTPException as exc:
+                if exc.status_code != 404:
+                    raise
+            except Exception:
+                # Pack corrupt / partial — registration must still succeed.
+                pass
         user_row = self.db.fetchone("SELECT * FROM users WHERE id = ?", (user_id,))
         return {
             "user": self._user_out(user_row),
@@ -302,9 +314,17 @@ class AuthService:
                ORDER BY created_at DESC""",
             (user_id,),
         )
+        from evalverse.sample_workspace import project_has_sample_data
+
+        projects = self._user_projects(user_id)
+        has_sample = False
+        for p in projects:
+            if project_has_sample_data(self.svc, p["name"]):
+                has_sample = True
+                break
         return {
             "user": self._user_out(row),
-            "projects": self._user_projects(user_id),
+            "projects": projects,
             "api_keys": [
                 {
                     "id": k["id"],
@@ -317,7 +337,18 @@ class AuthService:
                 }
                 for k in keys
             ],
+            "has_sample_data": has_sample,
         }
+
+    def seed_demo(self, project: str) -> dict[str, int]:
+        from evalverse.sample_workspace import seed_demo
+
+        return seed_demo(self.svc, project)
+
+    def unseed_demo(self, project: str) -> dict[str, int]:
+        from evalverse.sample_workspace import unseed_demo
+
+        return unseed_demo(self.svc, project)
 
     # ------------------------------------------------------------------ api keys / projects
     def create_api_key(self, user_id: str, *, name: str, project: str) -> dict[str, Any]:

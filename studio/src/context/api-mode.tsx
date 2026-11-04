@@ -10,15 +10,22 @@ import {
   useState,
 } from "react";
 import {
+  ApiError,
   apiConfig,
   clearStoredConnection,
   health,
   writeStoredConnection,
   type StoredConnection,
 } from "@/lib/api";
-import { readSession } from "@/lib/session";
+import { clearSession, readSession } from "@/lib/session";
 
 export type StudioMode = "live" | "snapshot";
+
+export type ConnectionBanner =
+  | null
+  | { kind: "demo" }
+  | { kind: "session-expired" }
+  | { kind: "unreachable"; detail?: string };
 
 interface ApiModeValue {
   mode: StudioMode;
@@ -27,13 +34,17 @@ interface ApiModeValue {
   error: string | null;
   hostLabel: string;
   projectLabel: string;
+  /** User wants live project data (only meaningful when signed in). */
   preferLive: boolean;
   hasStoredConnection: boolean;
   signedIn: boolean;
+  banner: ConnectionBanner;
   refresh: () => void;
   connect: (conn: Omit<StoredConnection, "preferLive"> & { preferLive?: boolean }) => Promise<void>;
   switchToDemo: () => void;
+  switchToLive: () => void;
   disconnect: () => void;
+  clearSessionExpired: () => void;
 }
 
 const ApiModeContext = createContext<ApiModeValue | null>(null);
@@ -44,6 +55,7 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [signedIn, setSignedIn] = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
   const promotedRef = useRef(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const cfg = useMemo(() => apiConfig(), [tick]);
@@ -51,7 +63,8 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const session = readSession();
     setSignedIn(Boolean(session?.token));
-    if (session?.token && !cfg.preferLive && !promotedRef.current) {
+    // First sign-in: promote to live once if a session exists and preferLive was never set false intentionally.
+    if (session?.token && !cfg.hasStoredConnection && !promotedRef.current) {
       promotedRef.current = true;
       writeStoredConnection({
         url: session.apiUrl || cfg.url,
@@ -61,15 +74,29 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
       });
       setTick((t) => t + 1);
     }
-  }, [tick, cfg.preferLive, cfg.url, cfg.key, cfg.project]);
+  }, [tick, cfg.hasStoredConnection, cfg.url, cfg.key, cfg.project]);
+
+  useEffect(() => {
+    const onExpired = () => {
+      clearSession();
+      clearStoredConnection();
+      setSignedIn(false);
+      setSessionExpired(true);
+      setLiveAvailable(false);
+      setError(null);
+      setTick((t) => t + 1);
+    };
+    window.addEventListener("evalverse:auth-expired", onExpired);
+    return () => window.removeEventListener("evalverse:auth-expired", onExpired);
+  }, []);
+
+  const wantLive = Boolean(signedIn && cfg.preferLive && cfg.modeEnv !== "snapshot");
 
   useEffect(() => {
     let cancelled = false;
     const ctrl = new AbortController();
-    const session = readSession();
-    const wantLive = Boolean(cfg.preferLive || session?.token);
 
-    if (!wantLive || cfg.modeEnv === "snapshot") {
+    if (!wantLive) {
       setLiveAvailable(false);
       setChecking(false);
       setError(null);
@@ -90,7 +117,16 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
       } catch (e) {
         if (!cancelled) {
           setLiveAvailable(false);
-          setError(e instanceof Error ? e.message : "API unreachable");
+          const msg = e instanceof Error ? e.message : "API unreachable";
+          setError(msg);
+          if (e instanceof ApiError && e.status === 401) {
+            clearSession();
+            clearStoredConnection();
+            setSignedIn(false);
+            setSessionExpired(true);
+          } else {
+            console.warn("[evalverse] can't reach server", e);
+          }
         }
       } finally {
         if (!cancelled) setChecking(false);
@@ -101,20 +137,26 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
       cancelled = true;
       ctrl.abort();
     };
-  }, [cfg.preferLive, cfg.modeEnv, cfg.url, cfg.project, tick]);
+  }, [wantLive, cfg.url, cfg.project, tick]);
 
   useEffect(() => {
-    const session = readSession();
-    if (!cfg.preferLive && !session?.token) return;
-    if (cfg.modeEnv === "snapshot") return;
+    if (!wantLive) return;
     const id = setInterval(() => setTick((t) => t + 1), 15_000);
     return () => clearInterval(id);
-  }, [cfg.preferLive, cfg.modeEnv]);
+  }, [wantLive]);
 
+  /** Live label only when signed in, preferring live, and API is healthy. Never label demo as Live. */
   const effectiveMode: StudioMode =
-    liveAvailable && (cfg.preferLive || signedIn) && cfg.modeEnv !== "snapshot"
-      ? "live"
-      : "snapshot";
+    signedIn && cfg.preferLive && liveAvailable && cfg.modeEnv !== "snapshot" ? "live" : "snapshot";
+
+  const banner: ConnectionBanner = useMemo(() => {
+    if (sessionExpired) return { kind: "session-expired" };
+    if (signedIn && cfg.preferLive && !liveAvailable && !checking) {
+      return { kind: "unreachable", detail: error || undefined };
+    }
+    if (!signedIn || !cfg.preferLive) return { kind: "demo" };
+    return null;
+  }, [sessionExpired, signedIn, cfg.preferLive, liveAvailable, checking, error]);
 
   const connect = useCallback(
     async (conn: Omit<StoredConnection, "preferLive"> & { preferLive?: boolean }) => {
@@ -124,7 +166,8 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
         project: conn.project || "default",
         preferLive: conn.preferLive !== false,
       });
-      promotedRef.current = false;
+      setSessionExpired(false);
+      promotedRef.current = true;
       setTick((t) => t + 1);
     },
     [],
@@ -143,6 +186,19 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
     setTick((t) => t + 1);
   }, []);
 
+  const switchToLive = useCallback(() => {
+    const session = readSession();
+    const existing = apiConfig();
+    writeStoredConnection({
+      url: session?.apiUrl || existing.url,
+      apiKey: session?.apiKey || existing.key,
+      project: session?.project || existing.project || "default",
+      preferLive: true,
+    });
+    setSessionExpired(false);
+    setTick((t) => t + 1);
+  }, []);
+
   const disconnect = useCallback(() => {
     clearStoredConnection();
     setLiveAvailable(false);
@@ -152,6 +208,8 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
     setTick((t) => t + 1);
   }, []);
 
+  const clearSessionExpired = useCallback(() => setSessionExpired(false), []);
+
   const value = useMemo(
     () => ({
       mode: effectiveMode,
@@ -160,13 +218,16 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
       error,
       hostLabel: cfg.hostLabel,
       projectLabel: cfg.project || readSession()?.project || "default",
-      preferLive: Boolean(cfg.preferLive || signedIn),
+      preferLive: Boolean(signedIn && cfg.preferLive),
       hasStoredConnection: cfg.hasStoredConnection,
       signedIn,
+      banner,
       refresh: () => setTick((t) => t + 1),
       connect,
       switchToDemo,
+      switchToLive,
       disconnect,
+      clearSessionExpired,
     }),
     [
       effectiveMode,
@@ -178,9 +239,12 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
       cfg.preferLive,
       cfg.hasStoredConnection,
       signedIn,
+      banner,
       connect,
       switchToDemo,
+      switchToLive,
       disconnect,
+      clearSessionExpired,
     ],
   );
 

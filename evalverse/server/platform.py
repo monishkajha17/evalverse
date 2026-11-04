@@ -1084,7 +1084,15 @@ class PlatformMixin:
             if path.is_file():
                 data = json.loads(path.read_text())
                 return scoring.score_payload(data, profile=profile, policy=policy)
-            run_id = f"import:{suite}"
+            # Onboarding sample pack is stored per-project.
+            if suite == "sample":
+                candidate = f"import:sample:{project}"
+                if self.db.fetchone("SELECT id FROM eval_runs WHERE id = ?", (candidate,)):
+                    run_id = candidate
+                else:
+                    run_id = f"import:{suite}"
+            else:
+                run_id = f"import:{suite}"
 
         eval_rows: list[dict] = []
         traces: list[dict] = []

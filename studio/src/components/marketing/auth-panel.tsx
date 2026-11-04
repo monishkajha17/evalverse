@@ -11,6 +11,7 @@ import {
   type RegisterResponse,
 } from "@/lib/session";
 import { useApiMode } from "@/context/api-mode";
+import { markWelcomePending } from "@/lib/sample-data";
 
 function MiniTrace() {
   return (
@@ -96,8 +97,9 @@ export function AuthForm({ mode }: { mode: "signup" | "signin" }) {
           project: res.data.project,
           preferLive: true,
         });
+        markWelcomePending();
         refresh();
-        router.push("/get-started/");
+        router.push("/overview/");
       } else {
         const res = await authRequest<LoginResponse>("/api/v1/auth/login", { email, password });
         if (!res.ok) {

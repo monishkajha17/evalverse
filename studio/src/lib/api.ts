@@ -543,6 +543,22 @@ async function request<T>(path: string, opts: RequestOpts = {}): Promise<T> {
     }
   }
   if (!res.ok) {
+    if (res.status === 401 && typeof window !== "undefined") {
+      try {
+        console.warn("[evalverse] session expired", { path, status: 401, body: parsed });
+        window.dispatchEvent(
+          new CustomEvent("evalverse:auth-expired", { detail: { path, status: 401, body: parsed } }),
+        );
+      } catch {
+        /* ignore */
+      }
+    } else if (res.status >= 500 && typeof window !== "undefined") {
+      try {
+        console.warn("[evalverse] server error", { path, status: res.status, body: parsed });
+      } catch {
+        /* ignore */
+      }
+    }
     const detail =
       typeof parsed === "object" && parsed && "detail" in parsed
         ? JSON.stringify((parsed as { detail: unknown }).detail)
@@ -871,6 +887,35 @@ export async function compareExperimentRuns(
 export async function getCalibration(evaluatorId: string, signal?: AbortSignal) {
   return request<Calibration>("/api/v1/calibration", {
     query: { evaluator_id: evaluatorId },
+    signal,
+  });
+}
+
+export async function seedDemo(signal?: AbortSignal) {
+  return request<{ added: number; skipped: number }>("/api/v1/onboarding/seed-demo", {
+    method: "POST",
+    signal,
+  });
+}
+
+export async function unseedDemo(signal?: AbortSignal) {
+  return request<{ removed: number }>("/api/v1/onboarding/seed-demo", {
+    method: "DELETE",
+    signal,
+  });
+}
+
+export async function getScores(
+  params: {
+    run_id?: string;
+    experiment_id?: string;
+    suite?: string;
+    profile?: string;
+  } = {},
+  signal?: AbortSignal,
+) {
+  return request<Record<string, unknown>>("/api/v1/scores", {
+    query: { profile: "balanced", ...params },
     signal,
   });
 }

@@ -44,11 +44,11 @@ export function DataTable<T>({
   );
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-white">
-      <div className="flex items-center justify-end border-b border-border px-2 py-1.5">
+    <div className="overflow-hidden rounded-xl border border-hairline bg-surface">
+      <div className="flex items-center justify-end border-b border-hairline px-2 py-1.5">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button type="button" size="sm" variant="ghost" className="h-7 gap-1.5 text-xs text-ink/60">
+            <Button type="button" size="sm" variant="ghost" className="h-7 gap-1.5 text-xs text-ink-muted">
               <Columns3 className="h-3.5 w-3.5" />
               Columns
             </Button>

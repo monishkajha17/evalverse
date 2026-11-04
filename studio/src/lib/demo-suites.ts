@@ -40,8 +40,9 @@ export const DEMO_SUITE_CATALOG: Record<string, Omit<DemoSuiteMeta, "suite">> = 
     featured: true,
   },
   lists: {
-    title: "Menu lists",
+    title: "Completeness and hallucination",
     description: "List completeness and fabrication checks",
+    featured: true,
   },
   default: {
     title: "Default suite",
@@ -49,7 +50,15 @@ export const DEMO_SUITE_CATALOG: Record<string, Omit<DemoSuiteMeta, "suite">> = 
   },
 };
 
-const FEATURED_ORDER = ["cord", "audio", "video", "generated", "wonder", "crossmodal"];
+const FEATURED_ORDER = [
+  "cord",
+  "audio",
+  "video",
+  "generated",
+  "wonder",
+  "crossmodal",
+  "lists",
+];
 
 export function describeSuite(entry: SuiteIndexEntry): DemoSuiteMeta {
   const meta = DEMO_SUITE_CATALOG[entry.suite];

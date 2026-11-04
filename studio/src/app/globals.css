@@ -3,6 +3,55 @@
 @tailwind utilities;
 
 :root {
+  /* Fallback light tokens (marketing pages / pre-hydration) */
+  --st-bg: #f4f6f9;
+  --st-surface: #ffffff;
+  --st-raised: #ffffff;
+  --st-hairline: #e5eaf2;
+  --st-border: #d7dde7;
+  --st-ink: #101b2d;
+  --st-muted: #6a7b93;
+  --st-subtle: #a9b3c1;
+  --st-accent: #0b8f7a;
+  --st-accent-hover: #087a68;
+  --st-teal: #0b8f7a;
+  --st-crimson: #d4285c;
+  --st-amber: #c98512;
+  --st-slate: #6a7b93;
+  --st-muted-bg: #eef1f5;
+  --st-chart-grid: #e4e9f0;
+  --st-chart-label: #6a7b93;
+  --st-tooltip-bg: #ffffff;
+  --st-row-hover: rgba(16, 27, 45, 0.04);
+  --st-selected: rgba(11, 143, 122, 0.12);
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+  --st-bg: #050a14;
+  --st-surface: #0a1220;
+  --st-raised: #0f1a2e;
+  --st-hairline: #1b2a41;
+  --st-border: #26395a;
+  --st-ink: #e6f1ff;
+  --st-muted: #8ca0bc;
+  --st-subtle: #5f7391;
+  --st-accent: #8ec5ff;
+  --st-accent-hover: #b6dbff;
+  --st-teal: #2dd4bf;
+  --st-crimson: #f43f5e;
+  --st-amber: #f59e0b;
+  --st-slate: #94a3b8;
+  --st-muted-bg: rgba(142, 197, 255, 0.08);
+  --st-chart-grid: #1b2a41;
+  --st-chart-label: #8ca0bc;
+  --st-tooltip-bg: #0f1a2e;
+  --st-row-hover: rgba(142, 197, 255, 0.06);
+  --st-selected: rgba(142, 197, 255, 0.14);
+}
+
+html.light {
   color-scheme: light;
 }
 
@@ -13,27 +62,128 @@ body {
 
 body {
   margin: 0;
-  background: #f4f6f9;
-  color: #101b2d;
+  background: var(--st-bg);
+  color: var(--st-ink);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
 }
 
 *:focus-visible {
-  outline: 2px solid rgba(11, 143, 122, 0.45);
+  outline: 2px solid color-mix(in srgb, var(--st-accent) 55%, transparent);
   outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Studio dashboard — tokens scoped to .studio                                 */
+/* -------------------------------------------------------------------------- */
+
+.studio {
+  background: var(--st-bg);
+  color: var(--st-ink);
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+  min-height: 100vh;
+}
+
+.studio .page-title {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.studio .section-title {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.studio .label-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--st-muted);
+}
+
+.studio .tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.studio .sticky-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--st-raised);
+  box-shadow: inset 0 -1px 0 var(--st-hairline);
+  color: var(--st-muted);
+}
+
+.studio .sticky-table tbody tr {
+  height: 36px;
+}
+
+.studio .sticky-table tbody tr:hover {
+  background: var(--st-row-hover);
+}
+
+.studio .sticky-table tbody tr[data-selected="true"] {
+  box-shadow: inset 3px 0 0 var(--st-accent);
+  background: var(--st-selected);
+}
+
+.studio .card-surface {
+  background: var(--st-surface);
+  border: 1px solid var(--st-hairline);
+  border-radius: 12px;
+}
+
+.studio .chip-pass {
+  background: color-mix(in srgb, var(--st-teal) 14%, transparent);
+  color: var(--st-teal);
+  border-color: color-mix(in srgb, var(--st-teal) 35%, transparent);
+}
+
+.studio .chip-fail {
+  background: color-mix(in srgb, var(--st-crimson) 14%, transparent);
+  color: var(--st-crimson);
+  border-color: color-mix(in srgb, var(--st-crimson) 35%, transparent);
+}
+
+.studio .chip-amber {
+  background: color-mix(in srgb, var(--st-amber) 14%, transparent);
+  color: var(--st-amber);
+  border-color: color-mix(in srgb, var(--st-amber) 35%, transparent);
+}
+
+.studio .chip-slate {
+  background: color-mix(in srgb, var(--st-slate) 14%, transparent);
+  color: var(--st-slate);
+  border-color: color-mix(in srgb, var(--st-slate) 35%, transparent);
+}
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .sticky-table thead th {
   position: sticky;
   top: 0;
   z-index: 1;
-  background: #fff;
-  box-shadow: inset 0 -1px 0 #d7dde7;
-}
-
-.mono {
-  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  background: var(--st-raised);
+  box-shadow: inset 0 -1px 0 var(--st-hairline);
 }
 
 /* -------------------------------------------------------------------------- */

@@ -8,16 +8,23 @@ import { PageHeader } from "@/components/studio/page-chrome";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useApiMode } from "@/context/api-mode";
-import { apiConfig, testHealth } from "@/lib/api";
+import { apiConfig, testHealth, unseedDemo } from "@/lib/api";
+import { fetchAuthMe, friendlySampleError } from "@/lib/sample-data";
 import { clearSession, readSession } from "@/lib/session";
 
 type LocalKey = { id: string; prefix: string; last4: string; created: string; raw?: string };
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { connect, switchToDemo, mode, hostLabel, projectLabel, disconnect, liveAvailable } =
+  const { connect, switchToDemo, mode, hostLabel, projectLabel, disconnect, liveAvailable, refresh } =
     useApiMode();
   const [url, setUrl] = useState("http://127.0.0.1:8000");
   const [apiKey, setApiKey] = useState("");
@@ -28,6 +35,10 @@ export default function SettingsPage() {
   const [email, setEmail] = useState<string | null>(null);
   const [keys, setKeys] = useState<LocalKey[]>([]);
   const [newKeyOnce, setNewKeyOnce] = useState<string | null>(null);
+  const [hasSampleData, setHasSampleData] = useState(false);
+  const [confirmRemove, setConfirmRemove] = useState(false);
+  const [removing, setRemoving] = useState(false);
+  const [sampleMsg, setSampleMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const cfg = apiConfig();
@@ -36,6 +47,24 @@ export default function SettingsPage() {
     setProject(cfg.project || projectLabel || "default");
     setEmail(readSession()?.email || null);
   }, [projectLabel]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (mode !== "live" || !readSession()?.token) {
+      setHasSampleData(false);
+      return;
+    }
+    void fetchAuthMe()
+      .then((me) => {
+        if (!cancelled) setHasSampleData(Boolean(me.has_sample_data));
+      })
+      .catch(() => {
+        if (!cancelled) setHasSampleData(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [mode, projectLabel]);
 
   async function onTest() {
     setTesting(true);
@@ -84,6 +113,23 @@ export default function SettingsPage() {
     router.push("/signin/");
   }
 
+  async function onRemoveSample() {
+    setRemoving(true);
+    setSampleMsg(null);
+    try {
+      await unseedDemo();
+      setHasSampleData(false);
+      setConfirmRemove(false);
+      setSampleMsg("Sample data removed.");
+      refresh();
+    } catch (err) {
+      setSampleMsg(friendlySampleError(err, "Couldn’t remove sample data. Try again."));
+      setConfirmRemove(false);
+    } finally {
+      setRemoving(false);
+    }
+  }
+
   return (
     <>
       <Topbar title="Settings" />
@@ -120,6 +166,28 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
+
+          {mode === "live" && hasSampleData ? (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">Sample data</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <p className="text-xs text-ink-muted">
+                  This project includes the onboarding sample workspace (tagged Sample).
+                </p>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setConfirmRemove(true)}
+                >
+                  Remove sample data
+                </Button>
+                {sampleMsg ? <p className="text-xs text-ink-muted">{sampleMsg}</p> : null}
+              </CardContent>
+            </Card>
+          ) : null}
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -221,6 +289,30 @@ export default function SettingsPage() {
           </Card>
         </div>
       </main>
+
+      <Dialog open={confirmRemove} onOpenChange={setConfirmRemove}>
+        <DialogContent>
+          <DialogTitle>Remove sample data?</DialogTitle>
+          <DialogDescription>
+            This deletes every trace and session tagged Sample in this project. Your own traces
+            stay.
+          </DialogDescription>
+          <div className="mt-2 flex flex-wrap justify-end gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => setConfirmRemove(false)}
+              disabled={removing}
+            >
+              Cancel
+            </Button>
+            <Button type="button" size="sm" onClick={onRemoveSample} disabled={removing}>
+              {removing ? "Removing…" : "Remove sample data"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

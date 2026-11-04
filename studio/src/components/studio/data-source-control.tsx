@@ -16,13 +16,13 @@ import { describeSuite, orderedDemoSuites } from "@/lib/demo-suites";
 import { cn } from "@/lib/utils";
 
 export function DataSourceControl() {
-  const { mode, checking, hostLabel, projectLabel, preferLive, liveAvailable } = useApiMode();
+  const { mode, checking, projectLabel, signedIn } = useApiMode();
   const { index, suite, setSuite, entry } = useSuite();
   const demos = orderedDemoSuites(index);
   const current = entry ? describeSuite(entry) : demos.find((d) => d.suite === suite);
 
   const live = mode === "live";
-  const statusLabel = checking
+  const statusLabel = checking && signedIn
     ? "Checking…"
     : live
       ? `Live · ${projectLabel || "default"}`
@@ -33,15 +33,15 @@ export function DataSourceControl() {
       <Badge
         className={cn(
           "max-w-[160px] truncate border",
-          live ? "border-teal/35 bg-teal/10 text-teal" : "border-border bg-muted text-ink/70",
+          live ? "chip-pass border" : "border-border bg-muted text-ink-muted",
         )}
-        title={live ? `Connected · ${hostLabel}` : "Browsing exported demo suites"}
+        title={live ? `Project ${projectLabel}` : "Browsing recorded demo suites"}
       >
         {statusLabel}
       </Badge>
 
       {live ? (
-        <span className="hidden truncate text-xs text-ink/50 sm:inline" title={projectLabel}>
+        <span className="hidden truncate text-xs text-ink-muted sm:inline" title={projectLabel}>
           Project {projectLabel || "default"}
         </span>
       ) : (
@@ -49,11 +49,11 @@ export function DataSourceControl() {
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="inline-flex max-w-[220px] items-center gap-1.5 rounded-md border border-border bg-white px-2.5 py-1.5 text-xs text-ink hover:bg-muted"
+              className="inline-flex max-w-[220px] items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 py-1.5 text-xs text-ink hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
               aria-label="Choose demo data"
             >
               <span className="truncate font-medium">{current?.title || "Demo data"}</span>
-              <ChevronDown className="h-3.5 w-3.5 shrink-0 text-ink/40" />
+              <ChevronDown className="h-3.5 w-3.5 shrink-0 text-ink-subtle" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
@@ -70,20 +70,12 @@ export function DataSourceControl() {
                 </span>
                 <span className="min-w-0">
                   <span className="block text-sm font-medium text-ink">{d.title}</span>
-                  <span className="block text-xs text-ink/50">{d.description}</span>
+                  <span className="block text-xs text-ink-muted">{d.description}</span>
                 </span>
               </DropdownMenuItem>
             ))}
             {!demos.length ? (
-              <div className="px-2 py-3 text-xs text-ink/50">No demo suites available yet.</div>
-            ) : null}
-            {preferLive && !liveAvailable ? (
-              <>
-                <DropdownMenuSeparator />
-                <div className="px-2 py-1.5 text-[11px] text-ink/45">
-                  Server unreachable — staying on demo data.
-                </div>
-              </>
+              <div className="px-2 py-3 text-xs text-ink-muted">No demo suites available yet.</div>
             ) : null}
           </DropdownMenuContent>
         </DropdownMenu>

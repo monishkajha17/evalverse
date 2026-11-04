@@ -182,6 +182,16 @@ def create_app(
         _, project = ctx
         return accounts.create_sample_trace(project)
 
+    @app.post("/api/v1/onboarding/seed-demo")
+    def onboarding_seed_demo(ctx: tuple[str, str] = Depends(auth)):
+        _, project = ctx
+        return accounts.seed_demo(project)
+
+    @app.delete("/api/v1/onboarding/seed-demo")
+    def onboarding_unseed_demo(ctx: tuple[str, str] = Depends(auth)):
+        _, project = ctx
+        return accounts.unseed_demo(project)
+
     # ---- traces / sessions / media ----
     @app.post("/api/v1/traces")
     def create_trace(body: TraceCreate, ctx: tuple[str, str] = Depends(auth)):

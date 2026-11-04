@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Topbar } from "@/components/layout/topbar";
+import { OnboardingEmpty } from "@/components/studio/onboarding-empty";
 import {
   EmptyState,
   ErrorState,
@@ -21,6 +22,7 @@ import {
   listAlerts,
   listEvaluators,
   listPolicies,
+  listTraces,
   updatePolicy,
   type Alert,
   type Policy,
@@ -79,7 +81,8 @@ export default function OnlineEvaluationPage() {
       if (!evaluatorId && ev[0]) setEvaluatorId(ev[0].id);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load policies");
-      setPolicies(DEMO_POLICIES);
+      setPolicies([]);
+      setAlerts([]);
     } finally {
       setLoading(false);
     }
@@ -148,9 +151,11 @@ export default function OnlineEvaluationPage() {
     return Date.now() - new Date(a.created_at).getTime() < 24 * 3600 * 1000;
   });
 
+  const liveEmpty = mode === "live" && !loading && !error && policies.length === 0 && alerts.length === 0;
+
   return (
     <>
-      <Topbar title="Online evaluation" />
+      <Topbar hideTitle />
       <main className="min-w-0 space-y-4 overflow-x-hidden p-4">
         <PageHeader
           title="Online evaluation"
@@ -162,6 +167,12 @@ export default function OnlineEvaluationPage() {
           }
         />
 
+        {error ? <ErrorState title="Couldn't load online evaluation" detail={error} onRetry={reload} /> : null}
+        {liveEmpty ? (
+          <OnboardingEmpty title="No online evaluation data yet" onSeeded={reload} />
+        ) : null}
+
+        {!error && !liveEmpty ? (
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList>
             <TabsTrigger value="policies">Policies</TabsTrigger>
@@ -176,14 +187,14 @@ export default function OnlineEvaluationPage() {
                 placeholder="Filter policies"
                 value={filterText}
                 onChange={(e) => setFilterText(e.target.value)}
+                aria-label="Filter policies"
               />
               <Button type="button" size="sm" variant="outline" onClick={reload}>
                 Refresh
               </Button>
             </FilterBar>
-            {msg ? <p className="text-xs text-ink/55">{msg}</p> : null}
+            {msg ? <p className="text-xs text-ink-muted">{msg}</p> : null}
             {loading ? <SkeletonBlock /> : null}
-            {error ? <ErrorState detail={error} onRetry={reload} /> : null}
             {!loading && !filtered.length ? (
               <EmptyState
                 title="No policies yet"
@@ -306,6 +317,7 @@ export default function OnlineEvaluationPage() {
             </Card>
           </TabsContent>
         </Tabs>
+        ) : null}
       </main>
     </>
   );

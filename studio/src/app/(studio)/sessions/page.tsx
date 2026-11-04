@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
 import { Topbar } from "@/components/layout/topbar";
+import { OnboardingEmpty } from "@/components/studio/onboarding-empty";
+import { SampleChip } from "@/components/studio/sample-chip";
 import {
   EmptyState,
   ErrorState,
@@ -17,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { useApiMode } from "@/context/api-mode";
 import { useSuite } from "@/context/suite-context";
 import { listSessions } from "@/lib/api";
+import { isSampleSession } from "@/lib/sample-data";
 import type { SuiteData } from "@/lib/types";
 
 type SessionRow = {
@@ -27,6 +30,7 @@ type SessionRow = {
   tool_calls: number;
   errors: number;
   started: string | null;
+  sample: boolean;
 };
 
 function truncate(text: string, max = 72) {
@@ -65,6 +69,7 @@ function sessionsFromSuite(data: SuiteData): SessionRow[] {
       tool_calls,
       errors,
       started,
+      sample: false,
     };
   });
 }
@@ -93,6 +98,7 @@ export default function SessionsPage() {
           tool_calls: s.tool_call_count ?? 0,
           errors: s.error_count ?? 0,
           started: s.started || null,
+          sample: isSampleSession(s.session_id),
         })),
       );
     } catch (e) {
@@ -142,7 +148,10 @@ export default function SessionsPage() {
         header: "Session",
         cell: (r) => (
           <div className="min-w-0">
-            <div className="truncate font-medium text-ink">{r.title}</div>
+            <div className="flex items-center gap-2">
+              <div className="truncate font-medium text-ink">{r.title}</div>
+              {r.sample ? <SampleChip /> : null}
+            </div>
             {r.title !== r.id ? (
               <div className="truncate font-mono text-[10px] text-ink/40">{r.id}</div>
             ) : null}
@@ -190,10 +199,12 @@ export default function SessionsPage() {
     }
   }
 
+  const liveEmpty = mode === "live" && !loading && !error && rows.length === 0;
+
   return (
     <>
-      <Topbar title="Sessions" />
-      <main className="space-y-4 p-4">
+      <Topbar hideTitle />
+      <main className="min-w-0 space-y-4 overflow-x-hidden p-4">
         <PageHeader
           title="Sessions"
           description="Group related traces into a single conversation or task."
@@ -205,37 +216,52 @@ export default function SessionsPage() {
           }
         />
 
-        <FilterBar>
-          <Input
-            className="h-8 max-w-xs"
-            placeholder="Search sessions"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </FilterBar>
-
-        {loading ? <SkeletonBlock rows={6} /> : null}
-        {!loading && error ? (
+        {error ? (
           <ErrorState title="Could not load sessions" detail={error} onRetry={onRefresh} />
         ) : null}
-        {!loading && !error ? (
-          <DataTable
-            columns={columns}
-            rows={filtered}
-            rowKey={(r) => r.id}
-            onRowClick={(r) => router.push(`/sessions/view/?id=${encodeURIComponent(r.id)}`)}
-            empty={
-              <EmptyState
-                title="No sessions yet"
-                detail="Sessions appear when related traces share a conversation or task. Open Traces to explore individual runs."
-                action={
-                  <Button type="button" size="sm" variant="outline" onClick={() => router.push("/traces/")}>
-                    Browse traces
-                  </Button>
+
+        {liveEmpty ? (
+          <OnboardingEmpty title="No sessions in this project yet" onSeeded={onRefresh} />
+        ) : null}
+
+        {!error && !liveEmpty ? (
+          <>
+            <FilterBar>
+              <Input
+                className="h-8 max-w-xs"
+                placeholder="Search sessions"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                aria-label="Search sessions"
+              />
+            </FilterBar>
+
+            {loading ? <SkeletonBlock rows={6} /> : null}
+            {!loading ? (
+              <DataTable
+                columns={columns}
+                rows={filtered}
+                rowKey={(r) => r.id}
+                onRowClick={(r) => router.push(`/sessions/view/?id=${encodeURIComponent(r.id)}`)}
+                empty={
+                  <EmptyState
+                    title="No sessions match"
+                    detail="Try a different search, or open Traces to explore individual runs."
+                    action={
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => router.push("/traces/")}
+                      >
+                        Browse traces
+                      </Button>
+                    }
+                  />
                 }
               />
-            }
-          />
+            ) : null}
+          </>
         ) : null}
       </main>
     </>

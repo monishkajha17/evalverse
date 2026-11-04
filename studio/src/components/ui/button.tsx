@@ -4,14 +4,15 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 disabled:pointer-events-none disabled:opacity-45",
   {
     variants: {
       variant: {
-        default: "bg-ink text-white hover:bg-ink/90",
-        outline: "border border-border bg-white text-ink hover:bg-muted",
-        ghost: "text-ink hover:bg-muted",
-        teal: "bg-teal text-white hover:bg-teal/90",
+        default: "bg-accent text-[var(--st-bg)] hover:bg-accent-hover",
+        outline: "border border-border bg-surface text-ink hover:bg-muted",
+        ghost: "text-ink-muted hover:bg-muted hover:text-ink",
+        teal: "bg-teal text-[var(--st-bg)] hover:opacity-90",
+        secondary: "bg-muted text-ink hover:bg-hairline",
       },
       size: {
         default: "h-8 px-3",
@@ -39,3 +40,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   },
 );
 Button.displayName = "Button";
+
+export function IconButton({
+  className,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & { "aria-label": string }) {
+  return (
+    <Button type="button" size="icon" variant="ghost" className={cn("h-8 w-8", className)} {...props} />
+  );
+}
