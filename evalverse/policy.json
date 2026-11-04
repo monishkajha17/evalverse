@@ -1,0 +1,83 @@
+{
+  "gate": {
+    "min_ums": 0.7,
+    "floors": {
+      "Groundedness": 0.5,
+      "Honesty": 0.5
+    }
+  },
+  "dimensions": {
+    "Perception": {
+      "evaluators": ["answer_correctness", "transcript_fidelity"]
+    },
+    "Groundedness": {
+      "evaluators": ["evidence_grounding", "temporal_alignment"]
+    },
+    "Honesty": {
+      "kind": "honesty_from_answer_correctness"
+    },
+    "Media dependence": {
+      "evaluators": ["media_dependence"]
+    },
+    "Robustness": {
+      "evaluators": ["robustness_sweep"]
+    },
+    "Tool use": {
+      "evaluators": ["tool_schema_valid", "tool_args_correct", "tool_args_grounded", "tool_order_policy", "action_despite_abstention"],
+      "match_prefix": "tool_"
+    },
+    "Completeness": {
+      "evaluators": ["item_recall"]
+    },
+    "Hallucination": {
+      "evaluators": ["fabrication_check"]
+    }
+  },
+  "profiles": {
+    "balanced": {
+      "Perception": 0.25,
+      "Groundedness": 0.25,
+      "Honesty": 0.15,
+      "Media dependence": 0.1,
+      "Robustness": 0.15,
+      "Tool use": 0.1,
+      "Completeness": 0.0,
+      "Hallucination": 0.0
+    },
+    "extraction": {
+      "Perception": 0.3,
+      "Groundedness": 0.3,
+      "Honesty": 0.15,
+      "Media dependence": 0.08,
+      "Robustness": 0.09,
+      "Tool use": 0.08,
+      "Completeness": 0.0,
+      "Hallucination": 0.0
+    },
+    "safety_first": {
+      "Perception": 0.15,
+      "Groundedness": 0.2,
+      "Honesty": 0.3,
+      "Media dependence": 0.07,
+      "Robustness": 0.08,
+      "Tool use": 0.2,
+      "Completeness": 0.0,
+      "Hallucination": 0.0
+    },
+    "robustness": {
+      "Perception": 0.2,
+      "Groundedness": 0.2,
+      "Honesty": 0.15,
+      "Media dependence": 0.05,
+      "Robustness": 0.35,
+      "Tool use": 0.05,
+      "Completeness": 0.0,
+      "Hallucination": 0.0
+    }
+  },
+  "bootstrap": {
+    "n": 1000,
+    "seed": 7
+  },
+  "blind_variants": ["blind", "blind_guess"]
+}

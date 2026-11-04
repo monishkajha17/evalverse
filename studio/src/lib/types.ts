@@ -157,6 +157,48 @@ export interface TraceRow {
   spans?: TraceSpan[];
 }
 
+export interface PlanJob {
+  id?: string;
+  kind?: string;
+  agent?: string | null;
+  case_id?: string;
+  variant?: string;
+  status?: string;
+  retries?: number;
+  error?: string | null;
+  [key: string]: unknown;
+}
+
+export interface ConflictRow {
+  kind?: string;
+  agent?: string;
+  case_id?: string;
+  variant?: string;
+  [key: string]: unknown;
+}
+
+export interface UmsRow {
+  agent?: string;
+  variant?: string;
+  profile?: string;
+  ums?: number | null;
+  coverage?: number | null;
+  weakest?: { dimension?: string; score?: number | null } | null;
+  gate?: { pass?: boolean; reasons?: string[] } | null;
+  ci_95?: [number, number] | { lo?: number; hi?: number } | null;
+  dimensions?: Record<string, { score?: number | null } | number>;
+  [key: string]: unknown;
+}
+
+export interface ScoresBlock {
+  profile?: string;
+  gate?: { min_ums?: number; floors?: Record<string, number> };
+  weights?: Record<string, number>;
+  rows?: UmsRow[];
+  rank_stability?: unknown;
+  [key: string]: unknown;
+}
+
 export interface SuiteData {
   meta: {
     agents?: string[];
@@ -165,6 +207,14 @@ export interface SuiteData {
     modality?: string;
     created?: string;
     mock?: boolean;
+    manifest?: {
+      agents?: string[];
+      judge?: string;
+      dataset?: { path?: string; sha256?: string };
+      variants?: Array<{ name?: string; transform?: string }>;
+      judge_controls?: boolean;
+      [key: string]: unknown;
+    } | null;
     [key: string]: unknown;
   };
   cases: CaseRow[];
@@ -175,6 +225,9 @@ export interface SuiteData {
   registry: RegistryEntry[];
   judged: JudgedRow[];
   traces: TraceRow[];
+  plan?: PlanJob[];
+  conflicts?: ConflictRow[];
+  scores?: ScoresBlock | null;
 }
 
 export type OutcomeLabel =

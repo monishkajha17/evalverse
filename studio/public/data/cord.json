@@ -54097,5 +54097,5013 @@
     }
    ]
   }
- ]
+ ],
+ "plan": [],
+ "conflicts": [
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_03",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_03|clean|evidence_grounding",
+   "proposed": "68,180"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_04",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_04|clean|evidence_grounding",
+   "proposed": "3.600"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_07",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.1|cord_total_07|clean|evidence_grounding",
+   "proposed": "Rp38.000"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_12",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_12|clean|evidence_grounding",
+   "proposed": "5.455"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_27",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_27|clean|evidence_grounding",
+   "proposed": "24.000"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_28",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_28|clean|evidence_grounding",
+   "proposed": "6,364"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_05",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_05|clean|evidence_grounding",
+   "proposed": "30.000"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_06",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_06|clean|evidence_grounding",
+   "proposed": "50.000"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_07",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_07|clean|evidence_grounding",
+   "proposed": "Rp38.000"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_10",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_10|clean|evidence_grounding",
+   "proposed": "91000"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_12",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_12|clean|evidence_grounding",
+   "proposed": "5.455"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_16",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_16|clean|evidence_grounding",
+   "proposed": "23,000"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_20",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_20|clean|evidence_grounding",
+   "proposed": "63,000.00"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_21",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_21|clean|evidence_grounding",
+   "proposed": "28,000"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_22",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_22|clean|evidence_grounding",
+   "proposed": "30,365"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_25",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_25|clean|evidence_grounding",
+   "proposed": "2,272"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_26",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_26|clean|evidence_grounding",
+   "proposed": "17,000"
+  },
+  {
+   "kind": "judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_30",
+   "variant": "clean",
+   "judge_accepts": true,
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_30|clean|evidence_grounding",
+   "proposed": "74,000"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_03",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_03|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_03|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_03",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.1|cord_subtotal_03|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_subtotal_03|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_03",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_03|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_03|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_04",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_04|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_04|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_04",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.1|cord_tax_04|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_tax_04|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_05",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_total_05|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_total_05|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_05",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.1|cord_total_05|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_total_05|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_07",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.1|cord_total_07|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_total_07|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_07",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.1|cord_total_07|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_total_07|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_07",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_total_07|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_total_07|blur|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_07",
+   "variant": "blur",
+   "answer_correctness_id": "muse-spark-1.1|cord_total_07|blur|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_total_07|blur|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_07",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.1|cord_total_07|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_total_07|noise|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_07",
+   "variant": "noise",
+   "answer_correctness_id": "muse-spark-1.1|cord_total_07|noise|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_total_07|noise|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_07",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.1|cord_total_07|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_total_07|lowres|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_07",
+   "variant": "lowres",
+   "answer_correctness_id": "muse-spark-1.1|cord_total_07|lowres|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_total_07|lowres|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_10",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_total_10|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_total_10|blur|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_10",
+   "variant": "blur",
+   "answer_correctness_id": "muse-spark-1.1|cord_total_10|blur|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_total_10|blur|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_11",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.1|cord_total_11|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_total_11|noise|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_11",
+   "variant": "noise",
+   "answer_correctness_id": "muse-spark-1.1|cord_total_11|noise|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_total_11|noise|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_12",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_12|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_12|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_12",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.1|cord_tax_12|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_tax_12|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_12",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_12|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_12|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_12",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_12|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_12|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_13",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_13|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_13|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_13",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_13|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_13|noise|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_13",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_13|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_13|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_16",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_16|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_16|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_16",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_16|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_16|noise|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_16",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_16|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_16|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_19",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_total_19|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_total_19|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_total_20",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_total_20|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_total_20|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_21",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_21|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_21|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_21",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_21|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_21|noise|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_21",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_21|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_21|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_22",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_22|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_22|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_22",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_22|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_22|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_23",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_23|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_23|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_23",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_23|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_23|noise|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_24",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_24|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_24|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_24",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_24|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_24|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_25",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_25|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_25|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_26",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_26|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_26|lowres|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_26",
+   "variant": "lowres",
+   "answer_correctness_id": "muse-spark-1.1|cord_subtotal_26|lowres|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_subtotal_26|lowres|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_27",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.1|cord_subtotal_27|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_subtotal_27|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_subtotal_27",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.1|cord_subtotal_27|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_subtotal_27|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_28",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_28|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_28|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_28",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.1|cord_tax_28|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_tax_28|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_28",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_28|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_28|blur|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_28",
+   "variant": "blur",
+   "answer_correctness_id": "muse-spark-1.1|cord_tax_28|blur|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_tax_28|blur|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_28",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.1|cord_tax_28|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.1|cord_tax_28|lowres|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.1",
+   "case_id": "cord_tax_28",
+   "variant": "lowres",
+   "answer_correctness_id": "muse-spark-1.1|cord_tax_28|lowres|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.1|cord_tax_28|lowres|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_01",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_total_01|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_01|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_03",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_03|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_03|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_04",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_04|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_04|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_04",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_04|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_04|noise|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_04",
+   "variant": "noise",
+   "answer_correctness_id": "muse-spark-1.3|cord_tax_04|noise|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_tax_04|noise|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_04",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_04|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_04|lowres|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_04",
+   "variant": "lowres",
+   "answer_correctness_id": "muse-spark-1.3|cord_tax_04|lowres|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_tax_04|lowres|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_05",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_total_05|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_05|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_05",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_05|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_05|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_05",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_total_05|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_05|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_05",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_total_05|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_05|noise|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_05",
+   "variant": "noise",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_05|noise|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_05|noise|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_05",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.3|cord_total_05|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_05|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_06",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_total_06|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_06|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_06",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_06|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_06|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_07",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_total_07|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_07|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_07",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_07|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_07|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_08",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_08|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_08|noise|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_10",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_total_10|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_10|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_10",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_10|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_10|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_10",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_total_10|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_10|noise|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_10",
+   "variant": "noise",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_10|noise|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_10|noise|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_12",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_12|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_12|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_12",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_tax_12|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_tax_12|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_12",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_12|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_12|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_12",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_12|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_12|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_13",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_13|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_13|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_13",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_13|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_13|noise|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_13",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_13|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_13|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_15",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_total_15|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_15|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_15",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_total_15|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_15|noise|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_16",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_16|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_16|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_16",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_subtotal_16|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_subtotal_16|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_16",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_16|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_16|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_16",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_16|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_16|noise|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_16",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_16|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_16|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_19",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_total_19|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_19|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_19",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.3|cord_total_19|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_19|lowres|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_19",
+   "variant": "lowres",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_19|lowres|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_19|lowres|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_20",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_total_20|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_20|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_20",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_20|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_20|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_20",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_total_20|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_20|noise|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_20",
+   "variant": "noise",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_20|noise|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_20|noise|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_21",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_21|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_21|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_21",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_subtotal_21|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_subtotal_21|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_21",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_21|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_21|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_22",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_22|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_22|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_22",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_tax_22|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_tax_22|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_22",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_22|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_22|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_22",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_22|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_22|noise|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_22",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_22|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_22|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_23",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_23|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_23|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_23",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_23|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_23|noise|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_23",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_23|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_23|lowres|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_23",
+   "variant": "lowres",
+   "answer_correctness_id": "muse-spark-1.3|cord_tax_23|lowres|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_tax_23|lowres|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_24",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_24|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_24|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_24",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_24|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_24|noise|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_24",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_24|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_24|lowres|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_25",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_25|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_25|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_25",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_tax_25|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_tax_25|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_tax_25",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_tax_25|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_tax_25|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_26",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_26|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_26|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_26",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_subtotal_26|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_subtotal_26|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_26",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_26|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_26|blur|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_26",
+   "variant": "blur",
+   "answer_correctness_id": "muse-spark-1.3|cord_subtotal_26|blur|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_subtotal_26|blur|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_26",
+   "variant": "lowres",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_26|lowres|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_26|lowres|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_26",
+   "variant": "lowres",
+   "answer_correctness_id": "muse-spark-1.3|cord_subtotal_26|lowres|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_subtotal_26|lowres|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_27",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_subtotal_27|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_subtotal_27|blur|evidence_grounding"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_30",
+   "variant": "clean",
+   "perception_judge_id": "muse-spark-1.3|cord_total_30|clean|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_30|clean|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_30",
+   "variant": "clean",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_30|clean|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_30|clean|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_30",
+   "variant": "blur",
+   "perception_judge_id": "muse-spark-1.3|cord_total_30|blur|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_30|blur|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_30",
+   "variant": "blur",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_30|blur|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_30|blur|stage_attribution"
+  },
+  {
+   "kind": "perception_judge_vs_grounding",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_30",
+   "variant": "noise",
+   "perception_judge_id": "muse-spark-1.3|cord_total_30|noise|perception_judge",
+   "evidence_grounding_id": "muse-spark-1.3|cord_total_30|noise|evidence_grounding"
+  },
+  {
+   "kind": "correct_but_ungrounded",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_30",
+   "variant": "noise",
+   "answer_correctness_id": "muse-spark-1.3|cord_total_30|noise|answer_correctness",
+   "stage_attribution_id": "muse-spark-1.3|cord_total_30|noise|stage_attribution"
+  }
+ ],
+ "scores": {
+  "profile": "balanced",
+  "gate": {
+   "min_ums": 0.7,
+   "floors": {
+    "Groundedness": 0.5,
+    "Honesty": 0.5
+   }
+  },
+  "weights": {
+   "Perception": 0.25,
+   "Groundedness": 0.25,
+   "Honesty": 0.15,
+   "Media dependence": 0.1,
+   "Robustness": 0.15,
+   "Tool use": 0.1,
+   "Completeness": 0.0,
+   "Hallucination": 0.0
+  },
+  "rows": [
+   {
+    "agent": "muse-spark-1.1",
+    "variant": "clean",
+    "profile": "balanced",
+    "ums": 0.8629629629629629,
+    "coverage": 0.9,
+    "weakest": {
+     "dimension": "Robustness",
+     "score": 0.5111111111111111
+    },
+    "gate": {
+     "pass": true,
+     "reasons": []
+    },
+    "dimensions": {
+     "Perception": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Groundedness": {
+      "score": 0.8,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Honesty": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Media dependence": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.1,
+      "weight_eff": 0.11111111111111112
+     },
+     "Robustness": {
+      "score": 0.5111111111111111,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Tool use": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.1,
+      "weight_eff": null
+     },
+     "Completeness": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     },
+     "Hallucination": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     }
+    },
+    "ci_95": [
+     0.8111111111111111,
+     0.9092592592592592
+    ],
+    "dimension_scores": {
+     "cord_total_01": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_02": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_03": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_04": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_05": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_06": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_07": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_08": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_09": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_10": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_11": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_12": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_13": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_14": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_15": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_16": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_17": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_18": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_19": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_20": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_21": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_22": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_23": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_24": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_25": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_26": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_27": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_28": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_29": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_30": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     }
+    }
+   },
+   {
+    "agent": "muse-spark-1.1",
+    "variant": "blur",
+    "profile": "balanced",
+    "ums": 0.6074074074074074,
+    "coverage": 0.9,
+    "weakest": {
+     "dimension": "Perception",
+     "score": 0.4666666666666667
+    },
+    "gate": {
+     "pass": false,
+     "reasons": [
+      "ums_below_min (0.6074 < 0.7)"
+     ]
+    },
+    "dimensions": {
+     "Perception": {
+      "score": 0.4666666666666667,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Groundedness": {
+      "score": 0.5333333333333333,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Honesty": {
+      "score": 0.8,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Media dependence": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.1,
+      "weight_eff": 0.11111111111111112
+     },
+     "Robustness": {
+      "score": 0.5111111111111111,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Tool use": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.1,
+      "weight_eff": null
+     },
+     "Completeness": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     },
+     "Hallucination": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     }
+    },
+    "ci_95": [
+     0.5018518518518519,
+     0.7111111111111111
+    ],
+    "dimension_scores": {
+     "cord_total_01": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_02": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_03": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_04": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_05": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_06": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_07": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_08": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_09": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_10": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_11": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_12": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_13": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_14": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_15": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_16": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_17": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_18": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_19": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_20": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_21": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_22": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_23": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_24": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_25": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_26": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_27": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_28": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_29": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_30": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     }
+    }
+   },
+   {
+    "agent": "muse-spark-1.1",
+    "variant": "noise",
+    "profile": "balanced",
+    "ums": 0.7166666666666667,
+    "coverage": 0.9,
+    "weakest": {
+     "dimension": "Robustness",
+     "score": 0.5111111111111111
+    },
+    "gate": {
+     "pass": true,
+     "reasons": []
+    },
+    "dimensions": {
+     "Perception": {
+      "score": 0.6333333333333333,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Groundedness": {
+      "score": 0.8,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Honesty": {
+      "score": 0.7333333333333334,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Media dependence": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.1,
+      "weight_eff": 0.11111111111111112
+     },
+     "Robustness": {
+      "score": 0.5111111111111111,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Tool use": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.1,
+      "weight_eff": null
+     },
+     "Completeness": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     },
+     "Hallucination": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     }
+    },
+    "ci_95": [
+     0.6147685185185185,
+     0.8166666666666667
+    ],
+    "dimension_scores": {
+     "cord_total_01": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_02": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_03": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_04": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_05": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_06": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_07": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_08": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_09": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_10": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_11": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_12": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_13": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_14": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_15": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_16": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_17": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_18": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_19": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_20": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_21": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_22": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_23": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_24": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_25": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_26": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_27": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_28": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_29": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_30": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     }
+    }
+   },
+   {
+    "agent": "muse-spark-1.1",
+    "variant": "lowres",
+    "profile": "balanced",
+    "ums": 0.7111111111111111,
+    "coverage": 0.9,
+    "weakest": {
+     "dimension": "Robustness",
+     "score": 0.5111111111111111
+    },
+    "gate": {
+     "pass": true,
+     "reasons": []
+    },
+    "dimensions": {
+     "Perception": {
+      "score": 0.7,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Groundedness": {
+      "score": 0.6333333333333333,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Honesty": {
+      "score": 0.8666666666666667,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Media dependence": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.1,
+      "weight_eff": 0.11111111111111112
+     },
+     "Robustness": {
+      "score": 0.5111111111111111,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Tool use": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.1,
+      "weight_eff": null
+     },
+     "Completeness": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     },
+     "Hallucination": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     }
+    },
+    "ci_95": [
+     0.5962962962962963,
+     0.8203703703703704
+    ],
+    "dimension_scores": {
+     "cord_total_01": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_02": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_03": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_04": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_05": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_06": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_07": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_08": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_09": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_10": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_11": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_12": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_13": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_14": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_15": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_16": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_17": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_18": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_19": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_20": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_21": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_22": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_23": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_24": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_25": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_26": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_27": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_28": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_29": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_30": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     }
+    }
+   },
+   {
+    "agent": "muse-spark-1.1",
+    "variant": "overall",
+    "profile": "balanced",
+    "ums": 0.724537037037037,
+    "coverage": 0.9,
+    "weakest": {
+     "dimension": "Robustness",
+     "score": 0.5111111111111111
+    },
+    "gate": {
+     "pass": true,
+     "reasons": []
+    },
+    "dimensions": {
+     "Perception": {
+      "score": 0.7,
+      "n": 120,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Groundedness": {
+      "score": 0.6916666666666667,
+      "n": 120,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Honesty": {
+      "score": 0.85,
+      "n": 120,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Media dependence": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.1,
+      "weight_eff": 0.11111111111111112
+     },
+     "Robustness": {
+      "score": 0.5111111111111111,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Tool use": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.1,
+      "weight_eff": null
+     },
+     "Completeness": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     },
+     "Hallucination": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     }
+    },
+    "ci_95": [
+     0.6486111111111111,
+     0.7981481481481482
+    ],
+    "dimension_scores": {
+     "cord_total_01": {
+      "Perception": 0.75,
+      "Groundedness": 1.0,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_02": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_03": {
+      "Perception": 0.25,
+      "Groundedness": 0.5,
+      "Honesty": 0.5,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_04": {
+      "Perception": 1.0,
+      "Groundedness": 0.75,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_05": {
+      "Perception": 0.5,
+      "Groundedness": 0.5,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_06": {
+      "Perception": 0.75,
+      "Groundedness": 1.0,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_07": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_08": {
+      "Perception": 0.75,
+      "Groundedness": 1.0,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_09": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_10": {
+      "Perception": 1.0,
+      "Groundedness": 0.75,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_11": {
+      "Perception": 1.0,
+      "Groundedness": 0.75,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_12": {
+      "Perception": 0.5,
+      "Groundedness": 0.25,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_13": {
+      "Perception": 0.25,
+      "Groundedness": 0.25,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_14": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_15": {
+      "Perception": 0.5,
+      "Groundedness": 1.0,
+      "Honesty": 0.5,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_16": {
+      "Perception": 0.25,
+      "Groundedness": 0.25,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_17": {
+      "Perception": 0.5,
+      "Groundedness": 1.0,
+      "Honesty": 0.5,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_18": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_19": {
+      "Perception": 0.5,
+      "Groundedness": 0.75,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_20": {
+      "Perception": 0.75,
+      "Groundedness": 0.75,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_21": {
+      "Perception": 0.25,
+      "Groundedness": 0.25,
+      "Honesty": 0.5,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_22": {
+      "Perception": 0.25,
+      "Groundedness": 0.5,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_23": {
+      "Perception": 0.5,
+      "Groundedness": 0.5,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_24": {
+      "Perception": 0.25,
+      "Groundedness": 0.5,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_25": {
+      "Perception": 0.75,
+      "Groundedness": 0.75,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_26": {
+      "Perception": 1.0,
+      "Groundedness": 0.75,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_27": {
+      "Perception": 0.75,
+      "Groundedness": 0.75,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_28": {
+      "Perception": 1.0,
+      "Groundedness": 0.25,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_29": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_30": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     }
+    }
+   },
+   {
+    "agent": "muse-spark-1.3",
+    "variant": "clean",
+    "profile": "balanced",
+    "ums": 0.8,
+    "coverage": 0.9,
+    "weakest": {
+     "dimension": "Robustness",
+     "score": 0.4666666666666667
+    },
+    "gate": {
+     "pass": true,
+     "reasons": []
+    },
+    "dimensions": {
+     "Perception": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Groundedness": {
+      "score": 0.6,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Honesty": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Media dependence": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.1,
+      "weight_eff": 0.11111111111111112
+     },
+     "Robustness": {
+      "score": 0.4666666666666667,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Tool use": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.1,
+      "weight_eff": null
+     },
+     "Completeness": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     },
+     "Hallucination": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     }
+    },
+    "ci_95": [
+     0.7388888888888889,
+     0.8537037037037037
+    ],
+    "dimension_scores": {
+     "cord_total_01": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_02": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_03": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_04": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_05": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_06": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_07": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_08": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_09": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_10": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_11": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_12": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_13": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_14": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_15": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_16": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_17": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_18": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_19": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_20": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_21": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_22": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_23": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_24": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_25": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_26": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_27": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_28": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_29": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_30": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     }
+    }
+   },
+   {
+    "agent": "muse-spark-1.3",
+    "variant": "blur",
+    "profile": "balanced",
+    "ums": 0.5944444444444444,
+    "coverage": 0.9,
+    "weakest": {
+     "dimension": "Groundedness",
+     "score": 0.43333333333333335
+    },
+    "gate": {
+     "pass": false,
+     "reasons": [
+      "ums_below_min (0.5944 < 0.7)",
+      "Groundedness_below_floor (0.4333 < 0.5)"
+     ]
+    },
+    "dimensions": {
+     "Perception": {
+      "score": 0.4666666666666667,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Groundedness": {
+      "score": 0.43333333333333335,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Honesty": {
+      "score": 0.9333333333333333,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Media dependence": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.1,
+      "weight_eff": 0.11111111111111112
+     },
+     "Robustness": {
+      "score": 0.4666666666666667,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Tool use": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.1,
+      "weight_eff": null
+     },
+     "Completeness": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     },
+     "Hallucination": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     }
+    },
+    "ci_95": [
+     0.4888425925925926,
+     0.70375
+    ],
+    "dimension_scores": {
+     "cord_total_01": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_02": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_03": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_04": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_05": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_06": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_07": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_08": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_09": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_10": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_11": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_12": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_13": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_14": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_15": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_16": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_17": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_18": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_19": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_20": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_21": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_22": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_23": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_24": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_25": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_26": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_27": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_28": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_29": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_30": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     }
+    }
+   },
+   {
+    "agent": "muse-spark-1.3",
+    "variant": "noise",
+    "profile": "balanced",
+    "ums": 0.6703703703703704,
+    "coverage": 0.9,
+    "weakest": {
+     "dimension": "Robustness",
+     "score": 0.4666666666666667
+    },
+    "gate": {
+     "pass": false,
+     "reasons": [
+      "ums_below_min (0.6704 < 0.7)"
+     ]
+    },
+    "dimensions": {
+     "Perception": {
+      "score": 0.6333333333333333,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Groundedness": {
+      "score": 0.6,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Honesty": {
+      "score": 0.8333333333333334,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Media dependence": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.1,
+      "weight_eff": 0.11111111111111112
+     },
+     "Robustness": {
+      "score": 0.4666666666666667,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Tool use": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.1,
+      "weight_eff": null
+     },
+     "Completeness": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     },
+     "Hallucination": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     }
+    },
+    "ci_95": [
+     0.5666203703703704,
+     0.7722685185185185
+    ],
+    "dimension_scores": {
+     "cord_total_01": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_02": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_03": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_04": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_05": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_06": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_07": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_08": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_09": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_10": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_11": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_12": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_13": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_14": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_15": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_16": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_17": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_18": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_19": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_20": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_21": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_22": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_23": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_24": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_25": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_26": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_27": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_28": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_29": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_30": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     }
+    }
+   },
+   {
+    "agent": "muse-spark-1.3",
+    "variant": "lowres",
+    "profile": "balanced",
+    "ums": 0.7037037037037037,
+    "coverage": 0.9,
+    "weakest": {
+     "dimension": "Robustness",
+     "score": 0.4666666666666667
+    },
+    "gate": {
+     "pass": true,
+     "reasons": []
+    },
+    "dimensions": {
+     "Perception": {
+      "score": 0.6666666666666666,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Groundedness": {
+      "score": 0.6666666666666666,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Honesty": {
+      "score": 0.8666666666666667,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Media dependence": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.1,
+      "weight_eff": 0.11111111111111112
+     },
+     "Robustness": {
+      "score": 0.4666666666666667,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Tool use": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.1,
+      "weight_eff": null
+     },
+     "Completeness": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     },
+     "Hallucination": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     }
+    },
+    "ci_95": [
+     0.6036111111111111,
+     0.8000925925925926
+    ],
+    "dimension_scores": {
+     "cord_total_01": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_02": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_03": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_04": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_05": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_06": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_07": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_08": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_09": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_10": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_11": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_12": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_13": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_14": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_15": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_16": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_17": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_18": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_19": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_20": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_21": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_22": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_23": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_24": {
+      "Perception": 0.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_25": {
+      "Perception": 0.0,
+      "Groundedness": 1.0,
+      "Honesty": 0.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_26": {
+      "Perception": 1.0,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_27": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_28": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_29": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_30": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     }
+    }
+   },
+   {
+    "agent": "muse-spark-1.3",
+    "variant": "overall",
+    "profile": "balanced",
+    "ums": 0.6921296296296297,
+    "coverage": 0.9,
+    "weakest": {
+     "dimension": "Robustness",
+     "score": 0.4666666666666667
+    },
+    "gate": {
+     "pass": false,
+     "reasons": [
+      "ums_below_min (0.6921 < 0.7)"
+     ]
+    },
+    "dimensions": {
+     "Perception": {
+      "score": 0.6916666666666667,
+      "n": 120,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Groundedness": {
+      "score": 0.575,
+      "n": 120,
+      "status": "available",
+      "weight_orig": 0.25,
+      "weight_eff": 0.2777777777777778
+     },
+     "Honesty": {
+      "score": 0.9083333333333333,
+      "n": 120,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Media dependence": {
+      "score": 1.0,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.1,
+      "weight_eff": 0.11111111111111112
+     },
+     "Robustness": {
+      "score": 0.4666666666666667,
+      "n": 30,
+      "status": "available",
+      "weight_orig": 0.15,
+      "weight_eff": 0.16666666666666666
+     },
+     "Tool use": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.1,
+      "weight_eff": null
+     },
+     "Completeness": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     },
+     "Hallucination": {
+      "score": null,
+      "n": 0,
+      "status": "unavailable",
+      "weight_orig": 0.0,
+      "weight_eff": null
+     }
+    },
+    "ci_95": [
+     0.6138773148148149,
+     0.7694560185185185
+    ],
+    "dimension_scores": {
+     "cord_total_01": {
+      "Perception": 0.75,
+      "Groundedness": 0.75,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_02": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_03": {
+      "Perception": 0.25,
+      "Groundedness": 0.75,
+      "Honesty": 0.5,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_04": {
+      "Perception": 0.75,
+      "Groundedness": 0.25,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_05": {
+      "Perception": 0.5,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_06": {
+      "Perception": 0.75,
+      "Groundedness": 0.75,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_07": {
+      "Perception": 1.0,
+      "Groundedness": 0.75,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_08": {
+      "Perception": 0.5,
+      "Groundedness": 0.75,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_09": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_10": {
+      "Perception": 1.0,
+      "Groundedness": 0.5,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_11": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_12": {
+      "Perception": 0.5,
+      "Groundedness": 0.25,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_13": {
+      "Perception": 0.25,
+      "Groundedness": 0.25,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_14": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_15": {
+      "Perception": 0.5,
+      "Groundedness": 0.5,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_16": {
+      "Perception": 0.25,
+      "Groundedness": 0.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_17": {
+      "Perception": 0.75,
+      "Groundedness": 1.0,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_18": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_19": {
+      "Perception": 0.5,
+      "Groundedness": 0.5,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_20": {
+      "Perception": 1.0,
+      "Groundedness": 0.5,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_21": {
+      "Perception": 0.25,
+      "Groundedness": 0.5,
+      "Honesty": 0.5,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_22": {
+      "Perception": 0.25,
+      "Groundedness": 0.0,
+      "Honesty": 0.75,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_23": {
+      "Perception": 0.5,
+      "Groundedness": 0.25,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_24": {
+      "Perception": 0.25,
+      "Groundedness": 0.25,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_25": {
+      "Perception": 0.5,
+      "Groundedness": 0.5,
+      "Honesty": 0.5,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_26": {
+      "Perception": 1.0,
+      "Groundedness": 0.25,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_subtotal_27": {
+      "Perception": 0.75,
+      "Groundedness": 0.75,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.6666666666666666,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_28": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_tax_29": {
+      "Perception": 1.0,
+      "Groundedness": 1.0,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 1.0,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     },
+     "cord_total_30": {
+      "Perception": 1.0,
+      "Groundedness": 0.25,
+      "Honesty": 1.0,
+      "Media dependence": 1.0,
+      "Robustness": 0.3333333333333333,
+      "Tool use": null,
+      "Completeness": null,
+      "Hallucination": null
+     }
+    }
+   }
+  ],
+  "rank_stability": {
+   "ranking_by_profile": {
+    "balanced": [
+     "muse-spark-1.1",
+     "muse-spark-1.3"
+    ],
+    "extraction": [
+     "muse-spark-1.1",
+     "muse-spark-1.3"
+    ],
+    "safety_first": [
+     "muse-spark-1.1",
+     "muse-spark-1.3"
+    ],
+    "robustness": [
+     "muse-spark-1.1",
+     "muse-spark-1.3"
+    ]
+   },
+   "stable": true,
+   "flips": []
+  }
+ }
 }

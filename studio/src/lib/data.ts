@@ -10,6 +10,9 @@ const EMPTY: SuiteData = {
   registry: [],
   judged: [],
   traces: [],
+  plan: [],
+  conflicts: [],
+  scores: null,
 };
 
 export async function loadIndex(): Promise<SuiteIndexEntry[]> {
@@ -33,6 +36,10 @@ export async function loadSuite(suite: string): Promise<SuiteData> {
     registry: Array.isArray(raw.registry) ? raw.registry : [],
     judged: Array.isArray(raw.judged) ? raw.judged : [],
     traces: Array.isArray(raw.traces) ? raw.traces : [],
+    plan: Array.isArray(raw.plan) ? raw.plan : [],
+    conflicts: Array.isArray(raw.conflicts) ? raw.conflicts : [],
+    scores:
+      raw.scores && typeof raw.scores === "object" ? (raw.scores as SuiteData["scores"]) : null,
   };
 }
 

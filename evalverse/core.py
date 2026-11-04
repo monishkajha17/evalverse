@@ -34,6 +34,21 @@ AGENT_PROMPT = (
     "top-left. If you cannot read the answer, use answer \"unknown\" and box null."
 )
 
+AGENT_TOOL_PROMPT = (
+    "You are a visual-reading agent with tools. Read the receipt image and answer the question.\n"
+    "Question: {question}\n\n"
+    "Reply with JSON only, no other text:\n"
+    '{{"answer": "<your answer>", "box": [x_min, y_min, x_max, y_max], "evidence": "<what you read and where>", '
+    '"tool_calls": [{{"name": "check_duplicate", "arguments": {{"amount": "<value>"}}}}, '
+    '{{"name": "log_expense", "arguments": {{"amount": "<value>", "currency": "IDR", "category": "meals"}}}}]}}\n'
+    "box is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the "
+    "top-left.\n"
+    "Only call log_expense if you can actually read the value from the image. "
+    "If you cannot read it, set answer to \"unknown\", box to null, and \"tool_calls\": []. "
+    "When you do call tools, call check_duplicate before log_expense. "
+    "Use currency \"IDR\" and category \"meals\" for log_expense."
+)
+
 JUDGE_PROMPT = (
     "You are auditing an answer about the attached image. Look at the image yourself.\n"
     "Question: {question}\n"
@@ -374,9 +389,10 @@ class LiveBackend:
                 time.sleep(2 * (attempt + 1))
         raise RuntimeError(f"model call failed: {last}")
 
-    def agent(self, model, case, image_png, condition):
+    def agent(self, model, case, image_png, condition, prompt: str | None = None):
         t = time.time()
-        raw, usage = self._chat(model, AGENT_PROMPT.format(question=case["question"]), image_png)
+        text = prompt if prompt is not None else AGENT_PROMPT.format(question=case["question"])
+        raw, usage = self._chat(model, text, image_png)
         return raw, time.time() - t, usage
 
     def judge(self, model, case, proposed, image_png):
@@ -401,6 +417,44 @@ class LiveBackend:
         )
         return raw
 
+    def chat_images(
+        self,
+        model: str,
+        prompt: str,
+        framed: list[tuple[str, bytes]],
+    ) -> tuple[str, dict]:
+        """Multi-image chat. `framed` is [(caption, png_bytes), ...] interleaved after the prompt.
+
+        New method — does not change existing call signatures.
+        """
+        content: list[dict] = [{"type": "text", "text": prompt}]
+        for caption, png in framed:
+            content.append({"type": "text", "text": caption})
+            b64 = base64.b64encode(png).decode()
+            content.append(
+                {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}}
+            )
+        kwargs = {}
+        if self.effort:
+            kwargs["extra_body"] = {"reasoning_effort": self.effort}
+        last = None
+        for attempt in range(4):
+            try:
+                r = self.client.chat.completions.create(
+                    model=model, messages=[{"role": "user", "content": content}], **kwargs
+                )
+                return (r.choices[0].message.content or ""), self._usage_from_response(r)
+            except Exception as e:  # rate limit / transient
+                last = e
+                time.sleep(2 * (attempt + 1))
+        raise RuntimeError(f"model call failed: {last}")
+
+    def video_agent(self, model, case, framed: list[tuple[str, bytes]], prompt: str):
+        """Video agent over captioned frames. New method — existing signatures unchanged."""
+        t = time.time()
+        raw, usage = self.chat_images(model, prompt, framed)
+        return raw, time.time() - t, usage
+
 
 class MockBackend:
     """Offline stand-in used to test the pipeline end to end without an API key.
@@ -409,10 +463,11 @@ class MockBackend:
     def __init__(self, seed=0):
         self.rng = random.Random(seed)
 
-    def agent(self, model, case, image_png, condition):
+    def agent(self, model, case, image_png, condition, prompt: str | None = None):
         r = self.rng
         usage = {"input_tokens": 900, "output_tokens": 160}
         family = case.get("family") or ""
+        want_tools = prompt is not None and "tool_calls" in prompt
         if image_png is None:  # blind
             if family == "unanswerable":
                 ans = "not shown" if r.random() < 0.5 else case.get("distractor", "0")
@@ -420,7 +475,10 @@ class MockBackend:
                 ans = "unknown"
             else:
                 ans = "unknown" if r.random() < 0.7 else case["distractor"]
-            return json.dumps({"answer": ans, "box": None, "evidence": "no image"}), 0.01, usage
+            payload = {"answer": ans, "box": None, "evidence": "no image"}
+            if want_tools:
+                payload["tool_calls"] = []
+            return json.dumps(payload), 0.01, usage
         p_ok = {"clean": 0.95, "blur": 0.7, "noise": 0.6, "lowres": 0.4}.get(condition, 0.5)
         if "1.1" in model:
             p_ok -= 0.15
@@ -447,7 +505,20 @@ class MockBackend:
                 ans = json.dumps(ans)
         else:
             ans = case["answer"] if ok else case["distractor"]
-        return json.dumps({"answer": ans, "box": box, "evidence": "mock"}), 0.01, usage
+        payload = {"answer": ans, "box": box, "evidence": "mock"}
+        if want_tools:
+            readable = str(ans).lower() not in ("unknown", "not shown", "") and box is not None
+            if readable:
+                payload["tool_calls"] = [
+                    {"name": "check_duplicate", "arguments": {"amount": ans}},
+                    {
+                        "name": "log_expense",
+                        "arguments": {"amount": ans, "currency": "IDR", "category": "meals"},
+                    },
+                ]
+            else:
+                payload["tool_calls"] = []
+        return json.dumps(payload), 0.01, usage
 
     def judge(self, model, case, proposed, image_png):
         r = self.rng
@@ -479,3 +550,60 @@ class MockBackend:
     def audio_judge(self, model, case, proposed, transcript):
         truth = answer_correct(case, proposed)
         return json.dumps({"verdict": "correct" if truth else "incorrect", "reason": "mock"})
+
+    def video_agent(self, model, case, framed: list[tuple[str, bytes]], prompt: str):
+        """Offline video agent. New method — existing signatures unchanged."""
+        usage = {"input_tokens": 1200, "output_tokens": 180}
+        has_frames = bool(framed)
+        if not has_frames:
+            if "blind_guess" in (prompt or "").lower() or "best guess" in (prompt or "").lower():
+                if case.get("answer_type") == "seconds":
+                    try:
+                        ans = f"{max(0.0, float(case['answer']) + self.rng.choice([-3, -2, 2, 3])):0.1f}"
+                    except (TypeError, ValueError):
+                        ans = "5.0"
+                elif str(case.get("answer", "")).upper() in ("TAX", "TOTAL"):
+                    ans = "TAX" if case["answer"].upper() == "TOTAL" else "TOTAL"
+                else:
+                    ans = "COFFEE" if str(case.get("answer", "")).upper() != "COFFEE" else "TEA"
+                return json.dumps(
+                    {"answer": ans, "span_ms": [0, 2000], "box": None, "evidence": "guess"}
+                ), 0.01, usage
+            return json.dumps(
+                {"answer": "unknown", "span_ms": None, "box": None, "evidence": "no frames"}
+            ), 0.01, usage
+
+        condition = case.get("_condition") or "clean"
+        p_ok = {"clean": 0.92, "sparse": 0.75, "blur": 0.65, "noise": 0.6}.get(condition, 0.8)
+        if "1.1" in model:
+            p_ok -= 0.15
+        ok = self.rng.random() < p_ok
+        truth_span = case.get("truth_span_ms")
+        truth_box = case.get("truth_box")
+        if ok and truth_span:
+            span = list(truth_span)
+        elif truth_span:
+            span = [max(0, truth_span[0] - 4000), max(0, truth_span[1] - 4000)]
+        else:
+            span = None
+        if ok and truth_box:
+            box = list(truth_box)
+        elif truth_box:
+            box = [0, 0, 100, 100]
+        else:
+            box = None
+        if ok:
+            ans = case["answer"]
+        else:
+            if case.get("answer_type") == "seconds":
+                try:
+                    ans = f"{float(case['answer']) + 4.0:0.1f}"
+                except (TypeError, ValueError):
+                    ans = "0.0"
+            elif str(case.get("answer", "")).upper() in ("TAX", "TOTAL"):
+                ans = "TAX" if str(case["answer"]).upper() == "TOTAL" else "TOTAL"
+            else:
+                ans = case.get("distractor") or "UNKNOWN ITEM"
+        return json.dumps(
+            {"answer": ans, "span_ms": span, "box": box, "evidence": "mock frames"}
+        ), 0.01, usage

@@ -115,14 +115,37 @@ def count_span_unit_warnings(cases, runs) -> int:
     )
 
 
+def _asr_details_from_trace(trace: dict) -> list[dict]:
+    """Recover per-turn ASR detail from either the new fan-out spans or legacy transcribe span."""
+    details: list[dict] = []
+    for span in trace.get("spans") or []:
+        name = span.get("name") or ""
+        attrs = span.get("attributes") or span.get("metadata") or {}
+        if name == "transcribe" and span.get("turns"):
+            return list(span.get("turns") or [])
+        if name.startswith("transcribe turn") or (
+            isinstance(attrs.get("turn"), int) and "transcribe" in name
+        ):
+            details.append(
+                {
+                    "index": attrs.get("turn"),
+                    "latency": attrs.get("asr_latency_s"),
+                    "wer": attrs.get("wer"),
+                }
+            )
+    details.sort(key=lambda d: (d.get("index") is None, d.get("index") or 0))
+    return details
+
+
 def hearing_from_results(payload: dict, cases: list[dict], conditions: list[str]) -> dict:
     """Rebuild millisecond transcripts from stored ASR text. Does not call the ASR endpoint."""
     by_id = {c["id"]: c for c in cases}
     details = {}
     for trace in payload.get("traces") or []:
-        for span in trace.get("spans") or []:
-            if span.get("name") == "transcribe":
-                details[(trace.get("case_id"), trace.get("variant"))] = span.get("turns") or []
+        key = (trace.get("case_id"), trace.get("variant"))
+        recovered = _asr_details_from_trace(trace)
+        if recovered:
+            details[key] = recovered
     hearing = {}
     for run in payload.get("runs") or []:
         condition = run.get("condition")
@@ -133,7 +156,8 @@ def hearing_from_results(payload: dict, cases: list[dict], conditions: list[str]
         asr_turns = {str(k): v for k, v in (run.get("asr_turns") or {}).items()}
         turn_wers = {str(k): v for k, v in (run.get("turn_wers") or {}).items()}
         transcript = "\n".join(format_turn(turn, asr_turns.get(str(turn["index"]), "")) for turn in case["turns"])
-        hearing[key] = (transcript, asr_turns, turn_wers, details.get(key, []))
+        asr_details = run.get("asr_details") or details.get(key, [])
+        hearing[key] = (transcript, asr_turns, turn_wers, asr_details)
     return hearing
 
 
@@ -161,23 +185,11 @@ def score(case: dict, raw: str, asr_turns: dict) -> dict:
 
 
 def _trace(case, run, heard_details, result_ids):
-    variant = run["condition"]
-    assets = []
-    if variant not in ("blind", "blind_guess") and case.get("audio"):
-        path = ROOT / case["audio"]
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()[:12] if path.exists() else hashlib.sha256(case["audio"].encode()).hexdigest()[:12]
-        assets = [{"id": digest, "path": case["audio"], "modality": "audio", "transformation": variant}]
-    s1 = {"id": "s1", "name": "attach_audio" if variant not in ("blind", "blind_guess") else "remove_media", "type": "media",
-          "status": "completed", "parent_span_ids": [], "metadata": {"asset_id": assets[0]["id"] if assets else None}}
-    s2 = {"id": "s2", "name": "transcribe", "type": "model", "status": "completed", "parent_span_ids": ["s1"],
-          "model": "muse-voice-transcribe-1.0", "turns": heard_details}
-    s3 = {"id": "s3", "name": "model_call", "type": "model", "status": "failed" if run.get("error") else "completed",
-          "parent_span_ids": ["s2"], "model": run["model"], "latency_s": run["latency"],
-          "usage": run["usage"], "input": {"prompt": run["prompt"]}, "output": {"raw": run["raw"], "answer": run["answer"], "span_ms": run["span_ms"]}}
-    s4 = {"id": "s4", "name": "evaluation", "type": "evaluation", "status": "completed",
-          "parent_span_ids": ["s3"], "result_ids": result_ids}
-    return {"id": f"{run['agent']}|{case['id']}|{variant}", "agent": run["agent"], "case_id": case["id"],
-            "variant": variant, "assets": assets, "spans": [s1, s2, s3, s4]}
+    """Build the fan-out / fan-in audio DAG for one run."""
+    payload = dict(run)
+    if heard_details and not payload.get("asr_details"):
+        payload["asr_details"] = heard_details
+    return ev.build_audio_trace(case, payload, result_ids)
 
 
 def main():
@@ -208,7 +220,7 @@ def main():
             if (case["id"], condition) not in hearing:
                 hearing[(case["id"], condition)] = hear(case, condition, args.mock, reuse_asr=args.reuse_asr)
 
-    runs, heard_by_run = [], {}
+    runs = []
     for agent in agents:
         for case in cases:
             for condition in conditions + ["blind", "blind_guess"]:
@@ -223,11 +235,16 @@ def main():
                     rec = {"answer": "", "span_ms": None, "evidence": "", "asr_turns": asr_turns, "correct": False,
                            "evidence_ok": False, "label": "invalid_output", "latency": 0, "error": str(exc)[:200],
                            "model": agent, "prompt": prompt, "raw": "", "usage": None, "wer": None}
-                rec.update(agent=agent, case_id=case["id"], condition=condition, transcript=transcript, turn_wers=turn_wers)
+                rec.update(
+                    agent=agent,
+                    case_id=case["id"],
+                    condition=condition,
+                    transcript=transcript,
+                    turn_wers=turn_wers,
+                    asr_details=details,
+                )
                 runs.append(rec)
-                heard_by_run[(agent, case["id"], condition)] = details
 
-    by_id = {c["id"]: c for c in cases}
     judged = []
     for case in cases:
         transcript = hearing[(case["id"], "clean")][0]
@@ -244,12 +261,8 @@ def main():
     results, summary, disagreements, conflicts = ev.evaluate_all(
         cases, runs, judged, agents, judge_model=args.judge
     )
-    result_ids = {}
-    for result in results:
-        target = result["target"]
-        result_ids.setdefault((target["agent"], target["case_id"], target["variant"]), []).append(result["id"])
-    traces = [_trace(by_id[r["case_id"]], r, heard_by_run[(r["agent"], r["case_id"], r["condition"])],
-                     result_ids.get((r["agent"], r["case_id"], r["condition"]), [])) for r in runs]
+    # Prefer the shared builder so audio_run and rescore emit identical DAGs.
+    traces = ev.build_traces(cases, runs, results)
     payload = {
         "meta": {"agents": agents, "judge": args.judge, "conditions": conditions, "mock": args.mock,
                  "modality": "audio", "span_unit_warnings": count_span_unit_warnings(cases, runs),

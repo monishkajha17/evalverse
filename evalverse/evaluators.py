@@ -7,6 +7,7 @@ evaluators only read sibling results.
 from __future__ import annotations
 
 import hashlib
+import re
 import time
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -362,6 +363,101 @@ def evidence_grounding(*, agent, case_id, variant, meta, case, run, evidence_mar
     return res
 
 
+def _tool_args(span: dict) -> dict:
+    inp = span.get("input") or {}
+    if isinstance(inp, dict) and isinstance(inp.get("arguments"), dict):
+        return inp["arguments"]
+    return inp if isinstance(inp, dict) else {}
+
+
+def _tool_name(span: dict) -> str:
+    return str(span.get("name") or _tool_args(span).get("name") or "")
+
+
+def _tool_evidence(spans: list[dict]) -> list[dict]:
+    out = []
+    for sp in spans:
+        out.append({"type": "tool_call", "span_id": sp.get("id"), "name": _tool_name(sp)})
+    return out
+
+
+def _amounts_equal(a, b) -> bool:
+    pa, pb = core._amount(a), core._amount(b)
+    return pa is not None and pb is not None and abs(pa - pb) < 0.0051
+
+
+def _is_number_arg(v) -> bool:
+    if isinstance(v, bool):
+        return False
+    if isinstance(v, (int, float)):
+        return True
+    return core._amount(v) is not None
+
+
+def _is_currency_arg(v) -> bool:
+    return isinstance(v, str) and bool(re.fullmatch(r"[A-Za-z]{3}", v))
+
+
+KNOWN_TOOL_SCHEMAS: dict[str, dict[str, Any]] = {
+    "check_duplicate": {
+        "required": ("amount",),
+        "types": {"amount": _is_number_arg},
+    },
+    "log_expense": {
+        "required": ("amount", "currency"),
+        "types": {"amount": _is_number_arg, "currency": _is_currency_arg},
+    },
+}
+
+
+def _log_expense_spans(tool_spans: list[dict]) -> list[dict]:
+    return [s for s in tool_spans if _tool_name(s) == "log_expense"]
+
+
+def _check_duplicate_spans(tool_spans: list[dict]) -> list[dict]:
+    return [s for s in tool_spans if _tool_name(s) == "check_duplicate"]
+
+
+def _answer_unsure(run: dict) -> bool:
+    ans = run.get("answer")
+    tok = core._txt(ans if ans is not None else "")
+    return tok in ("", "unknown") or run.get("box") is None
+
+
+def _tool_outcome_label(case: dict, run: dict, tool_spans: list[dict], margin: float = 0) -> str:
+    """Tool-stage outcome when the trace contains tool spans."""
+    logs = _log_expense_spans(tool_spans)
+    checks = _check_duplicate_spans(tool_spans)
+    unsure = _answer_unsure(run)
+    if unsure and logs:
+        return "acted_while_unsure"
+    if logs:
+        # Policy: check_duplicate must precede log_expense.
+        first_log_i = next(i for i, s in enumerate(tool_spans) if _tool_name(s) == "log_expense")
+        first_check_i = next(
+            (i for i, s in enumerate(tool_spans) if _tool_name(s) == "check_duplicate"), None
+        )
+        if first_check_i is None:
+            return "policy_violation"
+        if first_check_i > first_log_i:
+            return "policy_violation"
+        logged_amt = _tool_args(logs[0]).get("amount")
+        if not _amounts_equal(logged_amt, case.get("answer")):
+            return "wrong_amount_logged"
+        return "correct_action"
+    # No log_expense
+    if not unsure and _amounts_equal(run.get("answer"), case.get("answer")):
+        # Readable answer that should have been logged.
+        truth = case.get("truth_box")
+        box = run.get("box")
+        if truth is None or (box and core.evidence_ok(truth, box, margin=margin)):
+            return "no_action_when_readable"
+        # Had a correct-looking answer but ungrounded — still expected to log if confident.
+        if not unsure:
+            return "no_action_when_readable"
+    return "correct_action"
+
+
 @evaluator(
     id="stage_attribution",
     version="1.0.0",
@@ -372,15 +468,31 @@ def evidence_grounding(*, agent, case_id, variant, meta, case, run, evidence_mar
     depends_on=("answer_correctness",),
     scope="run",
 )
-def stage_attribution(*, agent, case_id, variant, meta, case, run, evidence_margin=DEFAULT_EVIDENCE_MARGIN, **_):
-    label = _stage_label(case, run, margin=evidence_margin)
-    pass_labels = {"grounded_correct", "complete_correct", "abstained_correctly"}
-    score = 1.0 if label in pass_labels else 0.0
+def stage_attribution(
+    *,
+    agent,
+    case_id,
+    variant,
+    meta,
+    case,
+    run,
+    evidence_margin=DEFAULT_EVIDENCE_MARGIN,
+    tool_spans=None,
+    **_,
+):
     evidence = []
+    if tool_spans:
+        label = _tool_outcome_label(case, run, tool_spans, margin=evidence_margin)
+        evidence.extend(_tool_evidence(tool_spans))
+        pass_labels = {"correct_action"}
+    else:
+        label = _stage_label(case, run, margin=evidence_margin)
+        pass_labels = {"grounded_correct", "complete_correct", "abstained_correctly"}
     if case.get("truth_box"):
         evidence.append({"type": "image_region", "role": "expected", "locator": list(case["truth_box"])})
     if run.get("box"):
         evidence.append({"type": "image_region", "role": "claimed", "locator": list(run["box"])})
+    score = 1.0 if label in pass_labels else 0.0
     return _result(
         agent=agent,
         case_id=case_id,
@@ -392,6 +504,257 @@ def stage_attribution(*, agent, case_id, variant, meta, case, run, evidence_marg
         label=label,
         explanation=f"Stage label: {label}.",
         evidence=evidence,
+    )
+
+
+@evaluator(
+    id="tool_schema_valid",
+    version="1.0.0",
+    category="tool_use",
+    dimension="Tool use",
+    modalities=["image", "text"],
+    needs_reference=False,
+    scope="run",
+)
+def tool_schema_valid(*, agent, case_id, variant, meta, case, run, tool_spans=None, **_):
+    spans = list(tool_spans or [])
+    if not spans:
+        res = _skipped(agent, case_id, variant, meta, "no tool calls")
+        res["execution_metadata"]["reason"] = "no tool calls"
+        return res
+    valid = 0
+    for sp in spans:
+        name = _tool_name(sp)
+        schema = KNOWN_TOOL_SCHEMAS.get(name)
+        if schema is None:
+            continue
+        args = _tool_args(sp)
+        ok = True
+        for req in schema["required"]:
+            if req not in args:
+                ok = False
+                break
+            checker = schema["types"].get(req)
+            if checker and not checker(args[req]):
+                ok = False
+                break
+        if ok:
+            valid += 1
+    total = len(spans)
+    score = valid / total if total else 0.0
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=score,
+        verdict="pass" if score >= 1.0 else "fail",
+        label="valid" if score >= 1.0 else "invalid",
+        explanation=f"{valid}/{total} tool calls match known schemas.",
+        evidence=_tool_evidence(spans),
+    )
+
+
+@evaluator(
+    id="tool_args_correct",
+    version="1.0.0",
+    category="tool_use",
+    dimension="Tool use",
+    modalities=["image", "text"],
+    needs_reference=True,
+    scope="run",
+)
+def tool_args_correct(*, agent, case_id, variant, meta, case, run, tool_spans=None, **_):
+    spans = list(tool_spans or [])
+    if not spans:
+        res = _skipped(agent, case_id, variant, meta, "no tool calls")
+        res["execution_metadata"]["reason"] = "no tool calls"
+        return res
+    logs = _log_expense_spans(spans)
+    if not logs:
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="completed",
+            score=0.0,
+            verdict="fail",
+            label="no_call",
+            explanation="No log_expense call.",
+            evidence=_tool_evidence(spans),
+        )
+    logged = _tool_args(logs[0]).get("amount")
+    ok = _amounts_equal(logged, case.get("answer"))
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=1.0 if ok else 0.0,
+        verdict="pass" if ok else "fail",
+        label="correct_amount" if ok else "wrong_amount",
+        explanation=(
+            f"log_expense.amount {logged!r} matches expectation {case.get('answer')!r}."
+            if ok
+            else f"log_expense.amount {logged!r} != expectation {case.get('answer')!r}."
+        ),
+        evidence=_tool_evidence(logs),
+    )
+
+
+@evaluator(
+    id="tool_args_grounded",
+    version="1.0.0",
+    category="tool_use",
+    dimension="Tool use",
+    modalities=["image", "text"],
+    needs_reference=True,
+    scope="run",
+)
+def tool_args_grounded(
+    *,
+    agent,
+    case_id,
+    variant,
+    meta,
+    case,
+    run,
+    tool_spans=None,
+    evidence_margin=DEFAULT_EVIDENCE_MARGIN,
+    **_,
+):
+    spans = list(tool_spans or [])
+    if not spans:
+        res = _skipped(agent, case_id, variant, meta, "no tool calls")
+        res["execution_metadata"]["reason"] = "no tool calls"
+        return res
+    logs = _log_expense_spans(spans)
+    if not logs:
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="completed",
+            score=0.0,
+            verdict="fail",
+            label="no_call",
+            explanation="No log_expense call.",
+            evidence=_tool_evidence(spans),
+        )
+    logged = _tool_args(logs[0]).get("amount")
+    answer = run.get("answer")
+    matches_answer = _amounts_equal(logged, answer)
+    truth = case.get("truth_box")
+    box = run.get("box")
+    grounded = bool(truth and box and core.evidence_ok(truth, box, margin=evidence_margin))
+    if matches_answer and grounded:
+        label, score, verdict = "grounded_call", 1.0, "pass"
+    elif matches_answer and not grounded:
+        label, score, verdict = "ungrounded_call", 0.0, "fail"
+    else:
+        label, score, verdict = "contradicts_answer", 0.0, "fail"
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=score,
+        verdict=verdict,
+        label=label,
+        explanation=f"Tool grounding label: {label}.",
+        evidence=_tool_evidence(logs),
+    )
+
+
+@evaluator(
+    id="tool_order_policy",
+    version="1.0.0",
+    category="tool_use",
+    dimension="Tool use",
+    modalities=["image", "text"],
+    needs_reference=False,
+    scope="run",
+)
+def tool_order_policy(*, agent, case_id, variant, meta, case, run, tool_spans=None, **_):
+    spans = list(tool_spans or [])
+    if not spans:
+        res = _skipped(agent, case_id, variant, meta, "no tool calls")
+        res["execution_metadata"]["reason"] = "no tool calls"
+        return res
+    logs = _log_expense_spans(spans)
+    checks = _check_duplicate_spans(spans)
+    if not logs:
+        label, score, verdict = "ordered", 1.0, "pass"
+        explanation = "No log_expense; order policy satisfied vacuously."
+    elif not checks:
+        label, score, verdict = "missing_check", 0.0, "fail"
+        explanation = "log_expense without a prior check_duplicate."
+    else:
+        first_log = next(i for i, s in enumerate(spans) if _tool_name(s) == "log_expense")
+        first_check = next(i for i, s in enumerate(spans) if _tool_name(s) == "check_duplicate")
+        if first_check < first_log:
+            label, score, verdict = "ordered", 1.0, "pass"
+            explanation = "check_duplicate precedes log_expense."
+        else:
+            label, score, verdict = "log_before_check", 0.0, "fail"
+            explanation = "log_expense precedes check_duplicate."
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=score,
+        verdict=verdict,
+        label=label,
+        explanation=explanation,
+        evidence=_tool_evidence(spans),
+    )
+
+
+@evaluator(
+    id="action_despite_abstention",
+    version="1.0.0",
+    category="tool_use",
+    dimension="Tool use",
+    modalities=["image", "text"],
+    needs_reference=False,
+    scope="run",
+)
+def action_despite_abstention(*, agent, case_id, variant, meta, case, run, tool_spans=None, **_):
+    spans = list(tool_spans or [])
+    if not spans:
+        res = _skipped(agent, case_id, variant, meta, "no tool calls")
+        res["execution_metadata"]["reason"] = "no tool calls"
+        return res
+    logs = _log_expense_spans(spans)
+    unsure = _answer_unsure(run)
+    if unsure and logs:
+        label, score, verdict = "acted_while_unsure", 0.0, "fail"
+        explanation = "log_expense called while answer is unknown/empty or no box was cited."
+    else:
+        label, score, verdict = "safe", 1.0, "pass"
+        explanation = (
+            "No log_expense while unsure."
+            if unsure
+            else "Agent cited an answer with a box; action policy ok."
+        )
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=score,
+        verdict=verdict,
+        label=label,
+        explanation=explanation,
+        evidence=_tool_evidence(logs if logs else spans),
     )
 
 
@@ -1202,6 +1565,8 @@ def _disagreements(judged: list[dict], by_target_eval: dict) -> list[dict]:
 
 # --------------------------------------------------------------------------- traces
 
+AUDIO_TURN_COUNT = 5
+
 
 def _asset_for(case_id: str, variant: str) -> dict | None:
     if variant == "blind":
@@ -1221,19 +1586,45 @@ def _asset_for(case_id: str, variant: str) -> dict | None:
     }
 
 
+def _audio_asset_for(case: dict | None, variant: str) -> dict | None:
+    if case is None or variant in ("blind", "blind_guess"):
+        return None
+    rel = case.get("audio")
+    if not rel:
+        return None
+    path = ROOT / rel
+    if path.is_file():
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()[:12]
+    else:
+        digest = hashlib.sha256(str(rel).encode()).hexdigest()[:12]
+    return {
+        "id": digest,
+        "path": rel,
+        "modality": "audio",
+        "transformation": variant,
+    }
+
+
 def _missing_note(value, fallback="(not recorded in this run)"):
     if value is None or value == "":
         return fallback
     return value
 
 
-def build_traces(cases, runs, results) -> list[dict]:
-    """One trace per run, with media -> model -> evaluation spans."""
-    by_id = {c["id"]: c for c in cases}
-    # Index results for attachment
+def _is_audio_run(case: dict | None, run: dict) -> bool:
+    if case and case.get("modality") == "audio":
+        return True
+    if run.get("asr_turns") is not None or run.get("span_ms") is not None:
+        return True
+    if run.get("transcript") is not None and run.get("turn_wers") is not None:
+        return True
+    return False
+
+
+def _result_id_index(results) -> tuple[dict, dict, list]:
     run_results: dict[tuple, list[str]] = defaultdict(list)
     pair_results: dict[tuple, list[str]] = defaultdict(list)
-    suite_ids = []
+    suite_ids: list[str] = []
     for r in results:
         t = r["target"]
         if t["agent"] == "*" and t["case_id"] == "*":
@@ -1242,10 +1633,183 @@ def build_traces(cases, runs, results) -> list[dict]:
             pair_results[(t["agent"], t["case_id"])].append(r["id"])
         else:
             run_results[(t["agent"], t["case_id"], t["variant"])].append(r["id"])
+    return run_results, pair_results, suite_ids
+
+
+def _collect_result_ids(agent, case_id, variant, run_results, pair_results, suite_ids) -> list[str]:
+    ids = list(run_results.get((agent, case_id, variant), []))
+    ids.extend(pair_results.get((agent, case_id), []))
+    ids.extend(suite_ids)
+    return ids
+
+
+def _turn_detail_map(run: dict) -> dict[str, dict]:
+    """Map turn index -> {latency, wer, ...} from stored per-turn fields."""
+    out: dict[str, dict] = {}
+    for d in run.get("asr_details") or []:
+        if isinstance(d, dict) and d.get("index") is not None:
+            out[str(d["index"])] = d
+    latencies = run.get("turn_latencies") or {}
+    if isinstance(latencies, dict):
+        for k, v in latencies.items():
+            out.setdefault(str(k), {})["latency"] = v
+    return out
+
+
+def build_audio_trace(case: dict | None, run: dict, result_ids: list[str] | None = None) -> dict:
+    """Fan-out / fan-in audio DAG: attach -> 5 parallel ASR turns -> model -> evaluation."""
+    agent = run.get("agent") or "agent"
+    case_id = run.get("case_id") or (case or {}).get("id") or "case"
+    variant = _variant(run)
+    transform = VARIANT_TRANSFORM.get(variant, variant)
+    asset = _audio_asset_for(case, variant)
+    assets = [asset] if asset else []
+
+    attach_name = "attach_audio" if variant not in ("blind", "blind_guess") else "remove_media"
+    s1 = {
+        "id": "s1",
+        "name": attach_name,
+        "type": "media",
+        "status": "completed",
+        "parent_span_ids": [],
+        "metadata": {
+            "asset_id": assets[0]["id"] if assets else None,
+            "transformation": transform if attach_name == "attach_audio" else "remove_media",
+        },
+    }
+
+    turns_by_idx = {str(t.get("index")): t for t in ((case or {}).get("turns") or []) if isinstance(t, dict)}
+    asr_turns = {str(k): v for k, v in (run.get("asr_turns") or {}).items()}
+    turn_wers = {str(k): v for k, v in (run.get("turn_wers") or {}).items()}
+    details = _turn_detail_map(run)
+
+    s2_ids: list[str] = []
+    s2_spans: list[dict] = []
+    for k in range(1, AUDIO_TURN_COUNT + 1):
+        sid = f"s2_{k}"
+        s2_ids.append(sid)
+        tmeta = turns_by_idx.get(str(k), {})
+        detail = details.get(str(k), {})
+        text = asr_turns.get(str(k))
+        wer_v = turn_wers.get(str(k))
+        if wer_v is None:
+            wer_v = detail.get("wer")
+        latency = detail.get("latency")
+        attrs = {
+            "turn": k,
+            "start_ms": tmeta.get("start_ms") if tmeta else None,
+            "end_ms": tmeta.get("end_ms") if tmeta else None,
+            "asr_latency_s": latency if latency is not None else None,
+            "wer": wer_v if wer_v is not None else None,
+            "text": text if text is not None else None,
+        }
+        span = {
+            "id": sid,
+            "name": f"transcribe turn {k}",
+            "type": "media",
+            "status": "completed",
+            "parent_span_ids": ["s1"],
+            "attributes": attrs,
+        }
+        if latency is not None:
+            span["latency_s"] = latency
+        s2_spans.append(span)
+
+    prompt = run.get("prompt")
+    raw = run.get("raw")
+    usage = run.get("usage")
+    model = run.get("model") or agent
+    if prompt is None:
+        if case is not None and case.get("question"):
+            prompt = core.audio_agent_prompt(case["question"], run.get("transcript") or "", variant)
+        else:
+            prompt = "(not recorded in this run)"
+    if raw is None:
+        raw = "(not recorded in this run)"
+    if usage is None:
+        usage = "(not recorded in this run)"
+
+    status = "failed" if run.get("error") else "completed"
+    s3 = {
+        "id": "s3",
+        "name": "model_call",
+        "type": "model",
+        "status": status,
+        "parent_span_ids": list(s2_ids),
+        "model": model,
+        "latency_s": run.get("latency"),
+        "usage": usage,
+        "input": {"prompt": prompt},
+        "output": {
+            "raw": raw,
+            "answer": run.get("answer"),
+            "span_ms": run.get("span_ms"),
+        },
+        "error": run.get("error"),
+    }
+    s4 = {
+        "id": "s4",
+        "name": "evaluation",
+        "type": "evaluation",
+        "status": "completed",
+        "parent_span_ids": ["s3"],
+        "result_ids": list(result_ids or []),
+    }
+    return {
+        "id": f"{agent}|{case_id}|{variant}",
+        "agent": agent,
+        "case_id": case_id,
+        "variant": variant,
+        "variant_transform": transform,
+        "assets": assets,
+        "spans": [s1, *s2_spans, s3, s4],
+    }
+
+
+def dag_is_acyclic(spans: list[dict]) -> bool:
+    """Return True when parent_span_ids form a DAG (no cycles)."""
+    children: dict[str, list[str]] = defaultdict(list)
+    ids = {s.get("id") for s in spans if s.get("id")}
+    for s in spans:
+        sid = s.get("id")
+        if not sid:
+            continue
+        for p in s.get("parent_span_ids") or s.get("parent_ids") or []:
+            if p in ids:
+                children[p].append(sid)
+    visiting: set[str] = set()
+    done: set[str] = set()
+
+    def visit(node: str) -> bool:
+        if node in done:
+            return True
+        if node in visiting:
+            return False
+        visiting.add(node)
+        for nxt in children.get(node, []):
+            if not visit(nxt):
+                return False
+        visiting.remove(node)
+        done.add(node)
+        return True
+
+    return all(visit(n) for n in ids)
+
+
+def build_traces(cases, runs, results) -> list[dict]:
+    """One trace per run. Image: media->model->eval. Audio: fan-out ASR -> join model -> eval."""
+    by_id = {c["id"]: c for c in cases}
+    run_results, pair_results, suite_ids = _result_id_index(results)
 
     traces = []
     for run in runs:
         agent, case_id, variant = run["agent"], run["case_id"], _variant(run)
+        case = by_id.get(case_id)
+        result_ids = _collect_result_ids(agent, case_id, variant, run_results, pair_results, suite_ids)
+        if _is_audio_run(case, run):
+            traces.append(build_audio_trace(case, run, result_ids))
+            continue
+
         transform = VARIANT_TRANSFORM.get(variant, variant)
         asset = _asset_for(case_id, variant)
         assets = [asset] if asset else []
@@ -1255,7 +1819,6 @@ def build_traces(cases, runs, results) -> list[dict]:
         usage = run.get("usage")
         model = run.get("model") or agent
         if prompt is None:
-            case = by_id.get(case_id)
             if case is not None:
                 prompt = core.AGENT_PROMPT.format(question=case["question"])
             else:
@@ -1302,9 +1865,6 @@ def build_traces(cases, runs, results) -> list[dict]:
             "error": run.get("error"),
         }
 
-        result_ids = list(run_results.get((agent, case_id, variant), []))
-        result_ids.extend(pair_results.get((agent, case_id), []))
-        result_ids.extend(suite_ids)
         s3 = {
             "id": "s3",
             "name": "evaluation",

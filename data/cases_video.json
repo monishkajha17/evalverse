@@ -1,0 +1,3626 @@
+[
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_01.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "RICE 1kg       2.30",
+        "t_ms": 1935,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CHEESE         4.50",
+        "t_ms": 2043,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 4243,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5306,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "MILK 1L        2.49",
+        "t_ms": 5519,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.02",
+        "t_ms": 12320,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         13.76",
+        "t_ms": 6393,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_01_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "6.4",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      6393,
+      7893
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "3.4"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_01.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "RICE 1kg       2.30",
+        "t_ms": 1935,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CHEESE         4.50",
+        "t_ms": 2043,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 4243,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5306,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "MILK 1L        2.49",
+        "t_ms": 5519,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.02",
+        "t_ms": 12320,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         13.76",
+        "t_ms": 6393,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_01_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TOTAL",
+    "answer_type": "text",
+    "truth_span_ms": [
+      6393,
+      13820
+    ],
+    "truth_box": null,
+    "distractor": "TAX"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_01.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "RICE 1kg       2.30",
+        "t_ms": 1935,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CHEESE         4.50",
+        "t_ms": 2043,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 4243,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5306,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "MILK 1L        2.49",
+        "t_ms": 5519,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.02",
+        "t_ms": 12320,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         13.76",
+        "t_ms": 6393,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_01_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "TOMATOES",
+    "answer_type": "text",
+    "truth_span_ms": [
+      4243,
+      5743
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "RICE 1kg"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_02.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "EGGS 12pk      3.25",
+        "t_ms": 1943,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 5741,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5872,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 6230,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 8606,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.30",
+        "t_ms": 9093,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         17.54",
+        "t_ms": 9532,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_02_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "9.5",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      9532,
+      11032
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "6.5"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_02.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "EGGS 12pk      3.25",
+        "t_ms": 1943,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 5741,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5872,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 6230,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 8606,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.30",
+        "t_ms": 9093,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         17.54",
+        "t_ms": 9532,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_02_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TAX",
+    "answer_type": "text",
+    "truth_span_ms": [
+      9093,
+      11032
+    ],
+    "truth_box": null,
+    "distractor": "TOTAL"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_02.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "EGGS 12pk      3.25",
+        "t_ms": 1943,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 5741,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5872,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 6230,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 8606,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.30",
+        "t_ms": 9093,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         17.54",
+        "t_ms": 9532,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_02_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "SOAP",
+    "answer_type": "text",
+    "truth_span_ms": [
+      5872,
+      7372
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "EGGS 12pk"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_03.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "BREAD          1.80",
+        "t_ms": 2499,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 4644,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5555,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 5702,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "ONIONS         1.15",
+        "t_ms": 5782,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.18",
+        "t_ms": 13799,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         15.92",
+        "t_ms": 12910,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_03_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "12.9",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      12910,
+      14410
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "9.9"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_03.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "BREAD          1.80",
+        "t_ms": 2499,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 4644,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5555,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 5702,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "ONIONS         1.15",
+        "t_ms": 5782,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.18",
+        "t_ms": 13799,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         15.92",
+        "t_ms": 12910,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_03_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TOTAL",
+    "answer_type": "text",
+    "truth_span_ms": [
+      12910,
+      15299
+    ],
+    "truth_box": null,
+    "distractor": "TAX"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_03.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "BREAD          1.80",
+        "t_ms": 2499,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 4644,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5555,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 5702,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "ONIONS         1.15",
+        "t_ms": 5782,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.18",
+        "t_ms": 13799,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         15.92",
+        "t_ms": 12910,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_03_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "SOAP",
+    "answer_type": "text",
+    "truth_span_ms": [
+      5555,
+      7055
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "BREAD"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_04.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 1947,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 1971,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BUTTER         2.10",
+        "t_ms": 3045,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 4707,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CEREAL         3.80",
+        "t_ms": 6603,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.99",
+        "t_ms": 8477,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         13.39",
+        "t_ms": 9898,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_04_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "9.9",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      9898,
+      11398
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "6.9"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_04.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 1947,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 1971,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BUTTER         2.10",
+        "t_ms": 3045,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 4707,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CEREAL         3.80",
+        "t_ms": 6603,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.99",
+        "t_ms": 8477,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         13.39",
+        "t_ms": 9898,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_04_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TAX",
+    "answer_type": "text",
+    "truth_span_ms": [
+      8477,
+      11398
+    ],
+    "truth_box": null,
+    "distractor": "TOTAL"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_04.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 1947,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 1971,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BUTTER         2.10",
+        "t_ms": 3045,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 4707,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CEREAL         3.80",
+        "t_ms": 6603,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.99",
+        "t_ms": 8477,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         13.39",
+        "t_ms": 9898,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_04_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "BUTTER",
+    "answer_type": "text",
+    "truth_span_ms": [
+      3045,
+      4545
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "BANANAS"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_05.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 2114,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 2848,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 3752,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BUTTER         2.10",
+        "t_ms": 5213,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 7349,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.75",
+        "t_ms": 14866,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         10.10",
+        "t_ms": 10648,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_05_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "10.6",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      10648,
+      12148
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "7.6"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_05.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 2114,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 2848,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 3752,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BUTTER         2.10",
+        "t_ms": 5213,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 7349,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.75",
+        "t_ms": 14866,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         10.10",
+        "t_ms": 10648,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_05_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TOTAL",
+    "answer_type": "text",
+    "truth_span_ms": [
+      10648,
+      16366
+    ],
+    "truth_box": null,
+    "distractor": "TAX"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_05.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 2114,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 2848,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 3752,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BUTTER         2.10",
+        "t_ms": 5213,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 7349,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.75",
+        "t_ms": 14866,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         10.10",
+        "t_ms": 10648,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_05_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "SUGAR",
+    "answer_type": "text",
+    "truth_span_ms": [
+      3752,
+      5252
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "YOGURT"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_06.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "EGGS 12pk      3.25",
+        "t_ms": 2082,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BUTTER         2.10",
+        "t_ms": 4065,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "ONIONS         1.15",
+        "t_ms": 4663,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 8500,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 8715,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.80",
+        "t_ms": 11971,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         10.75",
+        "t_ms": 13002,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_06_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "13.0",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      13002,
+      14502
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "10.0"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_06.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "EGGS 12pk      3.25",
+        "t_ms": 2082,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BUTTER         2.10",
+        "t_ms": 4065,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "ONIONS         1.15",
+        "t_ms": 4663,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 8500,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 8715,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.80",
+        "t_ms": 11971,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         10.75",
+        "t_ms": 13002,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_06_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TAX",
+    "answer_type": "text",
+    "truth_span_ms": [
+      11971,
+      14502
+    ],
+    "truth_box": null,
+    "distractor": "TOTAL"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_06.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "EGGS 12pk      3.25",
+        "t_ms": 2082,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BUTTER         2.10",
+        "t_ms": 4065,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "ONIONS         1.15",
+        "t_ms": 4663,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 8500,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 8715,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.80",
+        "t_ms": 11971,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         10.75",
+        "t_ms": 13002,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_06_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "ONIONS",
+    "answer_type": "text",
+    "truth_span_ms": [
+      4663,
+      6163
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "EGGS 12pk"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_07.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "RICE 1kg       2.30",
+        "t_ms": 4922,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5056,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 5849,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 7800,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 8585,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.13",
+        "t_ms": 14237,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         15.27",
+        "t_ms": 13678,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_07_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "13.7",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      13678,
+      15178
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "10.7"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_07.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "RICE 1kg       2.30",
+        "t_ms": 4922,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5056,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 5849,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 7800,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 8585,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.13",
+        "t_ms": 14237,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         15.27",
+        "t_ms": 13678,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_07_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TOTAL",
+    "answer_type": "text",
+    "truth_span_ms": [
+      13678,
+      15737
+    ],
+    "truth_box": null,
+    "distractor": "TAX"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_07.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "RICE 1kg       2.30",
+        "t_ms": 4922,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 5056,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 5849,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 7800,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 8585,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.13",
+        "t_ms": 14237,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         15.27",
+        "t_ms": 13678,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_07_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "PASTA",
+    "answer_type": "text",
+    "truth_span_ms": [
+      5849,
+      7349
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "RICE 1kg"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_08.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 4103,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 4166,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 6082,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 8153,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 8555,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.62",
+        "t_ms": 9486,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL          8.42",
+        "t_ms": 12484,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_08_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "12.5",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      12484,
+      13984
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "9.5"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_08.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 4103,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 4166,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 6082,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 8153,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 8555,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.62",
+        "t_ms": 9486,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL          8.42",
+        "t_ms": 12484,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_08_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TAX",
+    "answer_type": "text",
+    "truth_span_ms": [
+      9486,
+      13984
+    ],
+    "truth_box": null,
+    "distractor": "TOTAL"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_08.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 4103,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 4166,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 6082,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "PASTA          1.90",
+        "t_ms": 8153,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 8555,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.62",
+        "t_ms": 9486,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL          8.42",
+        "t_ms": 12484,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_08_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "SOAP",
+    "answer_type": "text",
+    "truth_span_ms": [
+      6082,
+      7582
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "SUGAR"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_09.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 2748,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CHEESE         4.50",
+        "t_ms": 3584,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 4512,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 5224,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 8376,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.28",
+        "t_ms": 14248,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         17.27",
+        "t_ms": 9852,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_09_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "9.9",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      9852,
+      11352
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "6.9"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_09.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 2748,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CHEESE         4.50",
+        "t_ms": 3584,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 4512,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 5224,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 8376,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.28",
+        "t_ms": 14248,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         17.27",
+        "t_ms": 9852,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_09_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TOTAL",
+    "answer_type": "text",
+    "truth_span_ms": [
+      9852,
+      15748
+    ],
+    "truth_box": null,
+    "distractor": "TAX"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_09.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 2748,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CHEESE         4.50",
+        "t_ms": 3584,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "COFFEE         6.99",
+        "t_ms": 4512,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 5224,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 8376,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.28",
+        "t_ms": 14248,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         17.27",
+        "t_ms": 9852,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_09_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "COFFEE",
+    "answer_type": "text",
+    "truth_span_ms": [
+      4512,
+      6012
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "SUGAR"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_10.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 2632,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 2822,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "ONIONS         1.15",
+        "t_ms": 3240,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "APPLES         2.75",
+        "t_ms": 8131,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "RICE 1kg       2.30",
+        "t_ms": 8683,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.88",
+        "t_ms": 9677,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         11.88",
+        "t_ms": 10774,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_10_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "10.8",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      10774,
+      12274
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "7.8"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_10.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 2632,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 2822,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "ONIONS         1.15",
+        "t_ms": 3240,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "APPLES         2.75",
+        "t_ms": 8131,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "RICE 1kg       2.30",
+        "t_ms": 8683,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.88",
+        "t_ms": 9677,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         11.88",
+        "t_ms": 10774,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_10_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TAX",
+    "answer_type": "text",
+    "truth_span_ms": [
+      9677,
+      12274
+    ],
+    "truth_box": null,
+    "distractor": "TOTAL"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_10.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "SOAP           1.40",
+        "t_ms": 2632,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 2822,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "ONIONS         1.15",
+        "t_ms": 3240,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "APPLES         2.75",
+        "t_ms": 8131,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "RICE 1kg       2.30",
+        "t_ms": 8683,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.88",
+        "t_ms": 9677,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         11.88",
+        "t_ms": 10774,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_10_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "ONIONS",
+    "answer_type": "text",
+    "truth_span_ms": [
+      3240,
+      4740
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "SOAP"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_11.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "APPLES         2.75",
+        "t_ms": 4269,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 4642,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 5748,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "MILK 1L        2.49",
+        "t_ms": 6679,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "EGGS 12pk      3.25",
+        "t_ms": 8648,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.08",
+        "t_ms": 17154,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         14.52",
+        "t_ms": 12680,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_11_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "12.7",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      12680,
+      14180
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "9.7"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_11.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "APPLES         2.75",
+        "t_ms": 4269,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 4642,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 5748,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "MILK 1L        2.49",
+        "t_ms": 6679,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "EGGS 12pk      3.25",
+        "t_ms": 8648,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.08",
+        "t_ms": 17154,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         14.52",
+        "t_ms": 12680,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_11_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TOTAL",
+    "answer_type": "text",
+    "truth_span_ms": [
+      12680,
+      18654
+    ],
+    "truth_box": null,
+    "distractor": "TAX"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_11.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "APPLES         2.75",
+        "t_ms": 4269,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TEA BOX        3.40",
+        "t_ms": 4642,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "SUGAR          1.55",
+        "t_ms": 5748,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "MILK 1L        2.49",
+        "t_ms": 6679,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "EGGS 12pk      3.25",
+        "t_ms": 8648,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            1.08",
+        "t_ms": 17154,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         14.52",
+        "t_ms": 12680,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_11_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "SUGAR",
+    "answer_type": "text",
+    "truth_span_ms": [
+      5748,
+      7248
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "APPLES"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_12.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "BREAD          1.80",
+        "t_ms": 2930,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 4456,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 4503,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 5111,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CEREAL         3.80",
+        "t_ms": 8885,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.85",
+        "t_ms": 9372,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         11.45",
+        "t_ms": 12300,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_12_time",
+    "question": "At what time in seconds does the TOTAL line appear on screen? Answer with the number only.",
+    "answer": "12.3",
+    "answer_type": "seconds",
+    "tolerance_s": 1.0,
+    "truth_span_ms": [
+      12300,
+      13800
+    ],
+    "truth_box": [
+      62,
+      750,
+      938,
+      825
+    ],
+    "distractor": "9.3"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_12.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "BREAD          1.80",
+        "t_ms": 2930,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 4456,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 4503,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 5111,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CEREAL         3.80",
+        "t_ms": 8885,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.85",
+        "t_ms": 9372,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         11.45",
+        "t_ms": 12300,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_12_order",
+    "question": "Which appears first on screen, the TAX line or the TOTAL line? Answer TAX or TOTAL.",
+    "answer": "TAX",
+    "answer_type": "text",
+    "truth_span_ms": [
+      9372,
+      13800
+    ],
+    "truth_box": null,
+    "distractor": "TOTAL"
+  },
+  {
+    "modality": "video",
+    "family": "register_video",
+    "video": "data/video/vid_12.mp4",
+    "duration_ms": 20000,
+    "fps": 10,
+    "events": [
+      {
+        "type": "item",
+        "text": "BREAD          1.80",
+        "t_ms": 2930,
+        "box": [
+          62,
+          210,
+          938,
+          285
+        ]
+      },
+      {
+        "type": "item",
+        "text": "YOGURT         1.75",
+        "t_ms": 4456,
+        "box": [
+          62,
+          300,
+          938,
+          375
+        ]
+      },
+      {
+        "type": "item",
+        "text": "TOMATOES       2.05",
+        "t_ms": 4503,
+        "box": [
+          62,
+          390,
+          938,
+          465
+        ]
+      },
+      {
+        "type": "item",
+        "text": "BANANAS        1.20",
+        "t_ms": 5111,
+        "box": [
+          62,
+          480,
+          938,
+          555
+        ]
+      },
+      {
+        "type": "item",
+        "text": "CEREAL         3.80",
+        "t_ms": 8885,
+        "box": [
+          62,
+          570,
+          938,
+          645
+        ]
+      },
+      {
+        "type": "tax",
+        "text": "TAX            0.85",
+        "t_ms": 9372,
+        "box": [
+          62,
+          660,
+          938,
+          735
+        ]
+      },
+      {
+        "type": "total",
+        "text": "TOTAL         11.45",
+        "t_ms": 12300,
+        "box": [
+          62,
+          750,
+          938,
+          825
+        ]
+      }
+    ],
+    "source": "synthetic",
+    "id": "vid_12_third",
+    "question": "What is the name of the third item that appears on screen? Answer with the item name only.",
+    "answer": "TOMATOES",
+    "answer_type": "text",
+    "truth_span_ms": [
+      4503,
+      6003
+    ],
+    "truth_box": [
+      62,
+      390,
+      938,
+      465
+    ],
+    "distractor": "BREAD"
+  }
+]

@@ -174,12 +174,22 @@ def import_results(
                     usage = sp.get("usage")
                     if isinstance(usage, str):
                         usage = None
-                    attrs = dict(sp.get("metadata") or {})
+                    attrs: dict[str, Any] = {}
+                    if isinstance(sp.get("attributes"), dict):
+                        attrs.update(sp["attributes"])
+                    if isinstance(sp.get("metadata"), dict):
+                        attrs.update(sp["metadata"])
                     if sp.get("result_ids"):
                         attrs["result_ids"] = sp["result_ids"]
                     # Remap asset_id in metadata to platform media id when known.
                     if "asset_id" in attrs and attrs["asset_id"] in asset_id_map:
                         attrs["media_id"] = asset_id_map[attrs["asset_id"]]
+                    # Prefer explicit span latency; else ASR turn latency from attributes.
+                    if latency_ms is None and attrs.get("asr_latency_s") is not None:
+                        try:
+                            latency_ms = float(attrs["asr_latency_s"]) * 1000.0
+                        except (TypeError, ValueError):
+                            pass
                     spans_payload.append(
                         {
                             "id": sp.get("id"),
@@ -372,6 +382,18 @@ def import_results_local(
                 usage = sp.get("usage")
                 if isinstance(usage, str):
                     usage = None
+                attrs: dict[str, Any] = {}
+                if isinstance(sp.get("attributes"), dict):
+                    attrs.update(sp["attributes"])
+                if isinstance(sp.get("metadata"), dict):
+                    attrs.update(sp["metadata"])
+                if sp.get("result_ids"):
+                    attrs["result_ids"] = sp["result_ids"]
+                if latency_ms is None and attrs.get("asr_latency_s") is not None:
+                    try:
+                        latency_ms = float(attrs["asr_latency_s"]) * 1000.0
+                    except (TypeError, ValueError):
+                        pass
                 spans.append(
                     SpanIn(
                         id=sp.get("id"),
@@ -384,7 +406,7 @@ def import_results_local(
                         usage=usage if isinstance(usage, dict) else None,
                         input=sp.get("input"),
                         output=sp.get("output"),
-                        attributes=sp.get("metadata"),
+                        attributes=attrs or None,
                         error=sp.get("error"),
                     )
                 )

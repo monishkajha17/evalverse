@@ -1,0 +1,2837 @@
+{
+ "meta": {
+  "agents": [
+   "muse-spark-1.3"
+  ],
+  "judge": "muse-wonder-1.0",
+  "conditions": [
+   "clean"
+  ],
+  "mock": false,
+  "evidence_margin": 25.0,
+  "created": "2026-11-04T14:41:53+00:00",
+  "seconds": 30.2,
+  "manifest": {
+   "dataset": {
+    "path": "data/cases_cord.json",
+    "sha256": "0c7807be29072aacb23154fb4734947979844c06f07f1767bae5a1b195183e04"
+   },
+   "evaluator_versions": {
+    "answer_correctness": "1.0.0",
+    "evidence_grounding": "1.0.0",
+    "stage_attribution": "1.0.0",
+    "tool_schema_valid": "1.0.0",
+    "tool_args_correct": "1.0.0",
+    "tool_args_grounded": "1.0.0",
+    "tool_order_policy": "1.0.0",
+    "action_despite_abstention": "1.0.0",
+    "item_recall": "1.0.0",
+    "fabrication_check": "1.0.0",
+    "transcript_fidelity": "1.0.0",
+    "temporal_alignment": "1.0.0",
+    "audio_stage_attribution": "1.0.0",
+    "media_dependence": "1.0.0",
+    "media_dependence_guess": "1.0.0",
+    "robustness_sweep": "1.0.0",
+    "perception_judge": "1.0.0",
+    "judge_audit": "1.0.0",
+    "judge_media_dependence": "1.0.0"
+   },
+   "agents": [
+    "muse-spark-1.3"
+   ],
+   "judge": "muse-wonder-1.0",
+   "variants": [
+    {
+     "name": "clean",
+     "transform": "identity",
+     "params": {},
+     "seed": 0
+    },
+    {
+     "name": "blind",
+     "transform": "remove_media",
+     "params": {},
+     "seed": 0
+    }
+   ],
+   "python_version": "3.14.4",
+   "git_commit": "4becbad3d8b7ce33da0f2ba0a2f631774a7bbc0f",
+   "agent_prompt_sha256": "22dba637ca741dbbbffc959e4d16b632395a1f4dd6e8f9bd5f93b9a1ce2b3c99",
+   "judge_prompt_sha256": "150cc335805965e33093b5585860ea96fca6ad38ed4f89fb9e8b486ad49f2c07",
+   "judge_prompt_no_media_sha256": "e4aa4c1fff8a65e963b2396f26ff467c11465df7e573fdb7db071fc0632b0b7d",
+   "utc_time": "2026-11-04T14:41:53+00:00",
+   "mock": false,
+   "judge_controls": true,
+   "total_calls": 21,
+   "token_totals": {
+    "input_tokens": 4148,
+    "output_tokens": 3993,
+    "reasoning_tokens": 3764
+   }
+  }
+ },
+ "cases": [
+  {
+   "id": "cord_total_01",
+   "family": "cord_receipt",
+   "question": "What is the total amount due on this receipt? Answer with the number only.",
+   "answer": "148,127",
+   "answer_type": "number",
+   "distractor": "117,500",
+   "truth_box": [
+    170,
+    965,
+    819,
+    995
+   ],
+   "size": [
+    576,
+    864
+   ],
+   "image": "data/images_cord/cord_total_01.jpg",
+   "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+   "id": "cord_total_02",
+   "family": "cord_receipt",
+   "question": "What is the total amount due on this receipt? Answer with the number only.",
+   "answer": "43,000",
+   "answer_type": "number",
+   "distractor": "50,000",
+   "truth_box": [
+    141,
+    521,
+    913,
+    587
+   ],
+   "size": [
+    853,
+    1280
+   ],
+   "image": "data/images_cord/cord_total_02.jpg",
+   "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+   "id": "cord_subtotal_03",
+   "family": "cord_receipt",
+   "question": "What is the subtotal on this receipt, before tax and service? Answer with the number only.",
+   "answer": "68,180",
+   "answer_type": "number",
+   "distractor": "0",
+   "truth_box": [
+    269,
+    608,
+    593,
+    627
+   ],
+   "size": [
+    853,
+    1280
+   ],
+   "image": "data/images_cord/cord_subtotal_03.jpg",
+   "source": "CORD v2 (CC BY 4.0)"
+  }
+ ],
+ "runs": [
+  {
+   "answer": "unknown",
+   "box": null,
+   "evidence": "no image visible",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "abstained",
+   "latency": 5.7,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\":\"unknown\",\"box\":null,\"evidence\":\"no image visible\"}",
+   "usage": {
+    "input_tokens": 139,
+    "output_tokens": 430,
+    "reasoning_tokens": 406
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_02",
+   "condition": "blind"
+  },
+  {
+   "answer": "unknown",
+   "box": null,
+   "evidence": "no visible image to read total amount due",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "abstained",
+   "latency": 6.99,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no visible image to read total amount due\"}",
+   "usage": {
+    "input_tokens": 139,
+    "output_tokens": 563,
+    "reasoning_tokens": 530
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_01",
+   "condition": "blind"
+  },
+  {
+   "answer": "43,000",
+   "box": [
+    605,
+    503,
+    877,
+    576
+   ],
+   "evidence": "TOTAL 43,000 in lower section next to TOTAL label",
+   "correct": true,
+   "evidence_ok": true,
+   "iou": 0.268,
+   "label": "grounded_correct",
+   "latency": 8.18,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"43,000\", \"box\": [605, 503, 877, 576], \"evidence\": \"TOTAL 43,000 in lower section next to TOTAL label\"}",
+   "usage": {
+    "input_tokens": 1491,
+    "output_tokens": 478,
+    "reasoning_tokens": 429
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_02",
+   "condition": "clean"
+  },
+  {
+   "answer": "68,180",
+   "box": [
+    518,
+    620,
+    600,
+    645
+   ],
+   "evidence": "SUBTOTAL 68,180 in lower-middle of receipt",
+   "correct": true,
+   "evidence_ok": true,
+   "iou": 0.068,
+   "label": "grounded_correct",
+   "latency": 10.1,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the subtotal on this receipt, before tax and service? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"68,180\", \"box\": [518, 620, 600, 645], \"evidence\": \"SUBTOTAL 68,180 in lower-middle of receipt\"}",
+   "usage": {
+    "input_tokens": 1495,
+    "output_tokens": 586,
+    "reasoning_tokens": 538
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_03",
+   "condition": "clean"
+  },
+  {
+   "answer": "148,127",
+   "box": [
+    550,
+    964,
+    815,
+    997
+   ],
+   "evidence": "TOTAL 148,127 at bottom of receipt",
+   "correct": true,
+   "evidence_ok": true,
+   "iou": 0.392,
+   "label": "grounded_correct",
+   "latency": 12.65,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"148,127\", \"box\": [550, 964, 815, 997], \"evidence\": \"TOTAL 148,127 at bottom of receipt\"}",
+   "usage": {
+    "input_tokens": 741,
+    "output_tokens": 941,
+    "reasoning_tokens": 895
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_01",
+   "condition": "clean"
+  },
+  {
+   "answer": "unknown",
+   "box": null,
+   "evidence": "no image content readable",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "abstained",
+   "latency": 14.39,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the subtotal on this receipt, before tax and service? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image content readable\"}",
+   "usage": {
+    "input_tokens": 143,
+    "output_tokens": 995,
+    "reasoning_tokens": 966
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_03",
+   "condition": "blind"
+  }
+ ],
+ "results": [
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.141
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.268, margin=25.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      141,
+      521,
+      913,
+      587
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      605,
+      503,
+      877,
+      576
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.019,
+    "evidence_margin": 25.0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|tool_schema_valid",
+   "evaluator_id": "tool_schema_valid",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.031,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|tool_args_correct",
+   "evaluator_id": "tool_args_correct",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.028,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|tool_args_grounded",
+   "evaluator_id": "tool_args_grounded",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.01,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|tool_order_policy",
+   "evaluator_id": "tool_order_policy",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.028,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|action_despite_abstention",
+   "evaluator_id": "action_despite_abstention",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.003,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|item_recall",
+   "evaluator_id": "item_recall",
+   "evaluator_version": "1.0.0",
+   "dimension": "Completeness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "item_recall only applies to menu_list",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|fabrication_check",
+   "evaluator_id": "fabrication_check",
+   "evaluator_version": "1.0.0",
+   "dimension": "Hallucination",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "fabrication_check only applies to menu_list/unanswerable",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.005
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|perception_judge",
+   "evaluator_id": "perception_judge",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "judge_accepts",
+   "explanation": "Judge model muse-wonder-1.0 accepted the answer.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      605,
+      503,
+      877,
+      576
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.007
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Stage label: grounded_correct.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      141,
+      521,
+      913,
+      587
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      605,
+      503,
+      877,
+      576
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.02
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.02
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.068, margin=25.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      269,
+      608,
+      593,
+      627
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      518,
+      620,
+      600,
+      645
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.011,
+    "evidence_margin": 25.0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|tool_schema_valid",
+   "evaluator_id": "tool_schema_valid",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.003,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|tool_args_correct",
+   "evaluator_id": "tool_args_correct",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|tool_args_grounded",
+   "evaluator_id": "tool_args_grounded",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|tool_order_policy",
+   "evaluator_id": "tool_order_policy",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|action_despite_abstention",
+   "evaluator_id": "action_despite_abstention",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|item_recall",
+   "evaluator_id": "item_recall",
+   "evaluator_version": "1.0.0",
+   "dimension": "Completeness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "item_recall only applies to menu_list",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|fabrication_check",
+   "evaluator_id": "fabrication_check",
+   "evaluator_version": "1.0.0",
+   "dimension": "Hallucination",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "fabrication_check only applies to menu_list/unanswerable",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.007
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|perception_judge",
+   "evaluator_id": "perception_judge",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "judge_accepts",
+   "explanation": "Judge model muse-wonder-1.0 accepted the answer.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      518,
+      620,
+      600,
+      645
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.007
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Stage label: grounded_correct.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      269,
+      608,
+      593,
+      627
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      518,
+      620,
+      600,
+      645
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.033
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.02
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.392, margin=25.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      170,
+      965,
+      819,
+      995
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      550,
+      964,
+      815,
+      997
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.01,
+    "evidence_margin": 25.0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|tool_schema_valid",
+   "evaluator_id": "tool_schema_valid",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.003,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|tool_args_correct",
+   "evaluator_id": "tool_args_correct",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|tool_args_grounded",
+   "evaluator_id": "tool_args_grounded",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|tool_order_policy",
+   "evaluator_id": "tool_order_policy",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|action_despite_abstention",
+   "evaluator_id": "action_despite_abstention",
+   "evaluator_version": "1.0.0",
+   "dimension": "Tool use",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no tool calls",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002,
+    "reason": "no tool calls"
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|item_recall",
+   "evaluator_id": "item_recall",
+   "evaluator_version": "1.0.0",
+   "dimension": "Completeness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "item_recall only applies to menu_list",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|fabrication_check",
+   "evaluator_id": "fabrication_check",
+   "evaluator_version": "1.0.0",
+   "dimension": "Hallucination",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "fabrication_check only applies to menu_list/unanswerable",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|perception_judge",
+   "evaluator_id": "perception_judge",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "judge_accepts",
+   "explanation": "Judge model muse-wonder-1.0 accepted the answer.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      550,
+      964,
+      815,
+      997
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.007
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Stage label: grounded_correct.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      170,
+      965,
+      819,
+      995
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      550,
+      964,
+      815,
+      997
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.013
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "clean"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.021
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|all|media_dependence_guess",
+   "evaluator_id": "media_dependence_guess",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "all"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_subtotal_03",
+    "variant": "all"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no robustness variants present",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.004
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.012
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|all|media_dependence_guess",
+   "evaluator_id": "media_dependence_guess",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "all"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_01",
+    "variant": "all"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no robustness variants present",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.003
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.011
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|all|media_dependence_guess",
+   "evaluator_id": "media_dependence_guess",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "all"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "modality 'image' not in ['audio']",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "cord_total_02",
+    "variant": "all"
+   },
+   "status": "skipped",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "skipped",
+   "explanation": "no robustness variants present",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "*|*|all|judge_audit",
+   "evaluator_id": "judge_audit",
+   "evaluator_version": "1.0.0",
+   "dimension": "Judge trust",
+   "target": {
+    "agent": "*",
+    "case_id": "*",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "judge_audit",
+   "explanation": "false-accept 0/3, false-reject 0/3",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.611
+   }
+  },
+  {
+   "id": "*|*|all|judge_media_dependence",
+   "evaluator_id": "judge_media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Judge trust",
+   "target": {
+    "agent": "*",
+    "case_id": "*",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 0.5,
+   "verdict": "pass",
+   "label": "judge_media_dependence",
+   "explanation": "accuracy_with_image=1.000 (n=6, false-accept=0), accuracy_without_image=0.500 (n=6, false-accept=0)",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.017
+   }
+  }
+ ],
+ "dimension_summary": [
+  {
+   "agent": "*",
+   "variant": "all",
+   "dimension": "Judge trust",
+   "evaluator_id": "judge_audit",
+   "n": 1,
+   "mean_score": 1.0,
+   "labels": {
+    "judge_audit": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "*",
+   "variant": "all",
+   "dimension": "Judge trust",
+   "evaluator_id": "judge_media_dependence",
+   "n": 1,
+   "mean_score": 0.5,
+   "labels": {
+    "judge_media_dependence": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "all",
+   "dimension": "Media dependence",
+   "evaluator_id": "media_dependence",
+   "n": 3,
+   "mean_score": 1.0,
+   "labels": {
+    "media_required": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "all",
+   "dimension": "Media dependence",
+   "evaluator_id": "media_dependence_guess",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "all",
+   "dimension": "Robustness",
+   "evaluator_id": "robustness_sweep",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Completeness",
+   "evaluator_id": "item_recall",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Failure analysis",
+   "evaluator_id": "audio_stage_attribution",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Failure analysis",
+   "evaluator_id": "stage_attribution",
+   "n": 3,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded_correct": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Groundedness",
+   "evaluator_id": "evidence_grounding",
+   "n": 3,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Groundedness",
+   "evaluator_id": "temporal_alignment",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Hallucination",
+   "evaluator_id": "fabrication_check",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Perception",
+   "evaluator_id": "answer_correctness",
+   "n": 3,
+   "mean_score": 1.0,
+   "labels": {
+    "correct": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Perception",
+   "evaluator_id": "perception_judge",
+   "n": 3,
+   "mean_score": 1.0,
+   "labels": {
+    "judge_accepts": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Perception",
+   "evaluator_id": "transcript_fidelity",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Tool use",
+   "evaluator_id": "action_despite_abstention",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Tool use",
+   "evaluator_id": "tool_args_correct",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Tool use",
+   "evaluator_id": "tool_args_grounded",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Tool use",
+   "evaluator_id": "tool_order_policy",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Tool use",
+   "evaluator_id": "tool_schema_valid",
+   "n": 0,
+   "mean_score": null,
+   "labels": {},
+   "skipped": 3,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "blind",
+   "dimension": "Confident errors",
+   "evaluator_id": "confident_errors",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "abstained": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Confident errors",
+   "evaluator_id": "confident_errors",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "grounded_correct": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  }
+ ],
+ "disagreements": [],
+ "registry": [
+  {
+   "id": "answer_correctness",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Perception",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "evidence_grounding",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Groundedness",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "stage_attribution",
+   "version": "1.0.0",
+   "category": "composite",
+   "dimension": "Failure analysis",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [
+    "answer_correctness"
+   ],
+   "scope": "run"
+  },
+  {
+   "id": "tool_schema_valid",
+   "version": "1.0.0",
+   "category": "tool_use",
+   "dimension": "Tool use",
+   "modalities": [
+    "image",
+    "text"
+   ],
+   "needs_reference": false,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "tool_args_correct",
+   "version": "1.0.0",
+   "category": "tool_use",
+   "dimension": "Tool use",
+   "modalities": [
+    "image",
+    "text"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "tool_args_grounded",
+   "version": "1.0.0",
+   "category": "tool_use",
+   "dimension": "Tool use",
+   "modalities": [
+    "image",
+    "text"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "tool_order_policy",
+   "version": "1.0.0",
+   "category": "tool_use",
+   "dimension": "Tool use",
+   "modalities": [
+    "image",
+    "text"
+   ],
+   "needs_reference": false,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "action_despite_abstention",
+   "version": "1.0.0",
+   "category": "tool_use",
+   "dimension": "Tool use",
+   "modalities": [
+    "image",
+    "text"
+   ],
+   "needs_reference": false,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "item_recall",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Completeness",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "fabrication_check",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Hallucination",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "transcript_fidelity",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Perception",
+   "modalities": [
+    "audio"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "temporal_alignment",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Groundedness",
+   "modalities": [
+    "audio"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "audio_stage_attribution",
+   "version": "1.0.0",
+   "category": "composite",
+   "dimension": "Failure analysis",
+   "modalities": [
+    "audio"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [
+    "transcript_fidelity",
+    "temporal_alignment"
+   ],
+   "scope": "run"
+  },
+  {
+   "id": "media_dependence",
+   "version": "1.0.0",
+   "category": "paired",
+   "dimension": "Media dependence",
+   "modalities": [
+    "image",
+    "audio"
+   ],
+   "needs_reference": false,
+   "needs_replay": true,
+   "depends_on": [],
+   "scope": "pair"
+  },
+  {
+   "id": "media_dependence_guess",
+   "version": "1.0.0",
+   "category": "paired",
+   "dimension": "Media dependence",
+   "modalities": [
+    "audio"
+   ],
+   "needs_reference": false,
+   "needs_replay": true,
+   "depends_on": [],
+   "scope": "pair"
+  },
+  {
+   "id": "robustness_sweep",
+   "version": "1.0.0",
+   "category": "paired",
+   "dimension": "Robustness",
+   "modalities": [
+    "image",
+    "audio"
+   ],
+   "needs_reference": true,
+   "needs_replay": true,
+   "depends_on": [],
+   "scope": "pair"
+  },
+  {
+   "id": "perception_judge",
+   "version": "1.0.0",
+   "category": "judge",
+   "dimension": "Perception",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": false,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "judge_audit",
+   "version": "1.0.0",
+   "category": "paired",
+   "dimension": "Judge trust",
+   "modalities": [
+    "image",
+    "audio"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "suite"
+  },
+  {
+   "id": "judge_media_dependence",
+   "version": "1.0.0",
+   "category": "paired",
+   "dimension": "Judge trust",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": true,
+   "depends_on": [],
+   "scope": "suite"
+  }
+ ],
+ "judged": [
+  {
+   "kind": "planted_wrong_noimg",
+   "agent": null,
+   "case_id": "cord_total_01",
+   "proposed": "117,500",
+   "judge_accepts": false,
+   "truth_correct": false,
+   "agrees": true
+  },
+  {
+   "kind": "planted_wrong",
+   "agent": null,
+   "case_id": "cord_total_02",
+   "proposed": "50,000",
+   "judge_accepts": false,
+   "truth_correct": false,
+   "agrees": true
+  },
+  {
+   "kind": "planted_right",
+   "agent": null,
+   "case_id": "cord_total_02",
+   "proposed": "43,000",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "planted_wrong",
+   "agent": null,
+   "case_id": "cord_total_01",
+   "proposed": "117,500",
+   "judge_accepts": false,
+   "truth_correct": false,
+   "agrees": true
+  },
+  {
+   "kind": "planted_right",
+   "agent": null,
+   "case_id": "cord_total_01",
+   "proposed": "148,127",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "planted_right_noimg",
+   "agent": null,
+   "case_id": "cord_total_01",
+   "proposed": "148,127",
+   "judge_accepts": false,
+   "truth_correct": true,
+   "agrees": false
+  },
+  {
+   "kind": "planted_wrong_noimg",
+   "agent": null,
+   "case_id": "cord_total_02",
+   "proposed": "50,000",
+   "judge_accepts": false,
+   "truth_correct": false,
+   "agrees": true
+  },
+  {
+   "kind": "planted_right",
+   "agent": null,
+   "case_id": "cord_subtotal_03",
+   "proposed": "68,180",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "planted_wrong",
+   "agent": null,
+   "case_id": "cord_subtotal_03",
+   "proposed": "0",
+   "judge_accepts": false,
+   "truth_correct": false,
+   "agrees": true
+  },
+  {
+   "kind": "agent_answer",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_02",
+   "proposed": "43,000",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "planted_right_noimg",
+   "agent": null,
+   "case_id": "cord_total_02",
+   "proposed": "43,000",
+   "judge_accepts": false,
+   "truth_correct": true,
+   "agrees": false
+  },
+  {
+   "kind": "agent_answer",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_03",
+   "proposed": "68,180",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "planted_wrong_noimg",
+   "agent": null,
+   "case_id": "cord_subtotal_03",
+   "proposed": "0",
+   "judge_accepts": false,
+   "truth_correct": false,
+   "agrees": true
+  },
+  {
+   "kind": "planted_right_noimg",
+   "agent": null,
+   "case_id": "cord_subtotal_03",
+   "proposed": "68,180",
+   "judge_accepts": false,
+   "truth_correct": true,
+   "agrees": false
+  },
+  {
+   "kind": "agent_answer",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_01",
+   "proposed": "148,127",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  }
+ ],
+ "traces": [
+  {
+   "id": "muse-spark-1.3|cord_total_02|blind",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_02",
+   "variant": "blind",
+   "variant_transform": "remove_media",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "transformation": "remove_media"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 5.7,
+     "usage": {
+      "input_tokens": 139,
+      "output_tokens": 430,
+      "reasoning_tokens": 406
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\":\"unknown\",\"box\":null,\"evidence\":\"no image visible\"}",
+      "answer": "unknown",
+      "box": null
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|cord_total_02|all|media_dependence",
+      "muse-spark-1.3|cord_total_02|all|media_dependence_guess",
+      "muse-spark-1.3|cord_total_02|all|robustness_sweep",
+      "*|*|all|judge_audit",
+      "*|*|all|judge_media_dependence"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|blind",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_01",
+   "variant": "blind",
+   "variant_transform": "remove_media",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "transformation": "remove_media"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 6.99,
+     "usage": {
+      "input_tokens": 139,
+      "output_tokens": 563,
+      "reasoning_tokens": 530
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no visible image to read total amount due\"}",
+      "answer": "unknown",
+      "box": null
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|cord_total_01|all|media_dependence",
+      "muse-spark-1.3|cord_total_01|all|media_dependence_guess",
+      "muse-spark-1.3|cord_total_01|all|robustness_sweep",
+      "*|*|all|judge_audit",
+      "*|*|all|judge_media_dependence"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_02|clean",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_02",
+   "variant": "clean",
+   "variant_transform": "identity",
+   "assets": [
+    {
+     "id": "ec6b6b96d2e7",
+     "path": "out/perturbed/cord_total_02_clean.png",
+     "modality": "image",
+     "transformation": "identity"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "ec6b6b96d2e7",
+      "transformation": "identity"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 8.18,
+     "usage": {
+      "input_tokens": 1491,
+      "output_tokens": 478,
+      "reasoning_tokens": 429
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"43,000\", \"box\": [605, 503, 877, 576], \"evidence\": \"TOTAL 43,000 in lower section next to TOTAL label\"}",
+      "answer": "43,000",
+      "box": [
+       605,
+       503,
+       877,
+       576
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|cord_total_02|clean|answer_correctness",
+      "muse-spark-1.3|cord_total_02|clean|evidence_grounding",
+      "muse-spark-1.3|cord_total_02|clean|tool_schema_valid",
+      "muse-spark-1.3|cord_total_02|clean|tool_args_correct",
+      "muse-spark-1.3|cord_total_02|clean|tool_args_grounded",
+      "muse-spark-1.3|cord_total_02|clean|tool_order_policy",
+      "muse-spark-1.3|cord_total_02|clean|action_despite_abstention",
+      "muse-spark-1.3|cord_total_02|clean|item_recall",
+      "muse-spark-1.3|cord_total_02|clean|fabrication_check",
+      "muse-spark-1.3|cord_total_02|clean|transcript_fidelity",
+      "muse-spark-1.3|cord_total_02|clean|temporal_alignment",
+      "muse-spark-1.3|cord_total_02|clean|perception_judge",
+      "muse-spark-1.3|cord_total_02|clean|stage_attribution",
+      "muse-spark-1.3|cord_total_02|clean|audio_stage_attribution",
+      "muse-spark-1.3|cord_total_02|all|media_dependence",
+      "muse-spark-1.3|cord_total_02|all|media_dependence_guess",
+      "muse-spark-1.3|cord_total_02|all|robustness_sweep",
+      "*|*|all|judge_audit",
+      "*|*|all|judge_media_dependence"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|clean",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_03",
+   "variant": "clean",
+   "variant_transform": "identity",
+   "assets": [
+    {
+     "id": "5abc035554ea",
+     "path": "out/perturbed/cord_subtotal_03_clean.png",
+     "modality": "image",
+     "transformation": "identity"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "5abc035554ea",
+      "transformation": "identity"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 10.1,
+     "usage": {
+      "input_tokens": 1495,
+      "output_tokens": 586,
+      "reasoning_tokens": 538
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the subtotal on this receipt, before tax and service? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"68,180\", \"box\": [518, 620, 600, 645], \"evidence\": \"SUBTOTAL 68,180 in lower-middle of receipt\"}",
+      "answer": "68,180",
+      "box": [
+       518,
+       620,
+       600,
+       645
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|cord_subtotal_03|clean|answer_correctness",
+      "muse-spark-1.3|cord_subtotal_03|clean|evidence_grounding",
+      "muse-spark-1.3|cord_subtotal_03|clean|tool_schema_valid",
+      "muse-spark-1.3|cord_subtotal_03|clean|tool_args_correct",
+      "muse-spark-1.3|cord_subtotal_03|clean|tool_args_grounded",
+      "muse-spark-1.3|cord_subtotal_03|clean|tool_order_policy",
+      "muse-spark-1.3|cord_subtotal_03|clean|action_despite_abstention",
+      "muse-spark-1.3|cord_subtotal_03|clean|item_recall",
+      "muse-spark-1.3|cord_subtotal_03|clean|fabrication_check",
+      "muse-spark-1.3|cord_subtotal_03|clean|transcript_fidelity",
+      "muse-spark-1.3|cord_subtotal_03|clean|temporal_alignment",
+      "muse-spark-1.3|cord_subtotal_03|clean|perception_judge",
+      "muse-spark-1.3|cord_subtotal_03|clean|stage_attribution",
+      "muse-spark-1.3|cord_subtotal_03|clean|audio_stage_attribution",
+      "muse-spark-1.3|cord_subtotal_03|all|media_dependence",
+      "muse-spark-1.3|cord_subtotal_03|all|media_dependence_guess",
+      "muse-spark-1.3|cord_subtotal_03|all|robustness_sweep",
+      "*|*|all|judge_audit",
+      "*|*|all|judge_media_dependence"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|cord_total_01|clean",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_01",
+   "variant": "clean",
+   "variant_transform": "identity",
+   "assets": [
+    {
+     "id": "0a4839cf503d",
+     "path": "out/perturbed/cord_total_01_clean.png",
+     "modality": "image",
+     "transformation": "identity"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "0a4839cf503d",
+      "transformation": "identity"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 12.65,
+     "usage": {
+      "input_tokens": 741,
+      "output_tokens": 941,
+      "reasoning_tokens": 895
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"148,127\", \"box\": [550, 964, 815, 997], \"evidence\": \"TOTAL 148,127 at bottom of receipt\"}",
+      "answer": "148,127",
+      "box": [
+       550,
+       964,
+       815,
+       997
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|cord_total_01|clean|answer_correctness",
+      "muse-spark-1.3|cord_total_01|clean|evidence_grounding",
+      "muse-spark-1.3|cord_total_01|clean|tool_schema_valid",
+      "muse-spark-1.3|cord_total_01|clean|tool_args_correct",
+      "muse-spark-1.3|cord_total_01|clean|tool_args_grounded",
+      "muse-spark-1.3|cord_total_01|clean|tool_order_policy",
+      "muse-spark-1.3|cord_total_01|clean|action_despite_abstention",
+      "muse-spark-1.3|cord_total_01|clean|item_recall",
+      "muse-spark-1.3|cord_total_01|clean|fabrication_check",
+      "muse-spark-1.3|cord_total_01|clean|transcript_fidelity",
+      "muse-spark-1.3|cord_total_01|clean|temporal_alignment",
+      "muse-spark-1.3|cord_total_01|clean|perception_judge",
+      "muse-spark-1.3|cord_total_01|clean|stage_attribution",
+      "muse-spark-1.3|cord_total_01|clean|audio_stage_attribution",
+      "muse-spark-1.3|cord_total_01|all|media_dependence",
+      "muse-spark-1.3|cord_total_01|all|media_dependence_guess",
+      "muse-spark-1.3|cord_total_01|all|robustness_sweep",
+      "*|*|all|judge_audit",
+      "*|*|all|judge_media_dependence"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|cord_subtotal_03|blind",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_03",
+   "variant": "blind",
+   "variant_transform": "remove_media",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "transformation": "remove_media"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 14.39,
+     "usage": {
+      "input_tokens": 143,
+      "output_tokens": 995,
+      "reasoning_tokens": 966
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the subtotal on this receipt, before tax and service? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot read the answer, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image content readable\"}",
+      "answer": "unknown",
+      "box": null
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|cord_subtotal_03|all|media_dependence",
+      "muse-spark-1.3|cord_subtotal_03|all|media_dependence_guess",
+      "muse-spark-1.3|cord_subtotal_03|all|robustness_sweep",
+      "*|*|all|judge_audit",
+      "*|*|all|judge_media_dependence"
+     ]
+    }
+   ]
+  }
+ ],
+ "plan": [
+  {
+   "id": "agent|muse-spark-1.3|cord_total_01|clean",
+   "kind": "agent",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_01",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "agent|muse-spark-1.3|cord_total_01|blind",
+   "kind": "agent",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_01",
+   "variant": "blind",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "agent|muse-spark-1.3|cord_total_02|clean",
+   "kind": "agent",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_02",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "agent|muse-spark-1.3|cord_total_02|blind",
+   "kind": "agent",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_02",
+   "variant": "blind",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "agent|muse-spark-1.3|cord_subtotal_03|clean",
+   "kind": "agent",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_03",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "agent|muse-spark-1.3|cord_subtotal_03|blind",
+   "kind": "agent",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_03",
+   "variant": "blind",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge|planted_right|cord_total_01",
+   "kind": "judge",
+   "agent": null,
+   "case_id": "cord_total_01",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge|planted_wrong|cord_total_01",
+   "kind": "judge",
+   "agent": null,
+   "case_id": "cord_total_01",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge_control|planted_right_noimg|cord_total_01",
+   "kind": "judge_control",
+   "agent": null,
+   "case_id": "cord_total_01",
+   "variant": "blind",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge_control|planted_wrong_noimg|cord_total_01",
+   "kind": "judge_control",
+   "agent": null,
+   "case_id": "cord_total_01",
+   "variant": "blind",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge|planted_right|cord_total_02",
+   "kind": "judge",
+   "agent": null,
+   "case_id": "cord_total_02",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge|planted_wrong|cord_total_02",
+   "kind": "judge",
+   "agent": null,
+   "case_id": "cord_total_02",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge_control|planted_right_noimg|cord_total_02",
+   "kind": "judge_control",
+   "agent": null,
+   "case_id": "cord_total_02",
+   "variant": "blind",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge_control|planted_wrong_noimg|cord_total_02",
+   "kind": "judge_control",
+   "agent": null,
+   "case_id": "cord_total_02",
+   "variant": "blind",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge|planted_right|cord_subtotal_03",
+   "kind": "judge",
+   "agent": null,
+   "case_id": "cord_subtotal_03",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge|planted_wrong|cord_subtotal_03",
+   "kind": "judge",
+   "agent": null,
+   "case_id": "cord_subtotal_03",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge_control|planted_right_noimg|cord_subtotal_03",
+   "kind": "judge_control",
+   "agent": null,
+   "case_id": "cord_subtotal_03",
+   "variant": "blind",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge_control|planted_wrong_noimg|cord_subtotal_03",
+   "kind": "judge_control",
+   "agent": null,
+   "case_id": "cord_subtotal_03",
+   "variant": "blind",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge|agent_answer|muse-spark-1.3|cord_total_02",
+   "kind": "judge",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_02",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge|agent_answer|muse-spark-1.3|cord_subtotal_03",
+   "kind": "judge",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_subtotal_03",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  },
+  {
+   "id": "judge|agent_answer|muse-spark-1.3|cord_total_01",
+   "kind": "judge",
+   "agent": "muse-spark-1.3",
+   "case_id": "cord_total_01",
+   "variant": "clean",
+   "status": "completed",
+   "retries": 0,
+   "error": null
+  }
+ ],
+ "conflicts": []
+}

@@ -1050,3 +1050,99 @@ class PlatformMixin:
             }
             for r in rows
         ]
+
+    def get_ums_scores(
+        self,
+        project: str,
+        *,
+        run_id: str | None = None,
+        experiment_id: str | None = None,
+        suite: str | None = None,
+        profile: str = "balanced",
+    ) -> dict:
+        """Compute UMS from stored eval_results (or a suite results JSON on disk)."""
+        from pathlib import Path
+
+        from evalverse import scoring
+
+        self.ensure_project(project)
+        policy = scoring.load_policy()
+        if profile not in (policy.get("profiles") or {}):
+            raise HTTPException(status_code=400, detail=f"unknown profile: {profile}")
+
+        # suite → prefer on-disk results JSON (same as CLI), else import:{suite} run.
+        if suite and not run_id and not experiment_id:
+            root = Path(__file__).resolve().parent.parent.parent
+            path = root / "out" / f"results_{suite}.json"
+            if path.is_file():
+                data = json.loads(path.read_text())
+                return scoring.score_payload(data, profile=profile, policy=policy)
+            run_id = f"import:{suite}"
+
+        eval_rows: list[dict] = []
+        traces: list[dict] = []
+
+        if experiment_id:
+            exp = self.get_experiment(project, experiment_id)
+            run_ids = [r["id"] for r in (exp.get("runs") or [])]
+            if not run_ids:
+                # Also accept experiment_id as an evaluation run id prefix via config.
+                raise HTTPException(status_code=404, detail="Experiment has no runs")
+            placeholders = ",".join("?" * len(run_ids))
+            rows = self.db.fetchall(
+                f"SELECT * FROM eval_results WHERE run_id IN ({placeholders})",
+                tuple(run_ids),
+            )
+            # Experiment runs store results against their eval run ids when present;
+            # fall back to joining traces tagged with the experiment.
+            if not rows:
+                tr_rows = self.db.fetchall(
+                    "SELECT * FROM traces WHERE project=? AND tags_json LIKE ?",
+                    (project, "%experiment%"),
+                )
+                for tr in tr_rows:
+                    tid = tr["id"]
+                    er = self.db.fetchall(
+                        "SELECT * FROM eval_results WHERE trace_id=?", (tid,)
+                    )
+                    rows.extend(er)
+                    traces.append(self.get_trace(project, tid).model_dump())
+            else:
+                for r in rows:
+                    eval_rows.append(self._result_dict(r))
+                # Load related traces
+                tids = sorted({r.get("trace_id") for r in eval_rows if r.get("trace_id")})
+                for tid in tids:
+                    try:
+                        traces.append(self.get_trace(project, tid).model_dump())
+                    except HTTPException:
+                        continue
+                results = scoring.results_from_eval_rows(eval_rows, traces)
+                return scoring.score_payload({"results": results}, profile=profile, policy=policy)
+
+        if run_id:
+            row = self.db.fetchone(
+                "SELECT * FROM eval_runs WHERE id=? AND project=?", (run_id, project)
+            )
+            if row is None:
+                # Allow cross-check without project on older import runs
+                row = self.db.fetchone("SELECT * FROM eval_runs WHERE id=?", (run_id,))
+            if row is None:
+                raise HTTPException(status_code=404, detail="Evaluation run not found")
+            rows = self.db.fetchall(
+                "SELECT * FROM eval_results WHERE run_id=? ORDER BY created_at ASC", (run_id,)
+            )
+            eval_rows = [self._result_dict(r) for r in rows]
+            tids = sorted({r.get("trace_id") for r in eval_rows if r.get("trace_id")})
+            for tid in tids:
+                try:
+                    traces.append(self.get_trace(project, tid).model_dump())
+                except HTTPException:
+                    continue
+            results = scoring.results_from_eval_rows(eval_rows, traces)
+            return scoring.score_payload({"results": results}, profile=profile, policy=policy)
+
+        raise HTTPException(
+            status_code=400,
+            detail="provide run_id, experiment_id, or suite",
+        )

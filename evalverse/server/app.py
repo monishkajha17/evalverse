@@ -466,6 +466,24 @@ def create_app(
         _ = ctx
         return list_providers()
 
+    # ---- UMS scores ----
+    @app.get("/api/v1/scores")
+    def get_scores(
+        run_id: Optional[str] = Query(default=None),
+        experiment_id: Optional[str] = Query(default=None),
+        suite: Optional[str] = Query(default=None),
+        profile: str = Query(default="balanced"),
+        ctx: tuple[str, str] = Depends(auth),
+    ):
+        _, project = ctx
+        return svc.get_ums_scores(
+            project,
+            run_id=run_id,
+            experiment_id=experiment_id,
+            suite=suite,
+            profile=profile,
+        )
+
     return app
 
 

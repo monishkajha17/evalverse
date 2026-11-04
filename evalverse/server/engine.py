@@ -75,14 +75,17 @@ def extract_model_run(trace: dict[str, Any]) -> dict[str, Any]:
 def expectation_to_case(expectation: dict[str, Any] | None, trace: dict[str, Any]) -> dict[str, Any] | None:
     if not expectation:
         return None
+    meta = trace.get("metadata") or {}
     case: dict[str, Any] = {
-        "id": (trace.get("metadata") or {}).get("case_id") or trace.get("id") or "case",
+        "id": expectation.get("case_id") or meta.get("case_id") or trace.get("id") or "case",
         "answer": expectation.get("answer"),
         "answer_type": expectation.get("answer_type") or "number",
         "question": None,
     }
     if isinstance(trace.get("input"), dict):
         case["question"] = trace["input"].get("question") or trace["input"].get("text")
+    if expectation.get("truth_box"):
+        case["truth_box"] = list(expectation["truth_box"])
     evidence = expectation.get("evidence")
     if isinstance(evidence, dict):
         if evidence.get("type") == "image_region" and evidence.get("locator"):
@@ -162,6 +165,17 @@ def build_rule_context(
     }
 
 
+TOOL_USE_EVALUATOR_IDS = frozenset(
+    {
+        "tool_schema_valid",
+        "tool_args_correct",
+        "tool_args_grounded",
+        "tool_order_policy",
+        "action_despite_abstention",
+    }
+)
+
+
 def run_builtin(
     evaluator_id: str,
     trace: dict[str, Any],
@@ -188,6 +202,21 @@ def run_builtin(
             "evidence": [],
             "execution_metadata": {"reason": "no expectation"},
         }
+    tool_spans = [s for s in (trace.get("spans") or []) if s.get("type") == "tool"]
+    is_tool_eval = evaluator_id in TOOL_USE_EVALUATOR_IDS or meta.get("category") == "tool_use"
+    if is_tool_eval and not tool_spans:
+        return {
+            "status": "skipped",
+            "score": None,
+            "verdict": "not_applicable",
+            "label": "skipped",
+            "explanation": "no tool calls",
+            "evidence": [],
+            "execution_metadata": {"reason": "no tool calls"},
+            "evaluator_id": meta["id"],
+            "evaluator_version": meta["version"],
+            "dimension": meta["dimension"],
+        }
     case = expectation_to_case(expectation, trace) or {"id": trace.get("id"), "answer": None}
     run = extract_model_run(trace)
     agent = trace.get("agent") or "agent"
@@ -200,6 +229,8 @@ def run_builtin(
         variant=variant,
         case=case,
         run=run,
+        tool_spans=tool_spans,
+        trace=trace,
     )
     return {
         "status": out.get("status"),

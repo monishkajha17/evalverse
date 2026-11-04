@@ -109,4 +109,46 @@ def test_mock_audio_runner_writes_results(tmp_path, monkeypatch):
     assert result.exists()
     payload = __import__("json").loads(result.read_text())
     assert payload["meta"]["modality"] == "audio"
-    assert payload["traces"][0]["spans"][1]["name"] == "transcribe"
+    spans = payload["traces"][0]["spans"]
+    assert spans[0]["name"] in ("attach_audio", "remove_media")
+    assert spans[1]["name"] == "transcribe turn 1"
+    assert spans[1]["type"] == "media"
+    assert spans[1]["parent_span_ids"] == ["s1"]
+
+
+def test_audio_trace_fanout_dag_is_acyclic():
+    case = audio_run._mock_cases()[0]
+    run = {
+        "agent": "muse-spark-1.3",
+        "case_id": case["id"],
+        "condition": "clean",
+        "answer": case["answer"],
+        "span_ms": case["truth_span"],
+        "prompt": "p",
+        "raw": "{}",
+        "usage": {"input_tokens": 1, "output_tokens": 1},
+        "latency": 0.01,
+        "model": "muse-spark-1.3",
+        "asr_turns": {str(t["index"]): t["text"] for t in case["turns"]},
+        "turn_wers": {str(t["index"]): 0.0 for t in case["turns"]},
+        "asr_details": [
+            {"index": t["index"], "latency": 0.01 * t["index"], "wer": 0.0} for t in case["turns"]
+        ],
+        "error": None,
+    }
+    tr = ev.build_audio_trace(case, run, result_ids=["r1"])
+    by_id = {s["id"]: s for s in tr["spans"]}
+    assert set(by_id) == {"s1", "s2_1", "s2_2", "s2_3", "s2_4", "s2_5", "s3", "s4"}
+    for k in range(1, 6):
+        sp = by_id[f"s2_{k}"]
+        assert sp["type"] == "media"
+        assert sp["parent_span_ids"] == ["s1"]
+        assert sp["name"] == f"transcribe turn {k}"
+        assert sp["attributes"]["turn"] == k
+        assert sp["attributes"]["text"] is not None
+    assert by_id["s3"]["parent_span_ids"] == ["s2_1", "s2_2", "s2_3", "s2_4", "s2_5"]
+    assert by_id["s4"]["parent_span_ids"] == ["s3"]
+    assert ev.dag_is_acyclic(tr["spans"]) is True
+    # Cycle detection sanity
+    cyclic = [{"id": "a", "parent_span_ids": ["b"]}, {"id": "b", "parent_span_ids": ["a"]}]
+    assert ev.dag_is_acyclic(cyclic) is False
