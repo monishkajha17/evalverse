@@ -1,0 +1,401 @@
+[
+  {
+    "family": "receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "51.70",
+    "answer_type": "number",
+    "distractor": "47.87",
+    "truth_box": [
+      120,
+      578,
+      880,
+      636
+    ],
+    "size": [
+      700,
+      900
+    ],
+    "id": "receipt_01",
+    "image": "data/images/receipt_01.png"
+  },
+  {
+    "family": "receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "44.37",
+    "answer_type": "number",
+    "distractor": "41.08",
+    "truth_box": [
+      120,
+      578,
+      880,
+      636
+    ],
+    "size": [
+      700,
+      900
+    ],
+    "id": "receipt_02",
+    "image": "data/images/receipt_02.png"
+  },
+  {
+    "family": "receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "41.61",
+    "answer_type": "number",
+    "distractor": "38.53",
+    "truth_box": [
+      120,
+      527,
+      880,
+      584
+    ],
+    "size": [
+      700,
+      900
+    ],
+    "id": "receipt_03",
+    "image": "data/images/receipt_03.png"
+  },
+  {
+    "family": "receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "68.29",
+    "answer_type": "number",
+    "distractor": "63.23",
+    "truth_box": [
+      120,
+      629,
+      880,
+      687
+    ],
+    "size": [
+      700,
+      900
+    ],
+    "id": "receipt_04",
+    "image": "data/images/receipt_04.png"
+  },
+  {
+    "family": "receipt",
+    "question": "How much tax was charged on this receipt? Answer with the number only.",
+    "answer": "4.19",
+    "answer_type": "number",
+    "distractor": "14.49",
+    "truth_box": [
+      120,
+      527,
+      880,
+      578
+    ],
+    "size": [
+      700,
+      900
+    ],
+    "id": "receipt_05",
+    "image": "data/images/receipt_05.png"
+  },
+  {
+    "family": "receipt",
+    "question": "How much tax was charged on this receipt? Answer with the number only.",
+    "answer": "3.76",
+    "answer_type": "number",
+    "distractor": "9.53",
+    "truth_box": [
+      120,
+      476,
+      880,
+      527
+    ],
+    "size": [
+      700,
+      900
+    ],
+    "id": "receipt_06",
+    "image": "data/images/receipt_06.png"
+  },
+  {
+    "family": "receipt",
+    "question": "How much tax was charged on this receipt? Answer with the number only.",
+    "answer": "5.59",
+    "answer_type": "number",
+    "distractor": "3.30",
+    "truth_box": [
+      120,
+      578,
+      880,
+      629
+    ],
+    "size": [
+      700,
+      900
+    ],
+    "id": "receipt_07",
+    "image": "data/images/receipt_07.png"
+  },
+  {
+    "family": "chart",
+    "question": "Which category has the highest value in this chart? Answer with the category label only.",
+    "answer": "Bravo",
+    "answer_type": "text",
+    "distractor": "Delta",
+    "truth_box": [
+      284,
+      247,
+      372,
+      833
+    ],
+    "size": [
+      900,
+      600
+    ],
+    "id": "chart_08",
+    "image": "data/images/chart_08.png"
+  },
+  {
+    "family": "chart",
+    "question": "Which category has the highest value in this chart? Answer with the category label only.",
+    "answer": "Delta",
+    "answer_type": "text",
+    "distractor": "Ember",
+    "truth_box": [
+      558,
+      267,
+      646,
+      833
+    ],
+    "size": [
+      900,
+      600
+    ],
+    "id": "chart_09",
+    "image": "data/images/chart_09.png"
+  },
+  {
+    "family": "chart",
+    "question": "Which category has the highest value in this chart? Answer with the category label only.",
+    "answer": "Central",
+    "answer_type": "text",
+    "distractor": "South",
+    "truth_box": [
+      695,
+      233,
+      783,
+      833
+    ],
+    "size": [
+      900,
+      600
+    ],
+    "id": "chart_10",
+    "image": "data/images/chart_10.png"
+  },
+  {
+    "family": "chart",
+    "question": "Which category has the highest value in this chart? Answer with the category label only.",
+    "answer": "May",
+    "answer_type": "text",
+    "distractor": "Apr",
+    "truth_box": [
+      810,
+      333,
+      915,
+      833
+    ],
+    "size": [
+      900,
+      600
+    ],
+    "id": "chart_11",
+    "image": "data/images/chart_11.png"
+  },
+  {
+    "family": "chart",
+    "question": "What is the value of Jun in this chart? Answer with the number only.",
+    "answer": "94",
+    "answer_type": "number",
+    "distractor": "63",
+    "truth_box": [
+      832,
+      207,
+      920,
+      833
+    ],
+    "size": [
+      900,
+      600
+    ],
+    "id": "chart_12",
+    "image": "data/images/chart_12.png"
+  },
+  {
+    "family": "chart",
+    "question": "What is the value of Fjord in this chart? Answer with the number only.",
+    "answer": "93",
+    "answer_type": "number",
+    "distractor": "60",
+    "truth_box": [
+      832,
+      213,
+      920,
+      833
+    ],
+    "size": [
+      900,
+      600
+    ],
+    "id": "chart_13",
+    "image": "data/images/chart_13.png"
+  },
+  {
+    "family": "chart",
+    "question": "What is the value of Feb in this chart? Answer with the number only.",
+    "answer": "87",
+    "answer_type": "number",
+    "distractor": "35",
+    "truth_box": [
+      316,
+      253,
+      422,
+      833
+    ],
+    "size": [
+      900,
+      600
+    ],
+    "id": "chart_14",
+    "image": "data/images/chart_14.png"
+  },
+  {
+    "family": "pricing",
+    "question": "What is the monthly price of the Team plan? Answer with the number only.",
+    "answer": "79",
+    "answer_type": "number",
+    "distractor": "149",
+    "truth_box": [
+      68,
+      288,
+      291,
+      436
+    ],
+    "size": [
+      900,
+      560
+    ],
+    "id": "pricing_15",
+    "image": "data/images/pricing_15.png"
+  },
+  {
+    "family": "pricing",
+    "question": "What is the monthly price of the Business plan? Answer with the number only.",
+    "answer": "12",
+    "answer_type": "number",
+    "distractor": "9",
+    "truth_box": [
+      712,
+      288,
+      936,
+      436
+    ],
+    "size": [
+      900,
+      560
+    ],
+    "id": "pricing_16",
+    "image": "data/images/pricing_16.png"
+  },
+  {
+    "family": "pricing",
+    "question": "What is the monthly price of the Pro plan? Answer with the number only.",
+    "answer": "12",
+    "answer_type": "number",
+    "distractor": "19",
+    "truth_box": [
+      390,
+      288,
+      613,
+      436
+    ],
+    "size": [
+      900,
+      560
+    ],
+    "id": "pricing_17",
+    "image": "data/images/pricing_17.png"
+  },
+  {
+    "family": "pricing",
+    "question": "What is the monthly price of the Team plan? Answer with the number only.",
+    "answer": "24",
+    "answer_type": "number",
+    "distractor": "12",
+    "truth_box": [
+      68,
+      288,
+      291,
+      436
+    ],
+    "size": [
+      900,
+      560
+    ],
+    "id": "pricing_18",
+    "image": "data/images/pricing_18.png"
+  },
+  {
+    "family": "pricing",
+    "question": "What is the monthly price of the Starter plan? Answer with the number only.",
+    "answer": "12",
+    "answer_type": "number",
+    "distractor": "59",
+    "truth_box": [
+      712,
+      288,
+      936,
+      436
+    ],
+    "size": [
+      900,
+      560
+    ],
+    "id": "pricing_19",
+    "image": "data/images/pricing_19.png"
+  },
+  {
+    "family": "pricing",
+    "question": "What is the monthly price of the Basic plan? Answer with the number only.",
+    "answer": "19",
+    "answer_type": "number",
+    "distractor": "39",
+    "truth_box": [
+      68,
+      288,
+      291,
+      436
+    ],
+    "size": [
+      900,
+      560
+    ],
+    "id": "pricing_20",
+    "image": "data/images/pricing_20.png"
+  },
+  {
+    "family": "pricing",
+    "question": "What is the monthly price of the Pro plan? Answer with the number only.",
+    "answer": "99",
+    "answer_type": "number",
+    "distractor": "49",
+    "truth_box": [
+      712,
+      288,
+      936,
+      436
+    ],
+    "size": [
+      900,
+      560
+    ],
+    "id": "pricing_21",
+    "image": "data/images/pricing_21.png"
+  }
+]

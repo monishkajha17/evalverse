@@ -1,0 +1,602 @@
+[
+  {
+    "id": "cord_total_01",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "148,127",
+    "answer_type": "number",
+    "distractor": "117,500",
+    "truth_box": [
+      170,
+      965,
+      819,
+      995
+    ],
+    "size": [
+      576,
+      864
+    ],
+    "image": "data/images_cord/cord_total_01.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_02",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "43,000",
+    "answer_type": "number",
+    "distractor": "50,000",
+    "truth_box": [
+      141,
+      521,
+      913,
+      587
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_total_02.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_subtotal_03",
+    "family": "cord_receipt",
+    "question": "What is the subtotal on this receipt, before tax and service? Answer with the number only.",
+    "answer": "68,180",
+    "answer_type": "number",
+    "distractor": "0",
+    "truth_box": [
+      269,
+      608,
+      593,
+      627
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_subtotal_03.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_tax_04",
+    "family": "cord_receipt",
+    "question": "How much tax was charged on this receipt? Answer with the number only.",
+    "answer": "Rp 3.600",
+    "answer_type": "number",
+    "distractor": "12.000",
+    "truth_box": [
+      283,
+      561,
+      813,
+      582
+    ],
+    "size": [
+      605,
+      1280
+    ],
+    "image": "data/images_cord/cord_tax_04.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_05",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "30.000",
+    "answer_type": "number",
+    "distractor": "0",
+    "truth_box": [
+      505,
+      506,
+      750,
+      534
+    ],
+    "size": [
+      720,
+      1280
+    ],
+    "image": "data/images_cord/cord_total_05.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_06",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "50.000",
+    "answer_type": "number",
+    "distractor": "4",
+    "truth_box": [
+      149,
+      740,
+      800,
+      764
+    ],
+    "size": [
+      720,
+      1280
+    ],
+    "image": "data/images_cord/cord_total_06.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_07",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "Rp 38.000",
+    "answer_type": "number",
+    "distractor": "Rp 35.000",
+    "truth_box": [
+      242,
+      584,
+      692,
+      613
+    ],
+    "size": [
+      960,
+      1280
+    ],
+    "image": "data/images_cord/cord_total_07.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_subtotal_08",
+    "family": "cord_receipt",
+    "question": "What is the subtotal on this receipt, before tax and service? Answer with the number only.",
+    "answer": "16,363",
+    "answer_type": "number",
+    "distractor": "1,636",
+    "truth_box": [
+      164,
+      644,
+      816,
+      684
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_subtotal_08.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_subtotal_09",
+    "family": "cord_receipt",
+    "question": "What is the subtotal on this receipt, before tax and service? Answer with the number only.",
+    "answer": "385,000",
+    "answer_type": "number",
+    "distractor": "210,000",
+    "truth_box": [
+      67,
+      396,
+      839,
+      426
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_subtotal_09.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_10",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "91000",
+    "answer_type": "number",
+    "distractor": "46000",
+    "truth_box": [
+      135,
+      645,
+      847,
+      683
+    ],
+    "size": [
+      960,
+      1280
+    ],
+    "image": "data/images_cord/cord_total_10.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_11",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "40,000",
+    "answer_type": "number",
+    "distractor": "20,000",
+    "truth_box": [
+      178,
+      499,
+      785,
+      551
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_total_11.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_tax_12",
+    "family": "cord_receipt",
+    "question": "How much tax was charged on this receipt? Answer with the number only.",
+    "answer": "5.455",
+    "answer_type": "number",
+    "distractor": "60.000",
+    "truth_box": [
+      491,
+      744,
+      819,
+      778
+    ],
+    "size": [
+      432,
+      648
+    ],
+    "image": "data/images_cord/cord_tax_12.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_subtotal_13",
+    "family": "cord_receipt",
+    "question": "What is the subtotal on this receipt, before tax and service? Answer with the number only.",
+    "answer": "24,500",
+    "answer_type": "number",
+    "distractor": "8,000",
+    "truth_box": [
+      257,
+      731,
+      715,
+      757
+    ],
+    "size": [
+      576,
+      864
+    ],
+    "image": "data/images_cord/cord_subtotal_13.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_14",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "22.000",
+    "answer_type": "number",
+    "distractor": "25.000",
+    "truth_box": [
+      141,
+      743,
+      844,
+      791
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_total_14.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_15",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "Rp.118.000",
+    "answer_type": "number",
+    "distractor": "Rp.0",
+    "truth_box": [
+      87,
+      810,
+      809,
+      843
+    ],
+    "size": [
+      576,
+      864
+    ],
+    "image": "data/images_cord/cord_total_15.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_subtotal_16",
+    "family": "cord_receipt",
+    "question": "What is the subtotal on this receipt, before tax and service? Answer with the number only.",
+    "answer": "23,000",
+    "answer_type": "number",
+    "distractor": "2",
+    "truth_box": [
+      281,
+      653,
+      809,
+      685
+    ],
+    "size": [
+      576,
+      864
+    ],
+    "image": "data/images_cord/cord_subtotal_16.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_subtotal_17",
+    "family": "cord_receipt",
+    "question": "What is the subtotal on this receipt, before tax and service? Answer with the number only.",
+    "answer": "Rp 138.000",
+    "answer_type": "number",
+    "distractor": "Rp 0",
+    "truth_box": [
+      128,
+      730,
+      822,
+      769
+    ],
+    "size": [
+      720,
+      1280
+    ],
+    "image": "data/images_cord/cord_subtotal_17.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_18",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "30.000",
+    "answer_type": "number",
+    "distractor": "50.000",
+    "truth_box": [
+      484,
+      606,
+      859,
+      658
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_total_18.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_19",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "22.000",
+    "answer_type": "number",
+    "distractor": "0",
+    "truth_box": [
+      670,
+      727,
+      833,
+      762
+    ],
+    "size": [
+      576,
+      864
+    ],
+    "image": "data/images_cord/cord_total_19.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_20",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "63,000.00",
+    "answer_type": "number",
+    "distractor": "3",
+    "truth_box": [
+      46,
+      773,
+      919,
+      799
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_total_20.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_subtotal_21",
+    "family": "cord_receipt",
+    "question": "What is the subtotal on this receipt, before tax and service? Answer with the number only.",
+    "answer": "28,000",
+    "answer_type": "number",
+    "distractor": "72,000",
+    "truth_box": [
+      123,
+      586,
+      873,
+      611
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_subtotal_21.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_tax_22",
+    "family": "cord_receipt",
+    "question": "How much tax was charged on this receipt? Answer with the number only.",
+    "answer": "30,365",
+    "answer_type": "number",
+    "distractor": "303,646",
+    "truth_box": [
+      222,
+      706,
+      796,
+      734
+    ],
+    "size": [
+      720,
+      1280
+    ],
+    "image": "data/images_cord/cord_tax_22.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_tax_23",
+    "family": "cord_receipt",
+    "question": "How much tax was charged on this receipt? Answer with the number only.",
+    "answer": "60,394",
+    "answer_type": "number",
+    "distractor": "561,800",
+    "truth_box": [
+      131,
+      709,
+      759,
+      734
+    ],
+    "size": [
+      720,
+      1280
+    ],
+    "image": "data/images_cord/cord_tax_23.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_tax_24",
+    "family": "cord_receipt",
+    "question": "How much tax was charged on this receipt? Answer with the number only.",
+    "answer": "25,585",
+    "answer_type": "number",
+    "distractor": "20,000",
+    "truth_box": [
+      300,
+      459,
+      763,
+      476
+    ],
+    "size": [
+      720,
+      1280
+    ],
+    "image": "data/images_cord/cord_tax_24.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_tax_25",
+    "family": "cord_receipt",
+    "question": "How much tax was charged on this receipt? Answer with the number only.",
+    "answer": "2,272",
+    "answer_type": "number",
+    "distractor": "100,000",
+    "truth_box": [
+      449,
+      366,
+      771,
+      392
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_tax_25.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_subtotal_26",
+    "family": "cord_receipt",
+    "question": "What is the subtotal on this receipt, before tax and service? Answer with the number only.",
+    "answer": "17,000",
+    "answer_type": "number",
+    "distractor": "3,000",
+    "truth_box": [
+      35,
+      586,
+      917,
+      625
+    ],
+    "size": [
+      576,
+      864
+    ],
+    "image": "data/images_cord/cord_subtotal_26.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_subtotal_27",
+    "family": "cord_receipt",
+    "question": "What is the subtotal on this receipt, before tax and service? Answer with the number only.",
+    "answer": "24.000",
+    "answer_type": "number",
+    "distractor": "26.000",
+    "truth_box": [
+      190,
+      535,
+      844,
+      560
+    ],
+    "size": [
+      720,
+      1280
+    ],
+    "image": "data/images_cord/cord_subtotal_27.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_tax_28",
+    "family": "cord_receipt",
+    "question": "How much tax was charged on this receipt? Answer with the number only.",
+    "answer": "6,364",
+    "answer_type": "number",
+    "distractor": "4,545",
+    "truth_box": [
+      109,
+      651,
+      838,
+      681
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_tax_28.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_tax_29",
+    "family": "cord_receipt",
+    "question": "How much tax was charged on this receipt? Answer with the number only.",
+    "answer": "12,733",
+    "answer_type": "number",
+    "distractor": "11,000",
+    "truth_box": [
+      391,
+      761,
+      903,
+      794
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_tax_29.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_total_30",
+    "family": "cord_receipt",
+    "question": "What is the total amount due on this receipt? Answer with the number only.",
+    "answer": "74,000",
+    "answer_type": "number",
+    "distractor": "100,000",
+    "truth_box": [
+      305,
+      494,
+      734,
+      528
+    ],
+    "size": [
+      720,
+      1280
+    ],
+    "image": "data/images_cord/cord_total_30.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  }
+]
