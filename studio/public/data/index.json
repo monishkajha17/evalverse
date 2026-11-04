@@ -2,7 +2,7 @@
  {
   "suite": "default",
   "modality": "image",
-  "n_cases": 3,
+  "n_cases": 21,
   "agents": [
    "muse-spark-1.1",
    "muse-spark-1.3"
@@ -13,12 +13,12 @@
    "noise",
    "lowres"
   ],
-  "created": "2026-11-04T12:16:36+00:00"
+  "created": "2026-11-04T15:11:05+00:00"
  },
  {
-  "suite": "audio",
+  "suite": "audio.before_units_fix",
   "modality": "audio",
-  "n_cases": 2,
+  "n_cases": 12,
   "agents": [
    "muse-spark-1.3",
    "muse-spark-1.1"
@@ -28,7 +28,22 @@
    "noise",
    "bandlimit"
   ],
-  "created": "2026-11-04T12:29:13+00:00"
+  "created": "2026-11-04T12:48:18+00:00"
+ },
+ {
+  "suite": "audio",
+  "modality": "audio",
+  "n_cases": 12,
+  "agents": [
+   "muse-spark-1.3",
+   "muse-spark-1.1"
+  ],
+  "variants": [
+   "clean",
+   "noise",
+   "bandlimit"
+  ],
+  "created": "2026-11-04T14:05:23+00:00"
  },
  {
   "suite": "cord",
@@ -44,7 +59,7 @@
    "noise",
    "lowres"
   ],
-  "created": "2026-11-04T12:01:20+00:00"
+  "created": "2026-11-04T15:08:25+00:00"
  },
  {
   "suite": "image_smoke",
@@ -60,6 +75,37 @@
   "created": "2026-11-04T12:28:44+00:00"
  },
  {
+  "suite": "lists",
+  "modality": "image",
+  "n_cases": 4,
+  "agents": [
+   "muse-spark-1.1",
+   "muse-spark-1.3"
+  ],
+  "variants": [
+   "clean",
+   "blur",
+   "noise",
+   "lowres"
+  ],
+  "created": "2026-11-04T13:46:18+00:00"
+ },
+ {
+  "suite": "video",
+  "modality": "video",
+  "n_cases": 36,
+  "agents": [
+   "muse-spark-1.3",
+   "muse-spark-1.1"
+  ],
+  "variants": [
+   "clean",
+   "sparse",
+   "blur"
+  ],
+  "created": "2026-11-04T15:11:53+00:00"
+ },
+ {
   "suite": "wonder",
   "modality": "image",
   "n_cases": 3,
@@ -69,6 +115,6 @@
   "variants": [
    "clean"
   ],
-  "created": "2026-11-04T14:41:53+00:00"
+  "created": "2026-11-04T14:55:05+00:00"
  }
 ]

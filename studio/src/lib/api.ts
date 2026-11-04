@@ -402,12 +402,92 @@ export class ApiError extends Error {
 
 const DEFAULT_URL = "http://127.0.0.1:8000";
 const DEFAULT_KEY = "dev";
+export const CONNECTION_STORAGE_KEY = "evalverse.connection";
+
+export type StoredConnection = {
+  url: string;
+  apiKey: string;
+  project: string;
+  /** When false, Studio stays on snapshot demo data. */
+  preferLive: boolean;
+};
+
+export function readStoredConnection(): StoredConnection | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(CONNECTION_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<StoredConnection>;
+    if (!parsed.url || !parsed.apiKey) return null;
+    return {
+      url: String(parsed.url).replace(/\/$/, ""),
+      apiKey: String(parsed.apiKey),
+      project: String(parsed.project || "default"),
+      preferLive: parsed.preferLive !== false,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export function writeStoredConnection(conn: StoredConnection) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(
+    CONNECTION_STORAGE_KEY,
+    JSON.stringify({
+      url: conn.url.replace(/\/$/, ""),
+      apiKey: conn.apiKey,
+      project: conn.project || "default",
+      preferLive: conn.preferLive,
+    }),
+  );
+}
+
+export function clearStoredConnection() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(CONNECTION_STORAGE_KEY);
+}
 
 export function apiConfig() {
-  const url = (process.env.NEXT_PUBLIC_API_URL || DEFAULT_URL).replace(/\/$/, "");
-  const key = process.env.NEXT_PUBLIC_API_KEY || DEFAULT_KEY;
   const modeEnv = (process.env.NEXT_PUBLIC_MODE || "live").toLowerCase();
-  return { url, key, modeEnv: modeEnv === "snapshot" ? "snapshot" : "live" as const };
+  const stored = readStoredConnection();
+  const url = (stored?.url || process.env.NEXT_PUBLIC_API_URL || DEFAULT_URL).replace(/\/$/, "");
+  const key = stored?.apiKey || process.env.NEXT_PUBLIC_API_KEY || DEFAULT_KEY;
+  const project = stored?.project || "default";
+  return {
+    url,
+    key,
+    project,
+    preferLive: stored ? stored.preferLive : modeEnv !== "snapshot",
+    modeEnv: modeEnv === "snapshot" ? ("snapshot" as const) : ("live" as const),
+    hasStoredConnection: !!stored,
+    hostLabel: (() => {
+      try {
+        return new URL(url).host;
+      } catch {
+        return url;
+      }
+    })(),
+  };
+}
+
+/** Health check against an arbitrary URL/key (Connect form) — never logs the key. */
+export async function testHealth(
+  url: string,
+  apiKey: string,
+  signal?: AbortSignal,
+): Promise<{ status: string }> {
+  const base = url.replace(/\/$/, "");
+  const res = await fetch(`${base}/api/v1/health`, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      Accept: "application/json",
+    },
+    signal,
+    cache: "no-store",
+  });
+  if (!res.ok) throw new ApiError(res.status, `Health check failed (${res.status})`);
+  return (await res.json()) as { status: string };
 }
 
 export function mediaFileUrl(mediaIdOrUrl: string): string {
@@ -426,7 +506,7 @@ type RequestOpts = {
 };
 
 async function request<T>(path: string, opts: RequestOpts = {}): Promise<T> {
-  const { url, key } = apiConfig();
+  const { url, key, project } = apiConfig();
   const qs = new URLSearchParams();
   if (opts.query) {
     for (const [k, v] of Object.entries(opts.query)) {
@@ -439,6 +519,7 @@ async function request<T>(path: string, opts: RequestOpts = {}): Promise<T> {
   const headers: Record<string, string> = {
     Authorization: `Bearer ${key}`,
     Accept: "application/json",
+    "X-Project": project || "default",
   };
   let body: BodyInit | undefined;
   if (opts.body !== undefined) {

@@ -119,6 +119,117 @@ def _map_wav(rel: str, media_dir: Path, suite: str, mapping: dict[str, str]) -> 
         mapping[rel] = f"/media/{suite}/{dest_name}"
 
 
+def _export_mp4(src: Path, dest: Path) -> bool:
+    if not src.is_file():
+        return False
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dest)
+    return True
+
+
+def _map_video(rel: str, media_dir: Path, suite: str, mapping: dict[str, str]) -> None:
+    if not rel or rel in mapping:
+        return
+    src = _resolve(rel)
+    dest_name = Path(rel).name
+    dest = media_dir / dest_name
+    if _export_mp4(src, dest):
+        mapping[rel] = f"/media/{suite}/{dest_name}"
+
+
+FRAME_THUMB_SIDE = 320
+
+
+def _frame_at_ms(video_path: Path, t_ms: int) -> Image.Image | None:
+    """Grab the frame nearest to t_ms from an mp4."""
+    try:
+        import imageio.v2 as imageio
+    except ImportError:
+        return None
+    if not video_path.is_file():
+        return None
+    reader = imageio.get_reader(str(video_path))
+    try:
+        meta = reader.get_meta_data()
+        fps = float(meta.get("fps") or 10.0)
+        idx = max(0, int(round((t_ms / 1000.0) * fps)))
+        # Clamp to last frame if needed.
+        try:
+            n = reader.count_frames()
+            if n and idx >= n:
+                idx = n - 1
+        except Exception:
+            pass
+        arr = reader.get_data(idx)
+        return Image.fromarray(arr).convert("RGB")
+    except Exception:
+        return None
+    finally:
+        reader.close()
+
+
+def _export_frame_thumb(img: Image.Image, dest: Path) -> bool:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    w, h = img.size
+    longest = max(w, h)
+    if longest > FRAME_THUMB_SIDE:
+        scale = FRAME_THUMB_SIDE / longest
+        img = img.resize(
+            (max(1, int(w * scale)), max(1, int(h * scale))),
+            Image.Resampling.LANCZOS,
+        )
+    img.save(dest, "JPEG", quality=JPEG_QUALITY, optimize=True)
+    return True
+
+
+def _export_video_frame_thumbs(
+    payload: dict,
+    media_dir: Path,
+    suite: str,
+    mapping: dict[str, str],
+) -> None:
+    """Write JPEG thumbs for every sampled-frame span into media/<suite>/frames/."""
+    frames_dir = media_dir / "frames"
+    cases_by_id = {c.get("id"): c for c in (payload.get("cases") or []) if c.get("id")}
+    for tr in payload.get("traces") or []:
+        case_id = tr.get("case_id")
+        case = cases_by_id.get(case_id) or {}
+        video_rel = case.get("video")
+        if not video_rel:
+            # Fall back to first video asset on the trace.
+            for asset in tr.get("assets") or []:
+                if (asset.get("modality") == "video") or str(asset.get("path", "")).endswith(".mp4"):
+                    video_rel = asset.get("path")
+                    break
+        if not video_rel:
+            continue
+        src = _resolve(video_rel)
+        for sp in tr.get("spans") or []:
+            name = sp.get("name") or ""
+            attrs = sp.get("attributes") or {}
+            if not name.startswith("sample frame") and attrs.get("t_ms") is None:
+                continue
+            t_ms = attrs.get("t_ms")
+            if t_ms is None:
+                continue
+            t_ms = int(t_ms)
+            thumb_name = f"{case_id}_{t_ms}.jpg"
+            dest = frames_dir / thumb_name
+            # Stable synthetic key so traces can reference the thumb if desired.
+            key = f"video_frame:{case_id}:{t_ms}"
+            if key in mapping and dest.is_file():
+                continue
+            img = _frame_at_ms(src, t_ms)
+            if img is None:
+                continue
+            if _export_frame_thumb(img, dest):
+                mapping[key] = f"/media/{suite}/frames/{thumb_name}"
+                # Also stash path on the span for Studio without requiring rewrite.
+                attrs = dict(attrs)
+                attrs["thumb"] = mapping[key]
+                sp["attributes"] = attrs
+
+
 def export_suite(results_path: Path, data_dir: Path, media_root: Path) -> dict:
     suite = suite_from_results_path(results_path)
     raw = json.loads(results_path.read_text())
@@ -138,6 +249,8 @@ def export_suite(results_path: Path, data_dir: Path, media_root: Path) -> dict:
             _map_image(case["image"], media_dir, suite, mapping)
         if case.get("audio"):
             _map_wav(case["audio"], media_dir, suite, mapping)
+        if case.get("video"):
+            _map_video(case["video"], media_dir, suite, mapping)
         for turn in case.get("turns") or []:
             if turn.get("clip"):
                 _map_wav(turn["clip"], media_dir, suite, mapping)
@@ -146,7 +259,7 @@ def export_suite(results_path: Path, data_dir: Path, media_root: Path) -> dict:
         if not case_id:
             continue
         for cond in conditions:
-            if cond == "blind":
+            if cond in ("blind", "blind_guess"):
                 continue
             rel = f"out/perturbed/{case_id}_{cond}.png"
             _map_image(rel, media_dir, suite, mapping)
@@ -157,10 +270,18 @@ def export_suite(results_path: Path, data_dir: Path, media_root: Path) -> dict:
             path = asset.get("path")
             if not path or path in mapping:
                 continue
-            if path.lower().endswith((".wav",)):
+            lower = path.lower()
+            if lower.endswith((".wav",)):
                 _map_wav(path, media_dir, suite, mapping)
+            elif lower.endswith((".mp4", ".webm", ".mov")):
+                _map_video(path, media_dir, suite, mapping)
             else:
                 _map_image(path, media_dir, suite, mapping)
+
+    if (payload.get("meta") or {}).get("modality") == "video" or any(
+        (c or {}).get("modality") == "video" for c in cases
+    ):
+        _export_video_frame_thumbs(payload, media_dir, suite, mapping)
 
     payload["cases"] = _rewrite(payload["cases"], mapping)
     payload["traces"] = _rewrite(payload["traces"], mapping)

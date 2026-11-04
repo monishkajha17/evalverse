@@ -67,7 +67,16 @@ def main():
     ev.enrich_results_payload(data, evidence_margin=args.margin)
     data["scores"] = scoring.score_payload(data, profile=args.profile)
     ev.write_traces(data["traces"])
-    path.write_text(json.dumps(data, indent=1))
+
+    def _jsonable(obj):
+        if hasattr(obj, "item"):
+            try:
+                return obj.item()
+            except Exception:
+                pass
+        raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+
+    path.write_text(json.dumps(data, indent=1, default=_jsonable))
     print(
         f"rescored {path}: {len(data['results'])} results, "
         f"{len(data['traces'])} traces, {len(data['disagreements'])} disagreements "

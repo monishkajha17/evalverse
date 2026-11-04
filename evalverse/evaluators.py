@@ -175,6 +175,23 @@ def _is_valid(run: dict) -> bool:
 
 def _recompute(case: dict, run: dict, margin: float = 0) -> tuple[bool, bool, bool]:
     valid = _is_valid(run)
+    if case.get("modality") == "video":
+        from . import video as vmod
+
+        correct = vmod.video_answer_correct(case, run.get("answer")) if valid else False
+        interval = vmod.sampling_interval_ms(
+            run.get("condition") or run.get("variant") or "clean"
+        )
+        ev_ok = (
+            vmod.video_span_match(
+                case.get("truth_span_ms"),
+                run.get("span_ms"),
+                sampling_interval_ms=interval,
+            )
+            if valid
+            else False
+        )
+        return correct, ev_ok, valid
     correct = core.answer_correct(case, run.get("answer")) if valid else False
     if case.get("modality") == "audio":
         ev_ok = span_match(case.get("truth_span"), run.get("span_ms")) if valid else False
@@ -212,6 +229,16 @@ def _list_family_label(case: dict, run: dict) -> str:
 def _stage_label(case: dict, run: dict, margin: float = 0) -> str:
     if case.get("modality") == "audio":
         return audio_label(case, run)
+    if case.get("modality") == "video":
+        from . import video as vmod
+
+        interval = vmod.sampling_interval_ms(
+            run.get("condition") or run.get("variant") or "clean"
+        )
+        payload = dict(run)
+        if payload.get("correct") is None and _is_valid(payload):
+            payload["correct"] = vmod.video_answer_correct(case, payload.get("answer"))
+        return vmod.video_label(case, payload, sampling_interval_ms=interval)
     if case.get("family") in ("menu_list", "unanswerable"):
         return _list_family_label(case, run)
     correct, ev_ok, valid = _recompute(case, run, margin=margin)
@@ -262,7 +289,7 @@ def audio_label(case: dict, run: dict) -> str:
     version="1.0.0",
     category="deterministic",
     dimension="Perception",
-    modalities=["image"],
+    modalities=["image", "video"],
     needs_reference=True,
     scope="run",
 )
@@ -463,7 +490,7 @@ def _tool_outcome_label(case: dict, run: dict, tool_spans: list[dict], margin: f
     version="1.0.0",
     category="composite",
     dimension="Failure analysis",
-    modalities=["image"],
+    modalities=["image", "video"],
     needs_reference=True,
     depends_on=("answer_correctness",),
     scope="run",
@@ -487,11 +514,19 @@ def stage_attribution(
         pass_labels = {"correct_action"}
     else:
         label = _stage_label(case, run, margin=evidence_margin)
-        pass_labels = {"grounded_correct", "complete_correct", "abstained_correctly"}
+        if case.get("modality") == "video":
+            # Video labels: grounded_correct | correct_ungrounded | mistimed | misread | abstained | invalid_output
+            pass_labels = {"grounded_correct"}
+        else:
+            pass_labels = {"grounded_correct", "complete_correct", "abstained_correctly"}
     if case.get("truth_box"):
         evidence.append({"type": "image_region", "role": "expected", "locator": list(case["truth_box"])})
+    if case.get("truth_span_ms"):
+        evidence.append({"type": "time_span", "role": "expected", "locator": list(case["truth_span_ms"])})
     if run.get("box"):
         evidence.append({"type": "image_region", "role": "claimed", "locator": list(run["box"])})
+    if run.get("span_ms"):
+        evidence.append({"type": "time_span", "role": "claimed", "locator": list(run["span_ms"])})
     score = 1.0 if label in pass_labels else 0.0
     return _result(
         agent=agent,
@@ -950,7 +985,7 @@ def audio_stage_attribution(*, agent, case_id, variant, meta, case, run, **_):
     version="1.0.0",
     category="paired",
     dimension="Media dependence",
-    modalities=["image", "audio"],
+    modalities=["image", "audio", "video"],
     needs_reference=False,
     needs_replay=True,
     scope="pair",
@@ -1006,7 +1041,7 @@ def media_dependence(*, agent, case_id, variant, meta, clean_run, blind_run, cas
     version="1.0.0",
     category="paired",
     dimension="Media dependence",
-    modalities=["audio"],
+    modalities=["audio", "video"],
     needs_reference=False,
     needs_replay=True,
     scope="pair",
@@ -1045,13 +1080,18 @@ def media_dependence_guess(*, agent, case_id, variant, meta, clean_run, case, bl
     version="1.0.0",
     category="paired",
     dimension="Robustness",
-    modalities=["image", "audio"],
+    modalities=["image", "audio", "video"],
     needs_reference=True,
     needs_replay=True,
     scope="pair",
 )
 def robustness_sweep(*, agent, case_id, variant, meta, case, sibling_runs, evidence_margin=DEFAULT_EVIDENCE_MARGIN, **_):
-    order = ("noise", "bandlimit") if case.get("modality") == "audio" else ROBUSTNESS_ORDER
+    if case.get("modality") == "audio":
+        order = ("noise", "bandlimit")
+    elif case.get("modality") == "video":
+        order = ("clean", "sparse", "blur")
+    else:
+        order = ROBUSTNESS_ORDER
     present = [(v, sibling_runs.get(v)) for v in order if sibling_runs.get(v) is not None]
     if not present:
         return _skipped(agent, case_id, "all", meta, "no robustness variants present")
@@ -1088,7 +1128,7 @@ def robustness_sweep(*, agent, case_id, variant, meta, case, sibling_runs, evide
     version="1.0.0",
     category="judge",
     dimension="Perception",
-    modalities=["image"],
+    modalities=["image", "video"],
     needs_reference=False,
     scope="run",
 )
@@ -1141,7 +1181,7 @@ def perception_judge(*, agent, case_id, variant, meta, case, run, judged=None, j
     version="1.0.0",
     category="paired",
     dimension="Judge trust",
-    modalities=["image", "audio"],
+    modalities=["image", "audio", "video"],
     needs_reference=True,
     scope="suite",
 )
@@ -1234,6 +1274,7 @@ def case_has_reference(case: dict) -> bool:
     return bool(
         case.get("truth_box")
         or case.get("truth_span")
+        or case.get("truth_span_ms")
         or case.get("answer") is not None
     )
 
@@ -1612,11 +1653,16 @@ def _missing_note(value, fallback="(not recorded in this run)"):
 
 
 def _is_audio_run(case: dict | None, run: dict) -> bool:
+    if case and case.get("modality") == "video":
+        return False
     if case and case.get("modality") == "audio":
         return True
-    if run.get("asr_turns") is not None or run.get("span_ms") is not None:
+    if run.get("asr_turns") is not None:
         return True
     if run.get("transcript") is not None and run.get("turn_wers") is not None:
+        return True
+    # Legacy audio rows may only carry span_ms (not used by image runs).
+    if run.get("span_ms") is not None and not run.get("box") and case is None:
         return True
     return False
 
@@ -1898,6 +1944,41 @@ def write_traces(traces: list[dict], traces_dir: Path | None = None) -> None:
         (traces_dir / name).write_text(json.dumps(tr, indent=1))
 
 
+def _refresh_video_traces(old_traces: list[dict], cases, runs, results) -> list[dict]:
+    """Keep the fan-out sample-frame DAG; refresh evaluation result_ids only."""
+    by_id = {c["id"]: c for c in cases}
+    run_results, pair_results, suite_ids = _result_id_index(results)
+    old_by_id = {t.get("id"): t for t in old_traces if t.get("id")}
+    out = []
+    for run in runs:
+        agent, case_id, variant = run["agent"], run["case_id"], _variant(run)
+        tid = f"{agent}|{case_id}|{variant}"
+        result_ids = _collect_result_ids(agent, case_id, variant, run_results, pair_results, suite_ids)
+        prev = old_by_id.get(tid)
+        if prev and any(str(s.get("name", "")).startswith("sample frame") for s in (prev.get("spans") or [])):
+            spans = []
+            for sp in prev.get("spans") or []:
+                sp = dict(sp)
+                if sp.get("name") == "evaluation" or sp.get("type") == "evaluation":
+                    sp["result_ids"] = list(result_ids)
+                spans.append(sp)
+            tr = dict(prev)
+            tr["spans"] = spans
+            out.append(tr)
+            continue
+        # Fallback: rebuild with frame timestamps recovered from prior spans or empty.
+        frame_tmss = []
+        if prev:
+            for sp in prev.get("spans") or []:
+                attrs = sp.get("attributes") or {}
+                if attrs.get("t_ms") is not None:
+                    frame_tmss.append(int(attrs["t_ms"]))
+        from .video_run import build_video_trace
+
+        out.append(build_video_trace(by_id[case_id], run, frame_tmss, result_ids))
+    return out
+
+
 def enrich_results_payload(data: dict, evidence_margin: float = DEFAULT_EVIDENCE_MARGIN) -> dict:
     """Recompute results / summary / disagreements / registry / traces from stored runs."""
     margin = float(evidence_margin)
@@ -1914,7 +1995,13 @@ def enrich_results_payload(data: dict, evidence_margin: float = DEFAULT_EVIDENCE
         evidence_margin=margin,
         judge_model=judge_model,
     )
-    traces = build_traces(data["cases"], data["runs"], results)
+    is_video = (data.get("meta") or {}).get("modality") == "video" or any(
+        (c or {}).get("modality") == "video" for c in (data.get("cases") or [])
+    )
+    if is_video:
+        traces = _refresh_video_traces(data.get("traces") or [], data["cases"], data["runs"], results)
+    else:
+        traces = build_traces(data["cases"], data["runs"], results)
     data["results"] = results
     data["dimension_summary"] = dimension_summary
     data["disagreements"] = disagreements
@@ -1926,3 +2013,14 @@ def enrich_results_payload(data: dict, evidence_margin: float = DEFAULT_EVIDENCE
     # Keep any existing plan statuses; do not invent jobs during rescore.
     data.setdefault("plan", data.get("plan") or [])
     return data
+
+
+# Register video evaluators into REGISTRY without a circular import at module load of video_evaluators alone.
+def _ensure_video_evaluators_registered() -> None:
+    try:
+        from . import video_evaluators as _video_evaluators  # noqa: F401
+    except Exception:
+        pass
+
+
+_ensure_video_evaluators_registered()

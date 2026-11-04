@@ -30,7 +30,7 @@ export function PipelineDiagram({ counts }: { counts: PipelineCounts }) {
     { id: "evals", label: "Evaluators", sub: "by category", href: "/evaluators/", count: counts.evaluators, countLabel: "evals", x: 580, y: 110 },
     { id: "judge", label: "Judge", sub: "audit · controls", href: "/judge/", count: counts.results, countLabel: "results", x: 760, y: 40 },
     { id: "agg", label: "Aggregator", sub: "dimensions + UMS", href: "/system/#score", count: counts.results, countLabel: "stored", x: 760, y: 180 },
-    { id: "studio", label: "Studio", sub: "this UI", href: "/", count: counts.policies, countLabel: "policies on", x: 940, y: 110 },
+    { id: "studio", label: "Studio", sub: "this UI", href: "/overview/", count: counts.policies, countLabel: "policies on", x: 940, y: 110 },
   ];
 
   const edges: Array<[string, string]> = [

@@ -25,7 +25,7 @@ const GROUPS: Array<{
   {
     label: "Observe",
     items: [
-      { href: "/", label: "Overview", icon: LayoutDashboard },
+      { href: "/overview/", label: "Overview", icon: LayoutDashboard },
       { href: "/sessions/", label: "Sessions", icon: Users },
       { href: "/traces/", label: "Traces", icon: ListTree },
       { href: "/system/", label: "System", icon: Network },
@@ -58,13 +58,13 @@ export function Sidebar() {
 
   return (
     <aside className="flex w-52 shrink-0 flex-col border-r border-border bg-white">
-      <div className="flex h-12 items-center gap-2 border-b border-border px-3">
+      <Link href="/" className="flex h-12 items-center gap-2 border-b border-border px-3 hover:bg-muted/60">
         <Scale className="h-4 w-4 text-teal" />
         <div>
           <div className="text-sm font-semibold leading-none text-ink">EvalVerse</div>
           <div className="text-[10px] uppercase tracking-wide text-ink/45">Studio</div>
         </div>
-      </div>
+      </Link>
       <nav className="flex flex-1 flex-col gap-3 overflow-auto p-2" aria-label="Primary">
         {GROUPS.map((group) => (
           <div key={group.label}>
@@ -74,9 +74,9 @@ export function Sidebar() {
             <div className="flex flex-col gap-0.5">
               {group.items.map((item) => {
                 const active =
-                  item.href === "/"
-                    ? pathname === "/"
-                    : pathname === item.href || pathname.startsWith(item.href.replace(/\/$/, ""));
+                  pathname === item.href ||
+                  pathname.startsWith(item.href.replace(/\/$/, "") + "/") ||
+                  pathname === item.href.replace(/\/$/, "");
                 const Icon = item.icon;
                 return (
                   <Link

@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useApiMode } from "@/context/api-mode";
 import { useSuite } from "@/context/suite-context";
@@ -8,7 +10,14 @@ import { cn } from "@/lib/utils";
 
 export function Topbar({ title, children }: { title: string; children?: React.ReactNode }) {
   const { index, suite, setSuite, entry, loading } = useSuite();
-  const { mode, checking, error } = useApiMode();
+  const { mode, checking, error, hostLabel, hasStoredConnection, disconnect } = useApiMode();
+
+  const badgeLabel =
+    checking
+      ? "Checking…"
+      : mode === "live"
+        ? `Connected to ${hostLabel}`
+        : "Demo";
 
   return (
     <header className="sticky top-0 z-20 flex h-12 items-center gap-3 border-b border-border bg-paper/95 px-4 backdrop-blur">
@@ -25,14 +34,23 @@ export function Topbar({ title, children }: { title: string; children?: React.Re
           )}
           title={
             mode === "live"
-              ? "Connected to EvalVerse API"
+              ? `Connected to ${hostLabel}`
               : error
-                ? `Snapshot fallback: ${error}`
-                : "Snapshot mode — reading /data/*.json"
+                ? `Demo snapshot: ${error}`
+                : "Demo — reading /data/*.json"
           }
         >
-          {checking ? "Checking…" : mode === "live" ? "Live" : "Snapshot"}
+          {badgeLabel}
         </Badge>
+        {mode === "live" || hasStoredConnection ? (
+          <Button type="button" variant="ghost" size="sm" onClick={disconnect}>
+            Disconnect
+          </Button>
+        ) : (
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/connect/">Connect</Link>
+          </Button>
+        )}
         {entry ? (
           <Badge className="border-border bg-white text-ink/70">
             {entry.modality} · {entry.n_cases} cases

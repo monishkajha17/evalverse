@@ -8,7 +8,13 @@ import {
   useMemo,
   useState,
 } from "react";
-import { apiConfig, health } from "@/lib/api";
+import {
+  apiConfig,
+  clearStoredConnection,
+  health,
+  writeStoredConnection,
+  type StoredConnection,
+} from "@/lib/api";
 
 export type StudioMode = "live" | "snapshot";
 
@@ -17,27 +23,40 @@ interface ApiModeValue {
   liveAvailable: boolean;
   checking: boolean;
   error: string | null;
+  hostLabel: string;
+  preferLive: boolean;
+  hasStoredConnection: boolean;
   refresh: () => void;
+  connect: (conn: Omit<StoredConnection, "preferLive"> & { preferLive?: boolean }) => Promise<void>;
+  switchToDemo: () => void;
+  disconnect: () => void;
 }
 
 const ApiModeContext = createContext<ApiModeValue | null>(null);
 
 export function ApiModeProvider({ children }: { children: React.ReactNode }) {
-  const forced = apiConfig().modeEnv;
+  const [tick, setTick] = useState(0);
   const [liveAvailable, setLiveAvailable] = useState(false);
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [tick, setTick] = useState(0);
+  // Re-read localStorage whenever tick changes (connect / disconnect / demo).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const cfg = useMemo(() => apiConfig(), [tick]);
 
   useEffect(() => {
-    if (forced === "snapshot") {
+    let cancelled = false;
+    const ctrl = new AbortController();
+
+    if (!cfg.preferLive || cfg.modeEnv === "snapshot") {
       setLiveAvailable(false);
       setChecking(false);
       setError(null);
-      return;
+      return () => {
+        cancelled = true;
+        ctrl.abort();
+      };
     }
-    let cancelled = false;
-    const ctrl = new AbortController();
+
     setChecking(true);
     (async () => {
       try {
@@ -55,20 +74,54 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
         if (!cancelled) setChecking(false);
       }
     })();
+
     return () => {
       cancelled = true;
       ctrl.abort();
     };
-  }, [forced, tick]);
+  }, [cfg.preferLive, cfg.modeEnv, cfg.url, cfg.project, tick]);
 
-  // periodic re-check every 15s when supposed to be live
   useEffect(() => {
-    if (forced === "snapshot") return;
+    if (!cfg.preferLive || cfg.modeEnv === "snapshot") return;
     const id = setInterval(() => setTick((t) => t + 1), 15_000);
     return () => clearInterval(id);
-  }, [forced]);
+  }, [cfg.preferLive, cfg.modeEnv]);
 
-  const mode: StudioMode = forced === "snapshot" || !liveAvailable ? "snapshot" : "live";
+  const mode: StudioMode =
+    !cfg.preferLive || cfg.modeEnv === "snapshot" || !liveAvailable ? "snapshot" : "live";
+
+  const connect = useCallback(
+    async (conn: Omit<StoredConnection, "preferLive"> & { preferLive?: boolean }) => {
+      writeStoredConnection({
+        url: conn.url,
+        apiKey: conn.apiKey,
+        project: conn.project || "default",
+        preferLive: conn.preferLive !== false,
+      });
+      setTick((t) => t + 1);
+    },
+    [],
+  );
+
+  const switchToDemo = useCallback(() => {
+    const existing = apiConfig();
+    writeStoredConnection({
+      url: existing.url,
+      apiKey: existing.key,
+      project: existing.hasStoredConnection ? existing.project : "default",
+      preferLive: false,
+    });
+    setLiveAvailable(false);
+    setError(null);
+    setTick((t) => t + 1);
+  }, []);
+
+  const disconnect = useCallback(() => {
+    clearStoredConnection();
+    setLiveAvailable(false);
+    setError(null);
+    setTick((t) => t + 1);
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -76,9 +129,26 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
       liveAvailable,
       checking,
       error,
+      hostLabel: cfg.hostLabel,
+      preferLive: cfg.preferLive,
+      hasStoredConnection: cfg.hasStoredConnection,
       refresh: () => setTick((t) => t + 1),
+      connect,
+      switchToDemo,
+      disconnect,
     }),
-    [mode, liveAvailable, checking, error],
+    [
+      mode,
+      liveAvailable,
+      checking,
+      error,
+      cfg.hostLabel,
+      cfg.preferLive,
+      cfg.hasStoredConnection,
+      connect,
+      switchToDemo,
+      disconnect,
+    ],
   );
 
   return <ApiModeContext.Provider value={value}>{children}</ApiModeContext.Provider>;

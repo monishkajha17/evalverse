@@ -1,18 +1,6 @@
 "use client";
 
-import { ApiModeProvider } from "@/context/api-mode";
-import { SuiteProvider } from "@/context/suite-context";
-import { Sidebar } from "./sidebar";
-
+/** @deprecated Prefer route-group layouts; kept for any residual imports. */
 export function AppShell({ children }: { children: React.ReactNode }) {
-  return (
-    <ApiModeProvider>
-      <SuiteProvider>
-        <div className="flex min-h-screen bg-paper text-ink">
-          <Sidebar />
-          <div className="flex min-w-0 flex-1 flex-col">{children}</div>
-        </div>
-      </SuiteProvider>
-    </ApiModeProvider>
-  );
+  return <>{children}</>;
 }

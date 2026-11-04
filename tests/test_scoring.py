@@ -39,13 +39,15 @@ def test_renormalisation_and_missing_never_zero():
 
     weights = POLICY["profiles"]["balanced"]
     combined = scoring.combine_ums(dims, weights, POLICY["gate"])
-    # P.25 + H.15 = 0.40 → Perception eff = 0.25/0.40
-    assert combined["weights_eff"]["Perception"] == pytest.approx(0.25 / 0.40)
-    assert combined["weights_eff"]["Honesty"] == pytest.approx(0.15 / 0.40)
+    # Only Perception + Honesty available → renormalise over those original weights.
+    w_p = float(weights["Perception"])
+    w_h = float(weights["Honesty"])
+    assert combined["weights_eff"]["Perception"] == pytest.approx(w_p / (w_p + w_h))
+    assert combined["weights_eff"]["Honesty"] == pytest.approx(w_h / (w_p + w_h))
     assert "Groundedness" not in combined["weights_eff"]
     assert combined["dimensions"]["Groundedness"]["score"] is None
     assert combined["ums"] == pytest.approx(0.5)
-    assert combined["coverage"] == pytest.approx(0.25 + 0.15)
+    assert combined["coverage"] == pytest.approx(w_p + w_h)
 
 
 def test_honesty_maths():

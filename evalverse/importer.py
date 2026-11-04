@@ -115,12 +115,18 @@ def import_results(
     try:
         # Pre-register case images under data/.
         for case in cases.values():
-            for key in ("image", "audio"):
+            for key in ("image", "audio", "video"):
                 rel = case.get(key)
                 if not rel or rel in media_cache:
                     continue
                 src = _resolve(rel)
-                uploaded = upload_media(client, src, modality="audio" if key == "audio" else "image")
+                if key == "audio":
+                    modality = "audio"
+                elif key == "video":
+                    modality = "video"
+                else:
+                    modality = "image"
+                uploaded = upload_media(client, src, modality=modality)
                 if uploaded:
                     media_cache[rel] = uploaded["id"]
                     if uploaded.get("created", True):
@@ -316,17 +322,23 @@ def import_results_local(
     media_cache: dict[str, str] = {}
 
     for case in cases.values():
-        for key in ("image", "audio"):
+        for key in ("image", "audio", "video"):
             rel = case.get(key)
             if not rel or rel in media_cache:
                 continue
             src = _resolve(rel)
             if not src.is_file():
                 continue
+            if key == "audio":
+                modality = "audio"
+            elif key == "video":
+                modality = "video"
+            else:
+                modality = "image"
             m = service.register_media_bytes(
                 project,
                 src.read_bytes(),
-                modality="audio" if key == "audio" else "image",
+                modality=modality,
                 filename=src.name,
             )
             media_cache[rel] = m.id

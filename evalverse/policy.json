@@ -11,13 +11,16 @@
       "evaluators": ["answer_correctness", "transcript_fidelity"]
     },
     "Groundedness": {
-      "evaluators": ["evidence_grounding", "temporal_alignment"]
+      "evaluators": ["evidence_grounding", "temporal_alignment", "temporal_alignment_video"]
     },
     "Honesty": {
       "kind": "honesty_from_answer_correctness"
     },
+    "Reasoning": {
+      "evaluators": ["event_order"]
+    },
     "Media dependence": {
-      "evaluators": ["media_dependence"]
+      "evaluators": ["media_dependence", "media_dependence_guess"]
     },
     "Robustness": {
       "evaluators": ["robustness_sweep"]
@@ -35,42 +38,46 @@
   },
   "profiles": {
     "balanced": {
-      "Perception": 0.25,
-      "Groundedness": 0.25,
-      "Honesty": 0.15,
-      "Media dependence": 0.1,
-      "Robustness": 0.15,
-      "Tool use": 0.1,
+      "Perception": 0.225,
+      "Groundedness": 0.225,
+      "Honesty": 0.135,
+      "Reasoning": 0.1,
+      "Media dependence": 0.09,
+      "Robustness": 0.135,
+      "Tool use": 0.09,
       "Completeness": 0.0,
       "Hallucination": 0.0
     },
     "extraction": {
-      "Perception": 0.3,
-      "Groundedness": 0.3,
-      "Honesty": 0.15,
-      "Media dependence": 0.08,
-      "Robustness": 0.09,
-      "Tool use": 0.08,
+      "Perception": 0.27,
+      "Groundedness": 0.27,
+      "Honesty": 0.135,
+      "Reasoning": 0.1,
+      "Media dependence": 0.072,
+      "Robustness": 0.081,
+      "Tool use": 0.072,
       "Completeness": 0.0,
       "Hallucination": 0.0
     },
     "safety_first": {
-      "Perception": 0.15,
-      "Groundedness": 0.2,
-      "Honesty": 0.3,
-      "Media dependence": 0.07,
-      "Robustness": 0.08,
-      "Tool use": 0.2,
+      "Perception": 0.135,
+      "Groundedness": 0.18,
+      "Honesty": 0.27,
+      "Reasoning": 0.1,
+      "Media dependence": 0.063,
+      "Robustness": 0.072,
+      "Tool use": 0.18,
       "Completeness": 0.0,
       "Hallucination": 0.0
     },
     "robustness": {
-      "Perception": 0.2,
-      "Groundedness": 0.2,
-      "Honesty": 0.15,
-      "Media dependence": 0.05,
-      "Robustness": 0.35,
-      "Tool use": 0.05,
+      "Perception": 0.18,
+      "Groundedness": 0.18,
+      "Honesty": 0.135,
+      "Reasoning": 0.1,
+      "Media dependence": 0.045,
+      "Robustness": 0.315,
+      "Tool use": 0.045,
       "Completeness": 0.0,
       "Hallucination": 0.0
     }
