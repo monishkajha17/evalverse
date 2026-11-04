@@ -230,6 +230,45 @@ CREATE TABLE IF NOT EXISTS alerts (
 );
 
 CREATE INDEX IF NOT EXISTS idx_alerts_project ON alerts(project);
+
+CREATE TABLE IF NOT EXISTS experiments (
+    id TEXT PRIMARY KEY,
+    project TEXT NOT NULL,
+    name TEXT NOT NULL,
+    config_json TEXT,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (project) REFERENCES projects(name)
+);
+
+CREATE TABLE IF NOT EXISTS experiment_runs (
+    id TEXT PRIMARY KEY,
+    experiment_id TEXT NOT NULL,
+    agent TEXT,
+    variant TEXT,
+    eval_run_id TEXT,
+    manifest_json TEXT,
+    status TEXT,
+    created_at TEXT NOT NULL,
+    ended_at TEXT,
+    FOREIGN KEY (experiment_id) REFERENCES experiments(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_experiment_runs_exp ON experiment_runs(experiment_id);
+
+CREATE TABLE IF NOT EXISTS reviews (
+    id TEXT PRIMARY KEY,
+    project TEXT NOT NULL,
+    result_id TEXT NOT NULL,
+    verdict TEXT NOT NULL,
+    label TEXT,
+    notes TEXT,
+    reviewer TEXT,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (project) REFERENCES projects(name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_reviews_project ON reviews(project);
+CREATE INDEX IF NOT EXISTS idx_reviews_result ON reviews(result_id);
 """
 
 

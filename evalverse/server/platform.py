@@ -227,6 +227,10 @@ class PlatformMixin:
             if not line:
                 continue
             obj = json.loads(line)
+            # Avoid id collisions when re-importing into a new version.
+            item_id = obj.get("id")
+            if item_id and self.db.fetchone("SELECT id FROM dataset_items WHERE id=?", (item_id,)):
+                item_id = None
             self.add_dataset_item(
                 project,
                 dataset_id,
@@ -235,7 +239,7 @@ class PlatformMixin:
                 tags=obj.get("tags"),
                 metadata=obj.get("metadata"),
                 version_id=vrow["id"],
-                item_id=obj.get("id"),
+                item_id=item_id,
             )
             n += 1
         return {"imported": n, "version_id": vrow["id"]}

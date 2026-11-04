@@ -13,6 +13,7 @@ from typing import Any, Optional
 from fastapi import HTTPException, UploadFile
 
 from evalverse.server.db import Database
+from evalverse.server.experiments import ExperimentsMixin, ReviewsMixin
 from evalverse.server.platform import PlatformMixin
 from evalverse.server.schemas import (
     EvalResultOut,
@@ -157,7 +158,7 @@ def _validate_span_graph_with_existing(
     _validate_span_graph(list(by_id.values()), existing_ids=set(by_id.keys()))
 
 
-class Service(PlatformMixin):
+class Service(PlatformMixin, ExperimentsMixin, ReviewsMixin):
     def __init__(self, db: Database, media_dir: Path):
         self.db = db
         self.media_dir = Path(media_dir)

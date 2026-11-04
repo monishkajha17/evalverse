@@ -359,3 +359,35 @@ class PolicyUpdate(BaseModel):
     evaluator_ids: Optional[list[str]] = None
     enabled: Optional[bool] = None
     alert: Optional[dict[str, Any]] = None
+
+
+class ExperimentAgent(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    name: str
+    model: str
+    prompt_version: Optional[str] = None
+
+
+class ExperimentCreate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    name: str
+    dataset_version_id: str
+    agents: list[ExperimentAgent | dict[str, Any] | str]
+    variants: list[str] = Field(default_factory=lambda: ["clean"])
+    evaluator_ids: list[str] = Field(default_factory=list)
+    judge_model: Optional[str] = "muse-spark-1.3"
+    mock: bool = False
+
+
+class ExperimentRunRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    mock: Optional[bool] = None
+
+
+class ReviewCreate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    result_id: str
+    verdict: str
+    label: Optional[str] = None
+    notes: Optional[str] = None
+    reviewer: Optional[str] = None

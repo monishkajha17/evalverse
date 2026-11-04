@@ -2,3 +2,5 @@ fastapi
 uvicorn[standard]
 python-multipart
 httpx
+opentelemetry-sdk
+opentelemetry-exporter-otlp-proto-http

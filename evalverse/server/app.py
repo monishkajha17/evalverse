@@ -10,7 +10,9 @@ from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse, Response
 
+from evalverse.providers.registry import list_providers
 from evalverse.server.db import Database
+from evalverse.server.otlp import ingest_otlp_json
 from evalverse.server.schemas import (
     DatasetCreate,
     DatasetItemCreate,
@@ -19,9 +21,12 @@ from evalverse.server.schemas import (
     EvaluatorCreate,
     EvaluatorTestRequest,
     EvalResultIn,
+    ExperimentCreate,
+    ExperimentRunRequest,
     PolicyCreate,
     PolicyUpdate,
     PromoteRequest,
+    ReviewCreate,
     SpansCreate,
     TraceCreate,
     TracePatch,
@@ -345,6 +350,121 @@ def create_app(
     def get_queue(ctx: tuple[str, str] = Depends(auth)):
         _, project = ctx
         return svc.queue_stats(project)
+
+    # ---- OTLP receiver ----
+    @app.post("/v1/traces")
+    async def otlp_traces(
+        request: Request,
+        authorization: Optional[str] = Header(default=None),
+        x_project: Optional[str] = Header(default=None, alias="X-Project"),
+    ):
+        # Auth (OTLP exporters often send Authorization / custom headers)
+        if not authorization or not authorization.lower().startswith("bearer "):
+            raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
+        token = authorization.split(" ", 1)[1].strip()
+        if token != app.state.api_key:
+            raise HTTPException(status_code=401, detail="Invalid API key")
+        project = (x_project or "default").strip() or "default"
+
+        ctype = (request.headers.get("content-type") or "").lower()
+        body = await request.body()
+        if "protobuf" in ctype or "application/x-protobuf" in ctype:
+            try:
+                from opentelemetry.proto.collector.trace.v1.trace_service_pb2 import (
+                    ExportTraceServiceRequest,
+                )
+            except ImportError as exc:
+                raise HTTPException(
+                    status_code=415,
+                    detail=(
+                        "OTLP protobuf received but opentelemetry-proto is not installed. "
+                        "Send OTLP/HTTP JSON (Content-Type: application/json) or install "
+                        "opentelemetry-exporter-otlp-proto-http / opentelemetry-proto."
+                    ),
+                ) from exc
+            msg = ExportTraceServiceRequest()
+            msg.ParseFromString(body)
+            # Convert protobuf to JSON-like dict via MessageToDict (camelCase).
+            from google.protobuf.json_format import MessageToDict
+
+            payload = MessageToDict(msg, preserving_proto_field_name=False)
+            return ingest_otlp_json(svc, project, payload)
+
+        # JSON (default)
+        import json as _json
+
+        try:
+            payload = _json.loads(body.decode("utf-8") if body else "{}")
+        except Exception as exc:
+            if body and body[:1] not in (b"{", b"["):
+                raise HTTPException(
+                    status_code=415,
+                    detail=(
+                        "Unable to parse body as OTLP/HTTP JSON. If you are sending protobuf, "
+                        "set Content-Type to application/x-protobuf and ensure "
+                        "opentelemetry-proto is installed."
+                    ),
+                ) from exc
+            raise HTTPException(status_code=400, detail=f"Invalid OTLP JSON: {exc}") from exc
+        return ingest_otlp_json(svc, project, payload)
+
+    # ---- experiments ----
+    @app.post("/api/v1/experiments")
+    def create_experiment(body: ExperimentCreate, ctx: tuple[str, str] = Depends(auth)):
+        _, project = ctx
+        return svc.create_experiment(project, body.model_dump(exclude_none=True))
+
+    @app.get("/api/v1/experiments")
+    def list_experiments(ctx: tuple[str, str] = Depends(auth)):
+        _, project = ctx
+        return svc.list_experiments(project)
+
+    @app.get("/api/v1/experiments/{experiment_id}")
+    def get_experiment(experiment_id: str, ctx: tuple[str, str] = Depends(auth)):
+        _, project = ctx
+        return svc.get_experiment(project, experiment_id)
+
+    @app.post("/api/v1/experiments/{experiment_id}/runs")
+    def run_experiment(
+        experiment_id: str,
+        body: ExperimentRunRequest | None = None,
+        ctx: tuple[str, str] = Depends(auth),
+    ):
+        _, project = ctx
+        mock = body.mock if body else None
+        return svc.run_experiment(project, experiment_id, mock=mock)
+
+    @app.get("/api/v1/experiments/{experiment_id}/compare")
+    def compare_experiments(
+        experiment_id: str,
+        a: str = Query(...),
+        b: str = Query(...),
+        ctx: tuple[str, str] = Depends(auth),
+    ):
+        _, project = ctx
+        return svc.compare_experiment_runs(project, experiment_id, a, b)
+
+    # ---- reviews / calibration ----
+    @app.post("/api/v1/reviews")
+    def create_review(body: ReviewCreate, ctx: tuple[str, str] = Depends(auth)):
+        _, project = ctx
+        return svc.create_review(project, body.model_dump(exclude_none=True))
+
+    @app.get("/api/v1/reviews/queue")
+    def reviews_queue(ctx: tuple[str, str] = Depends(auth)):
+        _, project = ctx
+        return svc.review_queue(project)
+
+    @app.get("/api/v1/calibration")
+    def calibration(evaluator_id: str = Query(...), ctx: tuple[str, str] = Depends(auth)):
+        _, project = ctx
+        return svc.calibration(project, evaluator_id)
+
+    # ---- providers ----
+    @app.get("/api/v1/providers")
+    def providers(ctx: tuple[str, str] = Depends(auth)):
+        _ = ctx
+        return list_providers()
 
     return app
 
