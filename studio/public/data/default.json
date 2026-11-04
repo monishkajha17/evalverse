@@ -1,0 +1,6272 @@
+{
+ "meta": {
+  "agents": [
+   "muse-spark-1.1",
+   "muse-spark-1.3"
+  ],
+  "judge": "muse-spark-1.3",
+  "conditions": [
+   "clean",
+   "blur",
+   "noise",
+   "lowres"
+  ],
+  "mock": true,
+  "created": "2026-11-04T12:16:36+00:00",
+  "seconds": 0.2
+ },
+ "cases": [
+  {
+   "family": "receipt",
+   "question": "What is the total amount due on this receipt? Answer with the number only.",
+   "answer": "51.70",
+   "answer_type": "number",
+   "distractor": "47.87",
+   "truth_box": [
+    120,
+    578,
+    880,
+    636
+   ],
+   "size": [
+    700,
+    900
+   ],
+   "id": "receipt_01",
+   "image": "/media/default/receipt_01.jpg"
+  },
+  {
+   "family": "receipt",
+   "question": "What is the total amount due on this receipt? Answer with the number only.",
+   "answer": "44.37",
+   "answer_type": "number",
+   "distractor": "41.08",
+   "truth_box": [
+    120,
+    578,
+    880,
+    636
+   ],
+   "size": [
+    700,
+    900
+   ],
+   "id": "receipt_02",
+   "image": "/media/default/receipt_02.jpg"
+  },
+  {
+   "family": "receipt",
+   "question": "What is the total amount due on this receipt? Answer with the number only.",
+   "answer": "41.61",
+   "answer_type": "number",
+   "distractor": "38.53",
+   "truth_box": [
+    120,
+    527,
+    880,
+    584
+   ],
+   "size": [
+    700,
+    900
+   ],
+   "id": "receipt_03",
+   "image": "/media/default/receipt_03.jpg"
+  }
+ ],
+ "runs": [
+  {
+   "answer": "47.87",
+   "box": [
+    118,
+    564,
+    873,
+    651
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": true,
+   "iou": 0.661,
+   "label": "misread",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"47.87\", \"box\": [118, 564, 873, 651], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_01",
+   "condition": "clean"
+  },
+  {
+   "answer": "51.70",
+   "box": [
+    130,
+    589,
+    874,
+    651
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": true,
+   "iou": 0.633,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"51.70\", \"box\": [130, 589, 874, 651], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_01",
+   "condition": "blur"
+  },
+  {
+   "answer": "47.87",
+   "box": [
+    258,
+    71,
+    544,
+    471
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"47.87\", \"box\": [258, 71, 544, 471], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_01",
+   "condition": "noise"
+  },
+  {
+   "answer": "47.87",
+   "box": [
+    128,
+    272,
+    475,
+    558
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"47.87\", \"box\": [128, 272, 475, 558], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_01",
+   "condition": "lowres"
+  },
+  {
+   "answer": "unknown",
+   "box": null,
+   "evidence": "no image",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_01",
+   "condition": "blind"
+  },
+  {
+   "answer": "44.37",
+   "box": [
+    132,
+    584,
+    875,
+    636
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": true,
+   "iou": 0.876,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"44.37\", \"box\": [132, 584, 875, 636], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_02",
+   "condition": "clean"
+  },
+  {
+   "answer": "44.37",
+   "box": [
+    134,
+    580,
+    894,
+    621
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": true,
+   "iou": 0.685,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"44.37\", \"box\": [134, 580, 894, 621], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_02",
+   "condition": "blur"
+  },
+  {
+   "answer": "44.37",
+   "box": [
+    0,
+    252,
+    570,
+    524
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "correct_ungrounded",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"44.37\", \"box\": [0, 252, 570, 524], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_02",
+   "condition": "noise"
+  },
+  {
+   "answer": "41.08",
+   "box": [
+    161,
+    104,
+    682,
+    644
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.102,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"41.08\", \"box\": [161, 104, 682, 644], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_02",
+   "condition": "lowres"
+  },
+  {
+   "answer": "unknown",
+   "box": null,
+   "evidence": "no image",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_02",
+   "condition": "blind"
+  },
+  {
+   "answer": "41.61",
+   "box": [
+    107,
+    518,
+    894,
+    587
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": true,
+   "iou": 0.798,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"41.61\", \"box\": [107, 518, 894, 587], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "condition": "clean"
+  },
+  {
+   "answer": "41.61",
+   "box": [
+    72,
+    278,
+    629,
+    446
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "correct_ungrounded",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"41.61\", \"box\": [72, 278, 629, 446], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "condition": "blur"
+  },
+  {
+   "answer": "41.61",
+   "box": [
+    250,
+    55,
+    554,
+    682
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": false,
+   "iou": 0.08,
+   "label": "correct_ungrounded",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"41.61\", \"box\": [250, 55, 554, 682], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "condition": "noise"
+  },
+  {
+   "answer": "38.53",
+   "box": [
+    115,
+    538,
+    894,
+    586
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": true,
+   "iou": 0.764,
+   "label": "misread",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"38.53\", \"box\": [115, 538, 894, 586], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "condition": "lowres"
+  },
+  {
+   "answer": "unknown",
+   "box": null,
+   "evidence": "no image",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "condition": "blind"
+  },
+  {
+   "answer": "51.70",
+   "box": [
+    122,
+    581,
+    874,
+    635
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": true,
+   "iou": 0.921,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"51.70\", \"box\": [122, 581, 874, 635], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_01",
+   "condition": "clean"
+  },
+  {
+   "answer": "51.70",
+   "box": [
+    162,
+    294,
+    523,
+    548
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "correct_ungrounded",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"51.70\", \"box\": [162, 294, 523, 548], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_01",
+   "condition": "blur"
+  },
+  {
+   "answer": "51.70",
+   "box": [
+    76,
+    19,
+    441,
+    676
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": false,
+   "iou": 0.07,
+   "label": "correct_ungrounded",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"51.70\", \"box\": [76, 19, 441, 676], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_01",
+   "condition": "noise"
+  },
+  {
+   "answer": "47.87",
+   "box": [
+    268,
+    141,
+    667,
+    520
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"47.87\", \"box\": [268, 141, 667, 520], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_01",
+   "condition": "lowres"
+  },
+  {
+   "answer": "unknown",
+   "box": null,
+   "evidence": "no image",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_01",
+   "condition": "blind"
+  },
+  {
+   "answer": "44.37",
+   "box": [
+    126,
+    571,
+    880,
+    623
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": true,
+   "iou": 0.687,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"44.37\", \"box\": [126, 571, 880, 623], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "condition": "clean"
+  },
+  {
+   "answer": "41.08",
+   "box": [
+    214,
+    296,
+    540,
+    630
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.125,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"41.08\", \"box\": [214, 296, 540, 630], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "condition": "blur"
+  },
+  {
+   "answer": "41.08",
+   "box": [
+    182,
+    42,
+    566,
+    459
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"41.08\", \"box\": [182, 42, 566, 459], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "condition": "noise"
+  },
+  {
+   "answer": "41.08",
+   "box": [
+    97,
+    124,
+    408,
+    538
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"41.08\", \"box\": [97, 124, 408, 538], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "condition": "lowres"
+  },
+  {
+   "answer": "unknown",
+   "box": null,
+   "evidence": "no image",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "condition": "blind"
+  },
+  {
+   "answer": "41.61",
+   "box": [
+    130,
+    517,
+    875,
+    582
+   ],
+   "evidence": "mock",
+   "correct": true,
+   "evidence_ok": true,
+   "iou": 0.807,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"41.61\", \"box\": [130, 517, 875, 582], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_03",
+   "condition": "clean"
+  },
+  {
+   "answer": "38.53",
+   "box": [
+    109,
+    539,
+    887,
+    576
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": true,
+   "iou": 0.639,
+   "label": "misread",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"38.53\", \"box\": [109, 539, 887, 576], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_03",
+   "condition": "blur"
+  },
+  {
+   "answer": "38.53",
+   "box": [
+    294,
+    61,
+    600,
+    446
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"38.53\", \"box\": [294, 61, 600, 446], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_03",
+   "condition": "noise"
+  },
+  {
+   "answer": "38.53",
+   "box": [
+    273,
+    37,
+    413,
+    463
+   ],
+   "evidence": "mock",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"38.53\", \"box\": [273, 37, 413, 463], \"evidence\": \"mock\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_03",
+   "condition": "lowres"
+  },
+  {
+   "answer": "unknown",
+   "box": null,
+   "evidence": "no image",
+   "correct": false,
+   "evidence_ok": false,
+   "iou": 0.0,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null.",
+   "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_03",
+   "condition": "blind"
+  }
+ ],
+ "results": [
+  {
+   "id": "muse-spark-1.1|receipt_01|clean|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|clean|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.661).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      118,
+      564,
+      873,
+      651
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|clean|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "misread",
+   "explanation": "Stage label: misread.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      118,
+      564,
+      873,
+      651
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|blur|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|blur|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.633).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      130,
+      589,
+      874,
+      651
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|blur|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Stage label: grounded_correct.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      130,
+      589,
+      874,
+      651
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|noise|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|noise|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      258,
+      71,
+      544,
+      471
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|noise|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "mislocated",
+   "explanation": "Stage label: mislocated.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      258,
+      71,
+      544,
+      471
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|lowres|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|lowres|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      128,
+      272,
+      475,
+      558
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|lowres|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "mislocated",
+   "explanation": "Stage label: mislocated.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      128,
+      272,
+      475,
+      558
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|clean|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|clean|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.876).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      132,
+      584,
+      875,
+      636
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|clean|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Stage label: grounded_correct.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      132,
+      584,
+      875,
+      636
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|blur|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|blur|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.685).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      134,
+      580,
+      894,
+      621
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|blur|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Stage label: grounded_correct.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      134,
+      580,
+      894,
+      621
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|noise|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|noise|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      0,
+      252,
+      570,
+      524
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|noise|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "correct_ungrounded",
+   "explanation": "Stage label: correct_ungrounded.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      0,
+      252,
+      570,
+      524
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|lowres|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|lowres|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.102).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      161,
+      104,
+      682,
+      644
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|lowres|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "mislocated",
+   "explanation": "Stage label: mislocated.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      161,
+      104,
+      682,
+      644
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|clean|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|clean|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.798).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      107,
+      518,
+      894,
+      587
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|clean|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Stage label: grounded_correct.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      107,
+      518,
+      894,
+      587
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|blur|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|blur|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      72,
+      278,
+      629,
+      446
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|blur|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "correct_ungrounded",
+   "explanation": "Stage label: correct_ungrounded.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      72,
+      278,
+      629,
+      446
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|noise|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|noise|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.08).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      250,
+      55,
+      554,
+      682
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|noise|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "correct_ungrounded",
+   "explanation": "Stage label: correct_ungrounded.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      250,
+      55,
+      554,
+      682
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|lowres|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|lowres|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.764).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      115,
+      538,
+      894,
+      586
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|lowres|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "misread",
+   "explanation": "Stage label: misread.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      115,
+      538,
+      894,
+      586
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|clean|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|clean|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.921).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      122,
+      581,
+      874,
+      635
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|clean|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Stage label: grounded_correct.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      122,
+      581,
+      874,
+      635
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|blur|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|blur|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      162,
+      294,
+      523,
+      548
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|blur|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "correct_ungrounded",
+   "explanation": "Stage label: correct_ungrounded.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      162,
+      294,
+      523,
+      548
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|noise|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|noise|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.07).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      76,
+      19,
+      441,
+      676
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|noise|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "correct_ungrounded",
+   "explanation": "Stage label: correct_ungrounded.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      76,
+      19,
+      441,
+      676
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|lowres|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|lowres|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      268,
+      141,
+      667,
+      520
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|lowres|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "mislocated",
+   "explanation": "Stage label: mislocated.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      268,
+      141,
+      667,
+      520
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|clean|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|clean|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.687).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      126,
+      571,
+      880,
+      623
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|clean|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Stage label: grounded_correct.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      126,
+      571,
+      880,
+      623
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|blur|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|blur|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.125).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      214,
+      296,
+      540,
+      630
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|blur|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "mislocated",
+   "explanation": "Stage label: mislocated.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      214,
+      296,
+      540,
+      630
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|noise|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|noise|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      182,
+      42,
+      566,
+      459
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|noise|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "mislocated",
+   "explanation": "Stage label: mislocated.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      182,
+      42,
+      566,
+      459
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|lowres|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|lowres|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      97,
+      124,
+      408,
+      538
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|lowres|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "mislocated",
+   "explanation": "Stage label: mislocated.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      578,
+      880,
+      636
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      97,
+      124,
+      408,
+      538
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|clean|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "correct",
+   "explanation": "Answer matches the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|clean|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.807).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      130,
+      517,
+      875,
+      582
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|clean|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Stage label: grounded_correct.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      130,
+      517,
+      875,
+      582
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|blur|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|blur|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited region overlaps the expected region (overlap 0.639).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      109,
+      539,
+      887,
+      576
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|blur|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "blur"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "misread",
+   "explanation": "Stage label: misread.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      109,
+      539,
+      887,
+      576
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|noise|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|noise|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      294,
+      61,
+      600,
+      446
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|noise|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "mislocated",
+   "explanation": "Stage label: mislocated.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      294,
+      61,
+      600,
+      446
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|lowres|answer_correctness",
+   "evaluator_id": "answer_correctness",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "incorrect",
+   "explanation": "Answer does not match the expectation.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|lowres|evidence_grounding",
+   "evaluator_id": "evidence_grounding",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited region does not match the expected region (overlap 0.0).",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      273,
+      37,
+      413,
+      463
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|lowres|stage_attribution",
+   "evaluator_id": "stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "lowres"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "mislocated",
+   "explanation": "Stage label: mislocated.",
+   "evidence": [
+    {
+     "type": "image_region",
+     "role": "expected",
+     "locator": [
+      120,
+      527,
+      880,
+      584
+     ]
+    },
+    {
+     "type": "image_region",
+     "role": "claimed",
+     "locator": [
+      273,
+      37,
+      413,
+      463
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "all"
+   },
+   "status": "inconclusive",
+   "score": null,
+   "verdict": "not_applicable",
+   "label": "inconclusive",
+   "explanation": "Clean variant answer is wrong; media dependence is inconclusive.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_01",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 0.3333333333333333,
+   "verdict": "fail",
+   "label": "first_failure:noise",
+   "explanation": "First non-grounded_correct variant in order blur,noise,lowres: noise.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_02",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 0.3333333333333333,
+   "verdict": "fail",
+   "label": "first_failure:noise",
+   "explanation": "First non-grounded_correct variant in order blur,noise,lowres: noise.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "receipt_03",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "first_failure:blur",
+   "explanation": "First non-grounded_correct variant in order blur,noise,lowres: blur.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_01",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "first_failure:blur",
+   "explanation": "First non-grounded_correct variant in order blur,noise,lowres: blur.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_02",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "first_failure:blur",
+   "explanation": "First non-grounded_correct variant in order blur,noise,lowres: blur.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "receipt_03",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "first_failure:blur",
+   "explanation": "First non-grounded_correct variant in order blur,noise,lowres: blur.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  },
+  {
+   "id": "*|*|all|judge_audit",
+   "evaluator_id": "judge_audit",
+   "evaluator_version": "1.0.0",
+   "dimension": "Judge trust",
+   "target": {
+    "agent": "*",
+    "case_id": "*",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 0.8333333333333334,
+   "verdict": "pass",
+   "label": "judge_audit",
+   "explanation": "false-accept 1/3, false-reject 0/3",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0
+   }
+  }
+ ],
+ "dimension_summary": [
+  {
+   "agent": "*",
+   "variant": "all",
+   "dimension": "Judge trust",
+   "evaluator_id": "judge_audit",
+   "n": 1,
+   "mean_score": 0.8333333333333334,
+   "labels": {
+    "judge_audit": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "all",
+   "dimension": "Media dependence",
+   "evaluator_id": "media_dependence",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "media_required": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "all",
+   "dimension": "Robustness",
+   "evaluator_id": "robustness_sweep",
+   "n": 3,
+   "mean_score": 0.2222222222222222,
+   "labels": {
+    "first_failure:noise": 2,
+    "first_failure:blur": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "blur",
+   "dimension": "Failure analysis",
+   "evaluator_id": "stage_attribution",
+   "n": 3,
+   "mean_score": 0.6666666666666666,
+   "labels": {
+    "grounded_correct": 2,
+    "correct_ungrounded": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "blur",
+   "dimension": "Groundedness",
+   "evaluator_id": "evidence_grounding",
+   "n": 3,
+   "mean_score": 0.6666666666666666,
+   "labels": {
+    "grounded": 2,
+    "ungrounded": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "blur",
+   "dimension": "Perception",
+   "evaluator_id": "answer_correctness",
+   "n": 3,
+   "mean_score": 1.0,
+   "labels": {
+    "correct": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "clean",
+   "dimension": "Failure analysis",
+   "evaluator_id": "stage_attribution",
+   "n": 3,
+   "mean_score": 0.6666666666666666,
+   "labels": {
+    "misread": 1,
+    "grounded_correct": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "clean",
+   "dimension": "Groundedness",
+   "evaluator_id": "evidence_grounding",
+   "n": 3,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "clean",
+   "dimension": "Perception",
+   "evaluator_id": "answer_correctness",
+   "n": 3,
+   "mean_score": 0.6666666666666666,
+   "labels": {
+    "incorrect": 1,
+    "correct": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "lowres",
+   "dimension": "Failure analysis",
+   "evaluator_id": "stage_attribution",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "mislocated": 2,
+    "misread": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "lowres",
+   "dimension": "Groundedness",
+   "evaluator_id": "evidence_grounding",
+   "n": 3,
+   "mean_score": 0.3333333333333333,
+   "labels": {
+    "ungrounded": 2,
+    "grounded": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "lowres",
+   "dimension": "Perception",
+   "evaluator_id": "answer_correctness",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "incorrect": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "noise",
+   "dimension": "Failure analysis",
+   "evaluator_id": "stage_attribution",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "mislocated": 1,
+    "correct_ungrounded": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "noise",
+   "dimension": "Groundedness",
+   "evaluator_id": "evidence_grounding",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "ungrounded": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "noise",
+   "dimension": "Perception",
+   "evaluator_id": "answer_correctness",
+   "n": 3,
+   "mean_score": 0.6666666666666666,
+   "labels": {
+    "incorrect": 1,
+    "correct": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "all",
+   "dimension": "Media dependence",
+   "evaluator_id": "media_dependence",
+   "n": 3,
+   "mean_score": 1.0,
+   "labels": {
+    "media_required": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "all",
+   "dimension": "Robustness",
+   "evaluator_id": "robustness_sweep",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "first_failure:blur": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "blur",
+   "dimension": "Failure analysis",
+   "evaluator_id": "stage_attribution",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "correct_ungrounded": 1,
+    "mislocated": 1,
+    "misread": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "blur",
+   "dimension": "Groundedness",
+   "evaluator_id": "evidence_grounding",
+   "n": 3,
+   "mean_score": 0.3333333333333333,
+   "labels": {
+    "ungrounded": 2,
+    "grounded": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "blur",
+   "dimension": "Perception",
+   "evaluator_id": "answer_correctness",
+   "n": 3,
+   "mean_score": 0.3333333333333333,
+   "labels": {
+    "correct": 1,
+    "incorrect": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Failure analysis",
+   "evaluator_id": "stage_attribution",
+   "n": 3,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded_correct": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Groundedness",
+   "evaluator_id": "evidence_grounding",
+   "n": 3,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Perception",
+   "evaluator_id": "answer_correctness",
+   "n": 3,
+   "mean_score": 1.0,
+   "labels": {
+    "correct": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "lowres",
+   "dimension": "Failure analysis",
+   "evaluator_id": "stage_attribution",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "mislocated": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "lowres",
+   "dimension": "Groundedness",
+   "evaluator_id": "evidence_grounding",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "ungrounded": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "lowres",
+   "dimension": "Perception",
+   "evaluator_id": "answer_correctness",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "incorrect": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "noise",
+   "dimension": "Failure analysis",
+   "evaluator_id": "stage_attribution",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "correct_ungrounded": 1,
+    "mislocated": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "noise",
+   "dimension": "Groundedness",
+   "evaluator_id": "evidence_grounding",
+   "n": 3,
+   "mean_score": 0.0,
+   "labels": {
+    "ungrounded": 3
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "noise",
+   "dimension": "Perception",
+   "evaluator_id": "answer_correctness",
+   "n": 3,
+   "mean_score": 0.3333333333333333,
+   "labels": {
+    "correct": 1,
+    "incorrect": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  }
+ ],
+ "disagreements": [
+  {
+   "kind": "judge_vs_truth",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "variant": "clean",
+   "judge_accepts": false,
+   "truth_correct": true,
+   "proposed": "41.61"
+  },
+  {
+   "kind": "judge_vs_truth",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "variant": "clean",
+   "judge_accepts": false,
+   "truth_correct": true,
+   "proposed": "44.37"
+  }
+ ],
+ "registry": [
+  {
+   "id": "answer_correctness",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Perception",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "evidence_grounding",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Groundedness",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "stage_attribution",
+   "version": "1.0.0",
+   "category": "composite",
+   "dimension": "Failure analysis",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [
+    "answer_correctness",
+    "evidence_grounding"
+   ],
+   "scope": "run"
+  },
+  {
+   "id": "media_dependence",
+   "version": "1.0.0",
+   "category": "paired",
+   "dimension": "Media dependence",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": false,
+   "needs_replay": true,
+   "depends_on": [],
+   "scope": "pair"
+  },
+  {
+   "id": "robustness_sweep",
+   "version": "1.0.0",
+   "category": "paired",
+   "dimension": "Robustness",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": true,
+   "depends_on": [],
+   "scope": "pair"
+  },
+  {
+   "id": "judge_audit",
+   "version": "1.0.0",
+   "category": "paired",
+   "dimension": "Judge trust",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "suite"
+  }
+ ],
+ "judged": [
+  {
+   "kind": "agent_answer",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_01",
+   "proposed": "47.87",
+   "judge_accepts": false,
+   "truth_correct": false,
+   "agrees": true
+  },
+  {
+   "kind": "agent_answer",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_02",
+   "proposed": "44.37",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "agent_answer",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "proposed": "41.61",
+   "judge_accepts": false,
+   "truth_correct": true,
+   "agrees": false
+  },
+  {
+   "kind": "agent_answer",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_01",
+   "proposed": "51.70",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "agent_answer",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "proposed": "44.37",
+   "judge_accepts": false,
+   "truth_correct": true,
+   "agrees": false
+  },
+  {
+   "kind": "agent_answer",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_03",
+   "proposed": "41.61",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "planted_right",
+   "agent": null,
+   "case_id": "receipt_01",
+   "proposed": "51.70",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "planted_wrong",
+   "agent": null,
+   "case_id": "receipt_01",
+   "proposed": "47.87",
+   "judge_accepts": false,
+   "truth_correct": false,
+   "agrees": true
+  },
+  {
+   "kind": "planted_right",
+   "agent": null,
+   "case_id": "receipt_02",
+   "proposed": "44.37",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "planted_wrong",
+   "agent": null,
+   "case_id": "receipt_02",
+   "proposed": "41.08",
+   "judge_accepts": true,
+   "truth_correct": false,
+   "agrees": false
+  },
+  {
+   "kind": "planted_right",
+   "agent": null,
+   "case_id": "receipt_03",
+   "proposed": "41.61",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "planted_wrong",
+   "agent": null,
+   "case_id": "receipt_03",
+   "proposed": "38.53",
+   "judge_accepts": false,
+   "truth_correct": false,
+   "agrees": true
+  }
+ ],
+ "traces": [
+  {
+   "id": "muse-spark-1.1|receipt_01|clean",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_01",
+   "variant": "clean",
+   "variant_transform": "identity",
+   "assets": [
+    {
+     "id": "bbcd252c8214",
+     "path": "/media/default/receipt_01_clean.jpg",
+     "modality": "image",
+     "transformation": "identity"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "bbcd252c8214",
+      "transformation": "identity"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"47.87\", \"box\": [118, 564, 873, 651], \"evidence\": \"mock\"}",
+      "answer": "47.87",
+      "box": [
+       118,
+       564,
+       873,
+       651
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_01|clean|answer_correctness",
+      "muse-spark-1.1|receipt_01|clean|evidence_grounding",
+      "muse-spark-1.1|receipt_01|clean|stage_attribution",
+      "muse-spark-1.1|receipt_01|all|media_dependence",
+      "muse-spark-1.1|receipt_01|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|blur",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_01",
+   "variant": "blur",
+   "variant_transform": "gaussian_blur r=5",
+   "assets": [
+    {
+     "id": "bf0b5c21e205",
+     "path": "/media/default/receipt_01_blur.jpg",
+     "modality": "image",
+     "transformation": "gaussian_blur r=5"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "bf0b5c21e205",
+      "transformation": "gaussian_blur r=5"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"51.70\", \"box\": [130, 589, 874, 651], \"evidence\": \"mock\"}",
+      "answer": "51.70",
+      "box": [
+       130,
+       589,
+       874,
+       651
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_01|blur|answer_correctness",
+      "muse-spark-1.1|receipt_01|blur|evidence_grounding",
+      "muse-spark-1.1|receipt_01|blur|stage_attribution",
+      "muse-spark-1.1|receipt_01|all|media_dependence",
+      "muse-spark-1.1|receipt_01|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|noise",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_01",
+   "variant": "noise",
+   "variant_transform": "gaussian_noise sigma=70",
+   "assets": [
+    {
+     "id": "e412f7e8a28e",
+     "path": "/media/default/receipt_01_noise.jpg",
+     "modality": "image",
+     "transformation": "gaussian_noise sigma=70"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "e412f7e8a28e",
+      "transformation": "gaussian_noise sigma=70"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"47.87\", \"box\": [258, 71, 544, 471], \"evidence\": \"mock\"}",
+      "answer": "47.87",
+      "box": [
+       258,
+       71,
+       544,
+       471
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_01|noise|answer_correctness",
+      "muse-spark-1.1|receipt_01|noise|evidence_grounding",
+      "muse-spark-1.1|receipt_01|noise|stage_attribution",
+      "muse-spark-1.1|receipt_01|all|media_dependence",
+      "muse-spark-1.1|receipt_01|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|lowres",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_01",
+   "variant": "lowres",
+   "variant_transform": "downscale 0.16",
+   "assets": [
+    {
+     "id": "ba69c532e85f",
+     "path": "/media/default/receipt_01_lowres.jpg",
+     "modality": "image",
+     "transformation": "downscale 0.16"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "ba69c532e85f",
+      "transformation": "downscale 0.16"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"47.87\", \"box\": [128, 272, 475, 558], \"evidence\": \"mock\"}",
+      "answer": "47.87",
+      "box": [
+       128,
+       272,
+       475,
+       558
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_01|lowres|answer_correctness",
+      "muse-spark-1.1|receipt_01|lowres|evidence_grounding",
+      "muse-spark-1.1|receipt_01|lowres|stage_attribution",
+      "muse-spark-1.1|receipt_01|all|media_dependence",
+      "muse-spark-1.1|receipt_01|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_01|blind",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_01",
+   "variant": "blind",
+   "variant_transform": "remove_media",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "transformation": "remove_media"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+      "answer": "unknown",
+      "box": null
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_01|all|media_dependence",
+      "muse-spark-1.1|receipt_01|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|clean",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_02",
+   "variant": "clean",
+   "variant_transform": "identity",
+   "assets": [
+    {
+     "id": "674f39808880",
+     "path": "/media/default/receipt_02_clean.jpg",
+     "modality": "image",
+     "transformation": "identity"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "674f39808880",
+      "transformation": "identity"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"44.37\", \"box\": [132, 584, 875, 636], \"evidence\": \"mock\"}",
+      "answer": "44.37",
+      "box": [
+       132,
+       584,
+       875,
+       636
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_02|clean|answer_correctness",
+      "muse-spark-1.1|receipt_02|clean|evidence_grounding",
+      "muse-spark-1.1|receipt_02|clean|stage_attribution",
+      "muse-spark-1.1|receipt_02|all|media_dependence",
+      "muse-spark-1.1|receipt_02|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|blur",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_02",
+   "variant": "blur",
+   "variant_transform": "gaussian_blur r=5",
+   "assets": [
+    {
+     "id": "60b8ca3d1d30",
+     "path": "/media/default/receipt_02_blur.jpg",
+     "modality": "image",
+     "transformation": "gaussian_blur r=5"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "60b8ca3d1d30",
+      "transformation": "gaussian_blur r=5"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"44.37\", \"box\": [134, 580, 894, 621], \"evidence\": \"mock\"}",
+      "answer": "44.37",
+      "box": [
+       134,
+       580,
+       894,
+       621
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_02|blur|answer_correctness",
+      "muse-spark-1.1|receipt_02|blur|evidence_grounding",
+      "muse-spark-1.1|receipt_02|blur|stage_attribution",
+      "muse-spark-1.1|receipt_02|all|media_dependence",
+      "muse-spark-1.1|receipt_02|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|noise",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_02",
+   "variant": "noise",
+   "variant_transform": "gaussian_noise sigma=70",
+   "assets": [
+    {
+     "id": "d8b591c8cc99",
+     "path": "/media/default/receipt_02_noise.jpg",
+     "modality": "image",
+     "transformation": "gaussian_noise sigma=70"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "d8b591c8cc99",
+      "transformation": "gaussian_noise sigma=70"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"44.37\", \"box\": [0, 252, 570, 524], \"evidence\": \"mock\"}",
+      "answer": "44.37",
+      "box": [
+       0,
+       252,
+       570,
+       524
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_02|noise|answer_correctness",
+      "muse-spark-1.1|receipt_02|noise|evidence_grounding",
+      "muse-spark-1.1|receipt_02|noise|stage_attribution",
+      "muse-spark-1.1|receipt_02|all|media_dependence",
+      "muse-spark-1.1|receipt_02|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|lowres",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_02",
+   "variant": "lowres",
+   "variant_transform": "downscale 0.16",
+   "assets": [
+    {
+     "id": "588ee77ad244",
+     "path": "/media/default/receipt_02_lowres.jpg",
+     "modality": "image",
+     "transformation": "downscale 0.16"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "588ee77ad244",
+      "transformation": "downscale 0.16"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"41.08\", \"box\": [161, 104, 682, 644], \"evidence\": \"mock\"}",
+      "answer": "41.08",
+      "box": [
+       161,
+       104,
+       682,
+       644
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_02|lowres|answer_correctness",
+      "muse-spark-1.1|receipt_02|lowres|evidence_grounding",
+      "muse-spark-1.1|receipt_02|lowres|stage_attribution",
+      "muse-spark-1.1|receipt_02|all|media_dependence",
+      "muse-spark-1.1|receipt_02|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_02|blind",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_02",
+   "variant": "blind",
+   "variant_transform": "remove_media",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "transformation": "remove_media"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+      "answer": "unknown",
+      "box": null
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_02|all|media_dependence",
+      "muse-spark-1.1|receipt_02|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|clean",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "variant": "clean",
+   "variant_transform": "identity",
+   "assets": [
+    {
+     "id": "a766d91f7244",
+     "path": "/media/default/receipt_03_clean.jpg",
+     "modality": "image",
+     "transformation": "identity"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "a766d91f7244",
+      "transformation": "identity"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"41.61\", \"box\": [107, 518, 894, 587], \"evidence\": \"mock\"}",
+      "answer": "41.61",
+      "box": [
+       107,
+       518,
+       894,
+       587
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_03|clean|answer_correctness",
+      "muse-spark-1.1|receipt_03|clean|evidence_grounding",
+      "muse-spark-1.1|receipt_03|clean|stage_attribution",
+      "muse-spark-1.1|receipt_03|all|media_dependence",
+      "muse-spark-1.1|receipt_03|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|blur",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "variant": "blur",
+   "variant_transform": "gaussian_blur r=5",
+   "assets": [
+    {
+     "id": "669774f6277d",
+     "path": "/media/default/receipt_03_blur.jpg",
+     "modality": "image",
+     "transformation": "gaussian_blur r=5"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "669774f6277d",
+      "transformation": "gaussian_blur r=5"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"41.61\", \"box\": [72, 278, 629, 446], \"evidence\": \"mock\"}",
+      "answer": "41.61",
+      "box": [
+       72,
+       278,
+       629,
+       446
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_03|blur|answer_correctness",
+      "muse-spark-1.1|receipt_03|blur|evidence_grounding",
+      "muse-spark-1.1|receipt_03|blur|stage_attribution",
+      "muse-spark-1.1|receipt_03|all|media_dependence",
+      "muse-spark-1.1|receipt_03|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|noise",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "variant": "noise",
+   "variant_transform": "gaussian_noise sigma=70",
+   "assets": [
+    {
+     "id": "856994c36a90",
+     "path": "/media/default/receipt_03_noise.jpg",
+     "modality": "image",
+     "transformation": "gaussian_noise sigma=70"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "856994c36a90",
+      "transformation": "gaussian_noise sigma=70"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"41.61\", \"box\": [250, 55, 554, 682], \"evidence\": \"mock\"}",
+      "answer": "41.61",
+      "box": [
+       250,
+       55,
+       554,
+       682
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_03|noise|answer_correctness",
+      "muse-spark-1.1|receipt_03|noise|evidence_grounding",
+      "muse-spark-1.1|receipt_03|noise|stage_attribution",
+      "muse-spark-1.1|receipt_03|all|media_dependence",
+      "muse-spark-1.1|receipt_03|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|lowres",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "variant": "lowres",
+   "variant_transform": "downscale 0.16",
+   "assets": [
+    {
+     "id": "73405705be8c",
+     "path": "/media/default/receipt_03_lowres.jpg",
+     "modality": "image",
+     "transformation": "downscale 0.16"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "73405705be8c",
+      "transformation": "downscale 0.16"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"38.53\", \"box\": [115, 538, 894, 586], \"evidence\": \"mock\"}",
+      "answer": "38.53",
+      "box": [
+       115,
+       538,
+       894,
+       586
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_03|lowres|answer_correctness",
+      "muse-spark-1.1|receipt_03|lowres|evidence_grounding",
+      "muse-spark-1.1|receipt_03|lowres|stage_attribution",
+      "muse-spark-1.1|receipt_03|all|media_dependence",
+      "muse-spark-1.1|receipt_03|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|receipt_03|blind",
+   "agent": "muse-spark-1.1",
+   "case_id": "receipt_03",
+   "variant": "blind",
+   "variant_transform": "remove_media",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "transformation": "remove_media"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+      "answer": "unknown",
+      "box": null
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|receipt_03|all|media_dependence",
+      "muse-spark-1.1|receipt_03|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|clean",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_01",
+   "variant": "clean",
+   "variant_transform": "identity",
+   "assets": [
+    {
+     "id": "bbcd252c8214",
+     "path": "/media/default/receipt_01_clean.jpg",
+     "modality": "image",
+     "transformation": "identity"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "bbcd252c8214",
+      "transformation": "identity"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"51.70\", \"box\": [122, 581, 874, 635], \"evidence\": \"mock\"}",
+      "answer": "51.70",
+      "box": [
+       122,
+       581,
+       874,
+       635
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_01|clean|answer_correctness",
+      "muse-spark-1.3|receipt_01|clean|evidence_grounding",
+      "muse-spark-1.3|receipt_01|clean|stage_attribution",
+      "muse-spark-1.3|receipt_01|all|media_dependence",
+      "muse-spark-1.3|receipt_01|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|blur",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_01",
+   "variant": "blur",
+   "variant_transform": "gaussian_blur r=5",
+   "assets": [
+    {
+     "id": "bf0b5c21e205",
+     "path": "/media/default/receipt_01_blur.jpg",
+     "modality": "image",
+     "transformation": "gaussian_blur r=5"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "bf0b5c21e205",
+      "transformation": "gaussian_blur r=5"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"51.70\", \"box\": [162, 294, 523, 548], \"evidence\": \"mock\"}",
+      "answer": "51.70",
+      "box": [
+       162,
+       294,
+       523,
+       548
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_01|blur|answer_correctness",
+      "muse-spark-1.3|receipt_01|blur|evidence_grounding",
+      "muse-spark-1.3|receipt_01|blur|stage_attribution",
+      "muse-spark-1.3|receipt_01|all|media_dependence",
+      "muse-spark-1.3|receipt_01|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|noise",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_01",
+   "variant": "noise",
+   "variant_transform": "gaussian_noise sigma=70",
+   "assets": [
+    {
+     "id": "e412f7e8a28e",
+     "path": "/media/default/receipt_01_noise.jpg",
+     "modality": "image",
+     "transformation": "gaussian_noise sigma=70"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "e412f7e8a28e",
+      "transformation": "gaussian_noise sigma=70"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"51.70\", \"box\": [76, 19, 441, 676], \"evidence\": \"mock\"}",
+      "answer": "51.70",
+      "box": [
+       76,
+       19,
+       441,
+       676
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_01|noise|answer_correctness",
+      "muse-spark-1.3|receipt_01|noise|evidence_grounding",
+      "muse-spark-1.3|receipt_01|noise|stage_attribution",
+      "muse-spark-1.3|receipt_01|all|media_dependence",
+      "muse-spark-1.3|receipt_01|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|lowres",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_01",
+   "variant": "lowres",
+   "variant_transform": "downscale 0.16",
+   "assets": [
+    {
+     "id": "ba69c532e85f",
+     "path": "/media/default/receipt_01_lowres.jpg",
+     "modality": "image",
+     "transformation": "downscale 0.16"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "ba69c532e85f",
+      "transformation": "downscale 0.16"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"47.87\", \"box\": [268, 141, 667, 520], \"evidence\": \"mock\"}",
+      "answer": "47.87",
+      "box": [
+       268,
+       141,
+       667,
+       520
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_01|lowres|answer_correctness",
+      "muse-spark-1.3|receipt_01|lowres|evidence_grounding",
+      "muse-spark-1.3|receipt_01|lowres|stage_attribution",
+      "muse-spark-1.3|receipt_01|all|media_dependence",
+      "muse-spark-1.3|receipt_01|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_01|blind",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_01",
+   "variant": "blind",
+   "variant_transform": "remove_media",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "transformation": "remove_media"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+      "answer": "unknown",
+      "box": null
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_01|all|media_dependence",
+      "muse-spark-1.3|receipt_01|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|clean",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "variant": "clean",
+   "variant_transform": "identity",
+   "assets": [
+    {
+     "id": "674f39808880",
+     "path": "/media/default/receipt_02_clean.jpg",
+     "modality": "image",
+     "transformation": "identity"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "674f39808880",
+      "transformation": "identity"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"44.37\", \"box\": [126, 571, 880, 623], \"evidence\": \"mock\"}",
+      "answer": "44.37",
+      "box": [
+       126,
+       571,
+       880,
+       623
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_02|clean|answer_correctness",
+      "muse-spark-1.3|receipt_02|clean|evidence_grounding",
+      "muse-spark-1.3|receipt_02|clean|stage_attribution",
+      "muse-spark-1.3|receipt_02|all|media_dependence",
+      "muse-spark-1.3|receipt_02|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|blur",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "variant": "blur",
+   "variant_transform": "gaussian_blur r=5",
+   "assets": [
+    {
+     "id": "60b8ca3d1d30",
+     "path": "/media/default/receipt_02_blur.jpg",
+     "modality": "image",
+     "transformation": "gaussian_blur r=5"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "60b8ca3d1d30",
+      "transformation": "gaussian_blur r=5"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"41.08\", \"box\": [214, 296, 540, 630], \"evidence\": \"mock\"}",
+      "answer": "41.08",
+      "box": [
+       214,
+       296,
+       540,
+       630
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_02|blur|answer_correctness",
+      "muse-spark-1.3|receipt_02|blur|evidence_grounding",
+      "muse-spark-1.3|receipt_02|blur|stage_attribution",
+      "muse-spark-1.3|receipt_02|all|media_dependence",
+      "muse-spark-1.3|receipt_02|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|noise",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "variant": "noise",
+   "variant_transform": "gaussian_noise sigma=70",
+   "assets": [
+    {
+     "id": "d8b591c8cc99",
+     "path": "/media/default/receipt_02_noise.jpg",
+     "modality": "image",
+     "transformation": "gaussian_noise sigma=70"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "d8b591c8cc99",
+      "transformation": "gaussian_noise sigma=70"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"41.08\", \"box\": [182, 42, 566, 459], \"evidence\": \"mock\"}",
+      "answer": "41.08",
+      "box": [
+       182,
+       42,
+       566,
+       459
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_02|noise|answer_correctness",
+      "muse-spark-1.3|receipt_02|noise|evidence_grounding",
+      "muse-spark-1.3|receipt_02|noise|stage_attribution",
+      "muse-spark-1.3|receipt_02|all|media_dependence",
+      "muse-spark-1.3|receipt_02|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|lowres",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "variant": "lowres",
+   "variant_transform": "downscale 0.16",
+   "assets": [
+    {
+     "id": "588ee77ad244",
+     "path": "/media/default/receipt_02_lowres.jpg",
+     "modality": "image",
+     "transformation": "downscale 0.16"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "588ee77ad244",
+      "transformation": "downscale 0.16"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"41.08\", \"box\": [97, 124, 408, 538], \"evidence\": \"mock\"}",
+      "answer": "41.08",
+      "box": [
+       97,
+       124,
+       408,
+       538
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_02|lowres|answer_correctness",
+      "muse-spark-1.3|receipt_02|lowres|evidence_grounding",
+      "muse-spark-1.3|receipt_02|lowres|stage_attribution",
+      "muse-spark-1.3|receipt_02|all|media_dependence",
+      "muse-spark-1.3|receipt_02|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_02|blind",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_02",
+   "variant": "blind",
+   "variant_transform": "remove_media",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "transformation": "remove_media"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+      "answer": "unknown",
+      "box": null
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_02|all|media_dependence",
+      "muse-spark-1.3|receipt_02|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|clean",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_03",
+   "variant": "clean",
+   "variant_transform": "identity",
+   "assets": [
+    {
+     "id": "a766d91f7244",
+     "path": "/media/default/receipt_03_clean.jpg",
+     "modality": "image",
+     "transformation": "identity"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "a766d91f7244",
+      "transformation": "identity"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"41.61\", \"box\": [130, 517, 875, 582], \"evidence\": \"mock\"}",
+      "answer": "41.61",
+      "box": [
+       130,
+       517,
+       875,
+       582
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_03|clean|answer_correctness",
+      "muse-spark-1.3|receipt_03|clean|evidence_grounding",
+      "muse-spark-1.3|receipt_03|clean|stage_attribution",
+      "muse-spark-1.3|receipt_03|all|media_dependence",
+      "muse-spark-1.3|receipt_03|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|blur",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_03",
+   "variant": "blur",
+   "variant_transform": "gaussian_blur r=5",
+   "assets": [
+    {
+     "id": "669774f6277d",
+     "path": "/media/default/receipt_03_blur.jpg",
+     "modality": "image",
+     "transformation": "gaussian_blur r=5"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "669774f6277d",
+      "transformation": "gaussian_blur r=5"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"38.53\", \"box\": [109, 539, 887, 576], \"evidence\": \"mock\"}",
+      "answer": "38.53",
+      "box": [
+       109,
+       539,
+       887,
+       576
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_03|blur|answer_correctness",
+      "muse-spark-1.3|receipt_03|blur|evidence_grounding",
+      "muse-spark-1.3|receipt_03|blur|stage_attribution",
+      "muse-spark-1.3|receipt_03|all|media_dependence",
+      "muse-spark-1.3|receipt_03|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|noise",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_03",
+   "variant": "noise",
+   "variant_transform": "gaussian_noise sigma=70",
+   "assets": [
+    {
+     "id": "856994c36a90",
+     "path": "/media/default/receipt_03_noise.jpg",
+     "modality": "image",
+     "transformation": "gaussian_noise sigma=70"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "856994c36a90",
+      "transformation": "gaussian_noise sigma=70"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"38.53\", \"box\": [294, 61, 600, 446], \"evidence\": \"mock\"}",
+      "answer": "38.53",
+      "box": [
+       294,
+       61,
+       600,
+       446
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_03|noise|answer_correctness",
+      "muse-spark-1.3|receipt_03|noise|evidence_grounding",
+      "muse-spark-1.3|receipt_03|noise|stage_attribution",
+      "muse-spark-1.3|receipt_03|all|media_dependence",
+      "muse-spark-1.3|receipt_03|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|lowres",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_03",
+   "variant": "lowres",
+   "variant_transform": "downscale 0.16",
+   "assets": [
+    {
+     "id": "73405705be8c",
+     "path": "/media/default/receipt_03_lowres.jpg",
+     "modality": "image",
+     "transformation": "downscale 0.16"
+    }
+   ],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_image",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": "73405705be8c",
+      "transformation": "downscale 0.16"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"38.53\", \"box\": [273, 37, 413, 463], \"evidence\": \"mock\"}",
+      "answer": "38.53",
+      "box": [
+       273,
+       37,
+       413,
+       463
+      ]
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_03|lowres|answer_correctness",
+      "muse-spark-1.3|receipt_03|lowres|evidence_grounding",
+      "muse-spark-1.3|receipt_03|lowres|stage_attribution",
+      "muse-spark-1.3|receipt_03|all|media_dependence",
+      "muse-spark-1.3|receipt_03|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|receipt_03|blind",
+   "agent": "muse-spark-1.3",
+   "case_id": "receipt_03",
+   "variant": "blind",
+   "variant_transform": "remove_media",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "transformation": "remove_media"
+     }
+    },
+    {
+     "id": "s2",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are a visual-reading agent. Answer the question using ONLY what you can see in the attached image.\nQuestion: What is the total amount due on this receipt? Answer with the number only.\n\nReply with JSON only, no other text:\n{\"answer\": \"<your answer>\", \"box\": [x_min, y_min, x_max, y_max], \"evidence\": \"<what you read and where>\"}\nbox is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the top-left. If you cannot see the image or cannot tell, use answer \"unknown\" and box null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"box\": null, \"evidence\": \"no image\"}",
+      "answer": "unknown",
+      "box": null
+     },
+     "error": null
+    },
+    {
+     "id": "s3",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|receipt_03|all|media_dependence",
+      "muse-spark-1.3|receipt_03|all|robustness_sweep",
+      "*|*|all|judge_audit"
+     ]
+    }
+   ]
+  }
+ ]
+}

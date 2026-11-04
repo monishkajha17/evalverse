@@ -145,10 +145,8 @@ def _collect_utterances(ds, limit_scan: int, verbose: bool) -> dict[int, list[di
             n_spk = len(by_speaker)
             n_utt = sum(len(v) for v in by_speaker.values())
             print(f"  scanned {scanned}: {n_spk} speakers, {n_utt} usable utterances")
-        if len(by_speaker) >= 60 and sum(len(v) for v in by_speaker.values()) >= 200:
-            # enough variety for 12 × 5 distinct speakers
-            if all(len(v) >= 1 for v in list(by_speaker.values())[:40]):
-                break
+        if len(by_speaker) >= 30 and sum(len(v) for v in by_speaker.values()) >= 150:
+            break
     return by_speaker
 
 

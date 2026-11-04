@@ -1,0 +1,3794 @@
+{
+ "meta": {
+  "agents": [
+   "muse-spark-1.3",
+   "muse-spark-1.1"
+  ],
+  "judge": "muse-spark-1.3",
+  "conditions": [
+   "clean",
+   "noise",
+   "bandlimit"
+  ],
+  "mock": true,
+  "modality": "audio",
+  "created": "2026-11-04T12:29:13+00:00",
+  "seconds": 0.0
+ },
+ "cases": [
+  {
+   "id": "mock_audio_01",
+   "modality": "audio",
+   "family": "mock_conversation",
+   "audio": "",
+   "duration_ms": 19400,
+   "turns": [
+    {
+     "index": 1,
+     "speaker_id": "1",
+     "start_ms": 0,
+     "end_ms": 3400,
+     "text": "This is synthetic conversation 1 turn 1 with distinctiveword1.",
+     "clip": ""
+    },
+    {
+     "index": 2,
+     "speaker_id": "2",
+     "start_ms": 4000,
+     "end_ms": 7400,
+     "text": "This is synthetic conversation 1 turn 2 with distinctiveword2.",
+     "clip": ""
+    },
+    {
+     "index": 3,
+     "speaker_id": "3",
+     "start_ms": 8000,
+     "end_ms": 11400,
+     "text": "This is synthetic conversation 1 turn 3 with distinctiveword3.",
+     "clip": ""
+    },
+    {
+     "index": 4,
+     "speaker_id": "4",
+     "start_ms": 12000,
+     "end_ms": 15400,
+     "text": "This is synthetic conversation 1 turn 4 with distinctiveword4.",
+     "clip": ""
+    },
+    {
+     "index": 5,
+     "speaker_id": "5",
+     "start_ms": 16000,
+     "end_ms": 19400,
+     "text": "This is synthetic conversation 1 turn 5 with distinctiveword5.",
+     "clip": ""
+    }
+   ],
+   "question": "In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.",
+   "answer": "1",
+   "answer_type": "text",
+   "keyword": "distinctiveword1",
+   "truth_span": [
+    0,
+    3400
+   ],
+   "source": "synthetic mock"
+  },
+  {
+   "id": "mock_audio_02",
+   "modality": "audio",
+   "family": "mock_conversation",
+   "audio": "",
+   "duration_ms": 19400,
+   "turns": [
+    {
+     "index": 1,
+     "speaker_id": "1",
+     "start_ms": 0,
+     "end_ms": 3400,
+     "text": "This is synthetic conversation 2 turn 1 with distinctiveword1.",
+     "clip": ""
+    },
+    {
+     "index": 2,
+     "speaker_id": "2",
+     "start_ms": 4000,
+     "end_ms": 7400,
+     "text": "This is synthetic conversation 2 turn 2 with distinctiveword2.",
+     "clip": ""
+    },
+    {
+     "index": 3,
+     "speaker_id": "3",
+     "start_ms": 8000,
+     "end_ms": 11400,
+     "text": "This is synthetic conversation 2 turn 3 with distinctiveword3.",
+     "clip": ""
+    },
+    {
+     "index": 4,
+     "speaker_id": "4",
+     "start_ms": 12000,
+     "end_ms": 15400,
+     "text": "This is synthetic conversation 2 turn 4 with distinctiveword4.",
+     "clip": ""
+    },
+    {
+     "index": 5,
+     "speaker_id": "5",
+     "start_ms": 16000,
+     "end_ms": 19400,
+     "text": "This is synthetic conversation 2 turn 5 with distinctiveword5.",
+     "clip": ""
+    }
+   ],
+   "question": "In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.",
+   "answer": "2",
+   "answer_type": "text",
+   "keyword": "distinctiveword2",
+   "truth_span": [
+    4000,
+    7400
+   ],
+   "source": "synthetic mock"
+  }
+ ],
+ "runs": [
+  {
+   "answer": "1",
+   "span_ms": [
+    0,
+    3400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 1 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 1 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 1 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 1 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 1 turn 5 with distinctiveword5."
+   },
+   "correct": true,
+   "evidence_ok": true,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_01",
+   "condition": "clean",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "2",
+   "span_ms": [
+    4000,
+    7400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 1 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 1 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 1 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 1 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 1 turn 5 with distinctiveword5."
+   },
+   "correct": false,
+   "evidence_ok": false,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_01",
+   "condition": "noise",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "1",
+   "span_ms": [
+    0,
+    3400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 1 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 1 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 1 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 1 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 1 turn 5 with distinctiveword5."
+   },
+   "correct": true,
+   "evidence_ok": true,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_01",
+   "condition": "bandlimit",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "unknown",
+   "span_ms": null,
+   "evidence": "no transcript",
+   "asr_turns": {},
+   "correct": false,
+   "evidence_ok": false,
+   "label": "abstained",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"unknown\", \"span_ms\": null, \"evidence\": \"no transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": null,
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_01",
+   "condition": "blind",
+   "transcript": "",
+   "turn_wers": {}
+  },
+  {
+   "answer": "2",
+   "span_ms": [
+    4000,
+    7400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 2 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 2 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 2 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 2 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 2 turn 5 with distinctiveword5."
+   },
+   "correct": true,
+   "evidence_ok": true,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_02",
+   "condition": "clean",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "2",
+   "span_ms": [
+    4000,
+    7400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 2 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 2 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 2 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 2 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 2 turn 5 with distinctiveword5."
+   },
+   "correct": true,
+   "evidence_ok": true,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_02",
+   "condition": "noise",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "2",
+   "span_ms": [
+    4000,
+    7400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 2 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 2 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 2 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 2 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 2 turn 5 with distinctiveword5."
+   },
+   "correct": true,
+   "evidence_ok": true,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_02",
+   "condition": "bandlimit",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "unknown",
+   "span_ms": null,
+   "evidence": "no transcript",
+   "asr_turns": {},
+   "correct": false,
+   "evidence_ok": false,
+   "label": "abstained",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.3",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"unknown\", \"span_ms\": null, \"evidence\": \"no transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": null,
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_02",
+   "condition": "blind",
+   "transcript": "",
+   "turn_wers": {}
+  },
+  {
+   "answer": "1",
+   "span_ms": [
+    0,
+    3400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 1 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 1 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 1 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 1 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 1 turn 5 with distinctiveword5."
+   },
+   "correct": true,
+   "evidence_ok": true,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_01",
+   "condition": "clean",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "1",
+   "span_ms": [
+    0,
+    3400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 1 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 1 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 1 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 1 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 1 turn 5 with distinctiveword5."
+   },
+   "correct": true,
+   "evidence_ok": true,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_01",
+   "condition": "noise",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "1",
+   "span_ms": [
+    0,
+    3400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 1 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 1 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 1 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 1 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 1 turn 5 with distinctiveword5."
+   },
+   "correct": true,
+   "evidence_ok": true,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_01",
+   "condition": "bandlimit",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "unknown",
+   "span_ms": null,
+   "evidence": "no transcript",
+   "asr_turns": {},
+   "correct": false,
+   "evidence_ok": false,
+   "label": "abstained",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"unknown\", \"span_ms\": null, \"evidence\": \"no transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": null,
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_01",
+   "condition": "blind",
+   "transcript": "",
+   "turn_wers": {}
+  },
+  {
+   "answer": "2",
+   "span_ms": [
+    4000,
+    7400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 2 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 2 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 2 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 2 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 2 turn 5 with distinctiveword5."
+   },
+   "correct": true,
+   "evidence_ok": true,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_02",
+   "condition": "clean",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "1",
+   "span_ms": [
+    0,
+    3400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 2 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 2 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 2 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 2 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 2 turn 5 with distinctiveword5."
+   },
+   "correct": false,
+   "evidence_ok": false,
+   "label": "mislocated",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_02",
+   "condition": "noise",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "2",
+   "span_ms": [
+    4000,
+    7400
+   ],
+   "evidence": "mock transcript",
+   "asr_turns": {
+    "1": "This is synthetic conversation 2 turn 1 with distinctiveword1.",
+    "2": "This is synthetic conversation 2 turn 2 with distinctiveword2.",
+    "3": "This is synthetic conversation 2 turn 3 with distinctiveword3.",
+    "4": "This is synthetic conversation 2 turn 4 with distinctiveword4.",
+    "5": "This is synthetic conversation 2 turn 5 with distinctiveword5."
+   },
+   "correct": true,
+   "evidence_ok": true,
+   "label": "grounded_correct",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": 0.0,
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_02",
+   "condition": "bandlimit",
+   "transcript": "[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.",
+   "turn_wers": {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0
+   }
+  },
+  {
+   "answer": "unknown",
+   "span_ms": null,
+   "evidence": "no transcript",
+   "asr_turns": {},
+   "correct": false,
+   "evidence_ok": false,
+   "label": "abstained",
+   "latency": 0.01,
+   "error": null,
+   "model": "muse-spark-1.1",
+   "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null.",
+   "raw": "{\"answer\": \"unknown\", \"span_ms\": null, \"evidence\": \"no transcript\"}",
+   "usage": {
+    "input_tokens": 900,
+    "output_tokens": 160
+   },
+   "wer": null,
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_02",
+   "condition": "blind",
+   "transcript": "",
+   "turn_wers": {}
+  }
+ ],
+ "results": [
+  {
+   "id": "muse-spark-1.3|mock_audio_01|clean|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.007
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|clean|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      0,
+      3400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      0,
+      3400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.005
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|clean|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Audio stage label: grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.006
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|noise|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.004
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|noise|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      0,
+      3400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      4000,
+      7400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.004
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|noise|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "mislocated",
+   "explanation": "Audio stage label: mislocated.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.007
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|bandlimit|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_01",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.003
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|bandlimit|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_01",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      0,
+      3400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      0,
+      3400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.003
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|bandlimit|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_01",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Audio stage label: grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.005
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|clean|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|clean|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      4000,
+      7400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      4000,
+      7400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.003
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|clean|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Audio stage label: grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.004
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|noise|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|noise|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      4000,
+      7400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      4000,
+      7400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.003
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|noise|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Audio stage label: grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.006
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|bandlimit|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_02",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|bandlimit|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_02",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      4000,
+      7400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      4000,
+      7400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.003
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|bandlimit|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_02",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Audio stage label: grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.004
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|clean|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.003
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|clean|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      0,
+      3400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      0,
+      3400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.003
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|clean|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_01",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Audio stage label: grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.004
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|noise|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|noise|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      0,
+      3400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      0,
+      3400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.003
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|noise|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_01",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Audio stage label: grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.004
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|bandlimit|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_01",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|bandlimit|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_01",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      0,
+      3400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      0,
+      3400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|bandlimit|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_01",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Audio stage label: grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.004
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|clean|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|clean|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      4000,
+      7400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      4000,
+      7400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|clean|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_02",
+    "variant": "clean"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Audio stage label: grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.004
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|noise|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|noise|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "ungrounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      4000,
+      7400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      0,
+      3400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.003
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|noise|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_02",
+    "variant": "noise"
+   },
+   "status": "completed",
+   "score": 0.0,
+   "verdict": "fail",
+   "label": "mislocated",
+   "explanation": "Audio stage label: mislocated.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.005
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|bandlimit|transcript_fidelity",
+   "evaluator_id": "transcript_fidelity",
+   "evaluator_version": "1.0.0",
+   "dimension": "Perception",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_02",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "transcript_fidelity",
+   "explanation": "Mean turn WER: 0.000.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.002
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|bandlimit|temporal_alignment",
+   "evaluator_id": "temporal_alignment",
+   "evaluator_version": "1.0.0",
+   "dimension": "Groundedness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_02",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded",
+   "explanation": "Cited time overlaps at least half of the true turn or has its midpoint inside it.",
+   "evidence": [
+    {
+     "type": "time_span",
+     "role": "expected",
+     "locator": [
+      4000,
+      7400
+     ]
+    },
+    {
+     "type": "time_span",
+     "role": "claimed",
+     "locator": [
+      4000,
+      7400
+     ]
+    }
+   ],
+   "execution_metadata": {
+    "latency_ms": 0.003
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|bandlimit|audio_stage_attribution",
+   "evaluator_id": "audio_stage_attribution",
+   "evaluator_version": "1.0.0",
+   "dimension": "Failure analysis",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_02",
+    "variant": "bandlimit"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "grounded_correct",
+   "explanation": "Audio stage label: grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.004
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_01",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.008
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_01",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 0.5,
+   "verdict": "fail",
+   "label": "first_failure:noise",
+   "explanation": "First non-grounded_correct variant in order noise,bandlimit: noise.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.012
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_02",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.006
+   }
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.3",
+    "case_id": "mock_audio_02",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "robust",
+   "explanation": "All 2 degradation variants are grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.009
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_01",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.006
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_01",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "robust",
+   "explanation": "All 2 degradation variants are grounded_correct.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.008
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|all|media_dependence",
+   "evaluator_id": "media_dependence",
+   "evaluator_version": "1.0.0",
+   "dimension": "Media dependence",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_02",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "media_required",
+   "explanation": "Correct on clean, wrong on blind: the image was required.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.005
+   }
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|all|robustness_sweep",
+   "evaluator_id": "robustness_sweep",
+   "evaluator_version": "1.0.0",
+   "dimension": "Robustness",
+   "target": {
+    "agent": "muse-spark-1.1",
+    "case_id": "mock_audio_02",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 0.5,
+   "verdict": "fail",
+   "label": "first_failure:noise",
+   "explanation": "First non-grounded_correct variant in order noise,bandlimit: noise.",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.009
+   }
+  },
+  {
+   "id": "*|*|all|judge_audit",
+   "evaluator_id": "judge_audit",
+   "evaluator_version": "1.0.0",
+   "dimension": "Judge trust",
+   "target": {
+    "agent": "*",
+    "case_id": "*",
+    "variant": "all"
+   },
+   "status": "completed",
+   "score": 1.0,
+   "verdict": "pass",
+   "label": "judge_audit",
+   "explanation": "false-accept 0/2, false-reject 0/2",
+   "evidence": [],
+   "execution_metadata": {
+    "latency_ms": 0.009
+   }
+  }
+ ],
+ "dimension_summary": [
+  {
+   "agent": "*",
+   "variant": "all",
+   "dimension": "Judge trust",
+   "evaluator_id": "judge_audit",
+   "n": 1,
+   "mean_score": 1.0,
+   "labels": {
+    "judge_audit": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "all",
+   "dimension": "Media dependence",
+   "evaluator_id": "media_dependence",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "media_required": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "all",
+   "dimension": "Robustness",
+   "evaluator_id": "robustness_sweep",
+   "n": 2,
+   "mean_score": 0.75,
+   "labels": {
+    "robust": 1,
+    "first_failure:noise": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "bandlimit",
+   "dimension": "Failure analysis",
+   "evaluator_id": "audio_stage_attribution",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded_correct": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "bandlimit",
+   "dimension": "Groundedness",
+   "evaluator_id": "temporal_alignment",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "bandlimit",
+   "dimension": "Perception",
+   "evaluator_id": "transcript_fidelity",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "transcript_fidelity": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "clean",
+   "dimension": "Failure analysis",
+   "evaluator_id": "audio_stage_attribution",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded_correct": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "clean",
+   "dimension": "Groundedness",
+   "evaluator_id": "temporal_alignment",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "clean",
+   "dimension": "Perception",
+   "evaluator_id": "transcript_fidelity",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "transcript_fidelity": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "noise",
+   "dimension": "Failure analysis",
+   "evaluator_id": "audio_stage_attribution",
+   "n": 2,
+   "mean_score": 0.5,
+   "labels": {
+    "grounded_correct": 1,
+    "mislocated": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "noise",
+   "dimension": "Groundedness",
+   "evaluator_id": "temporal_alignment",
+   "n": 2,
+   "mean_score": 0.5,
+   "labels": {
+    "grounded": 1,
+    "ungrounded": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "noise",
+   "dimension": "Perception",
+   "evaluator_id": "transcript_fidelity",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "transcript_fidelity": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "all",
+   "dimension": "Media dependence",
+   "evaluator_id": "media_dependence",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "media_required": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "all",
+   "dimension": "Robustness",
+   "evaluator_id": "robustness_sweep",
+   "n": 2,
+   "mean_score": 0.75,
+   "labels": {
+    "first_failure:noise": 1,
+    "robust": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "bandlimit",
+   "dimension": "Failure analysis",
+   "evaluator_id": "audio_stage_attribution",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded_correct": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "bandlimit",
+   "dimension": "Groundedness",
+   "evaluator_id": "temporal_alignment",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "bandlimit",
+   "dimension": "Perception",
+   "evaluator_id": "transcript_fidelity",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "transcript_fidelity": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Failure analysis",
+   "evaluator_id": "audio_stage_attribution",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded_correct": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Groundedness",
+   "evaluator_id": "temporal_alignment",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "grounded": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Perception",
+   "evaluator_id": "transcript_fidelity",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "transcript_fidelity": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "noise",
+   "dimension": "Failure analysis",
+   "evaluator_id": "audio_stage_attribution",
+   "n": 2,
+   "mean_score": 0.5,
+   "labels": {
+    "mislocated": 1,
+    "grounded_correct": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "noise",
+   "dimension": "Groundedness",
+   "evaluator_id": "temporal_alignment",
+   "n": 2,
+   "mean_score": 0.5,
+   "labels": {
+    "ungrounded": 1,
+    "grounded": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "noise",
+   "dimension": "Perception",
+   "evaluator_id": "transcript_fidelity",
+   "n": 2,
+   "mean_score": 1.0,
+   "labels": {
+    "transcript_fidelity": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "bandlimit",
+   "dimension": "Confident errors",
+   "evaluator_id": "confident_errors",
+   "n": 2,
+   "mean_score": 0.0,
+   "labels": {
+    "grounded_correct": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "blind",
+   "dimension": "Confident errors",
+   "evaluator_id": "confident_errors",
+   "n": 2,
+   "mean_score": 0.0,
+   "labels": {
+    "abstained": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "clean",
+   "dimension": "Confident errors",
+   "evaluator_id": "confident_errors",
+   "n": 2,
+   "mean_score": 0.0,
+   "labels": {
+    "grounded_correct": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.3",
+   "variant": "noise",
+   "dimension": "Confident errors",
+   "evaluator_id": "confident_errors",
+   "n": 2,
+   "mean_score": 0.5,
+   "labels": {
+    "confident_error": 1,
+    "grounded_correct": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "bandlimit",
+   "dimension": "Confident errors",
+   "evaluator_id": "confident_errors",
+   "n": 2,
+   "mean_score": 0.0,
+   "labels": {
+    "grounded_correct": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "blind",
+   "dimension": "Confident errors",
+   "evaluator_id": "confident_errors",
+   "n": 2,
+   "mean_score": 0.0,
+   "labels": {
+    "abstained": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "clean",
+   "dimension": "Confident errors",
+   "evaluator_id": "confident_errors",
+   "n": 2,
+   "mean_score": 0.0,
+   "labels": {
+    "grounded_correct": 2
+   },
+   "skipped": 0,
+   "errors": 0
+  },
+  {
+   "agent": "muse-spark-1.1",
+   "variant": "noise",
+   "dimension": "Confident errors",
+   "evaluator_id": "confident_errors",
+   "n": 2,
+   "mean_score": 0.5,
+   "labels": {
+    "grounded_correct": 1,
+    "confident_error": 1
+   },
+   "skipped": 0,
+   "errors": 0
+  }
+ ],
+ "disagreements": [],
+ "registry": [
+  {
+   "id": "answer_correctness",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Perception",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "evidence_grounding",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Groundedness",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "stage_attribution",
+   "version": "1.0.0",
+   "category": "composite",
+   "dimension": "Failure analysis",
+   "modalities": [
+    "image"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [
+    "answer_correctness",
+    "evidence_grounding"
+   ],
+   "scope": "run"
+  },
+  {
+   "id": "transcript_fidelity",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Perception",
+   "modalities": [
+    "audio"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "temporal_alignment",
+   "version": "1.0.0",
+   "category": "deterministic",
+   "dimension": "Groundedness",
+   "modalities": [
+    "audio"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "run"
+  },
+  {
+   "id": "audio_stage_attribution",
+   "version": "1.0.0",
+   "category": "composite",
+   "dimension": "Failure analysis",
+   "modalities": [
+    "audio"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [
+    "transcript_fidelity",
+    "temporal_alignment"
+   ],
+   "scope": "run"
+  },
+  {
+   "id": "media_dependence",
+   "version": "1.0.0",
+   "category": "paired",
+   "dimension": "Media dependence",
+   "modalities": [
+    "image",
+    "audio"
+   ],
+   "needs_reference": false,
+   "needs_replay": true,
+   "depends_on": [],
+   "scope": "pair"
+  },
+  {
+   "id": "robustness_sweep",
+   "version": "1.0.0",
+   "category": "paired",
+   "dimension": "Robustness",
+   "modalities": [
+    "image",
+    "audio"
+   ],
+   "needs_reference": true,
+   "needs_replay": true,
+   "depends_on": [],
+   "scope": "pair"
+  },
+  {
+   "id": "judge_audit",
+   "version": "1.0.0",
+   "category": "paired",
+   "dimension": "Judge trust",
+   "modalities": [
+    "image",
+    "audio"
+   ],
+   "needs_reference": true,
+   "needs_replay": false,
+   "depends_on": [],
+   "scope": "suite"
+  }
+ ],
+ "judged": [
+  {
+   "kind": "planted_right",
+   "agent": null,
+   "case_id": "mock_audio_01",
+   "proposed": "1",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "planted_wrong",
+   "agent": null,
+   "case_id": "mock_audio_01",
+   "proposed": "2",
+   "judge_accepts": false,
+   "truth_correct": false,
+   "agrees": true
+  },
+  {
+   "kind": "planted_right",
+   "agent": null,
+   "case_id": "mock_audio_02",
+   "proposed": "2",
+   "judge_accepts": true,
+   "truth_correct": true,
+   "agrees": true
+  },
+  {
+   "kind": "planted_wrong",
+   "agent": null,
+   "case_id": "mock_audio_02",
+   "proposed": "1",
+   "judge_accepts": false,
+   "truth_correct": false,
+   "agrees": true
+  }
+ ],
+ "traces": [
+  {
+   "id": "muse-spark-1.3|mock_audio_01|clean",
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_01",
+   "variant": "clean",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+      "answer": "1",
+      "span_ms": [
+       0,
+       3400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|mock_audio_01|clean|transcript_fidelity",
+      "muse-spark-1.3|mock_audio_01|clean|temporal_alignment",
+      "muse-spark-1.3|mock_audio_01|clean|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|noise",
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_01",
+   "variant": "noise",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+      "answer": "2",
+      "span_ms": [
+       4000,
+       7400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|mock_audio_01|noise|transcript_fidelity",
+      "muse-spark-1.3|mock_audio_01|noise|temporal_alignment",
+      "muse-spark-1.3|mock_audio_01|noise|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|bandlimit",
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_01",
+   "variant": "bandlimit",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+      "answer": "1",
+      "span_ms": [
+       0,
+       3400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|mock_audio_01|bandlimit|transcript_fidelity",
+      "muse-spark-1.3|mock_audio_01|bandlimit|temporal_alignment",
+      "muse-spark-1.3|mock_audio_01|bandlimit|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_01|blind",
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_01",
+   "variant": "blind",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": []
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"span_ms\": null, \"evidence\": \"no transcript\"}",
+      "answer": "unknown",
+      "span_ms": null
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": []
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|clean",
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_02",
+   "variant": "clean",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+      "answer": "2",
+      "span_ms": [
+       4000,
+       7400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|mock_audio_02|clean|transcript_fidelity",
+      "muse-spark-1.3|mock_audio_02|clean|temporal_alignment",
+      "muse-spark-1.3|mock_audio_02|clean|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|noise",
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_02",
+   "variant": "noise",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+      "answer": "2",
+      "span_ms": [
+       4000,
+       7400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|mock_audio_02|noise|transcript_fidelity",
+      "muse-spark-1.3|mock_audio_02|noise|temporal_alignment",
+      "muse-spark-1.3|mock_audio_02|noise|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|bandlimit",
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_02",
+   "variant": "bandlimit",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+      "answer": "2",
+      "span_ms": [
+       4000,
+       7400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.3|mock_audio_02|bandlimit|transcript_fidelity",
+      "muse-spark-1.3|mock_audio_02|bandlimit|temporal_alignment",
+      "muse-spark-1.3|mock_audio_02|bandlimit|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.3|mock_audio_02|blind",
+   "agent": "muse-spark-1.3",
+   "case_id": "mock_audio_02",
+   "variant": "blind",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": []
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.3",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"span_ms\": null, \"evidence\": \"no transcript\"}",
+      "answer": "unknown",
+      "span_ms": null
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": []
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|clean",
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_01",
+   "variant": "clean",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+      "answer": "1",
+      "span_ms": [
+       0,
+       3400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|mock_audio_01|clean|transcript_fidelity",
+      "muse-spark-1.1|mock_audio_01|clean|temporal_alignment",
+      "muse-spark-1.1|mock_audio_01|clean|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|noise",
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_01",
+   "variant": "noise",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+      "answer": "1",
+      "span_ms": [
+       0,
+       3400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|mock_audio_01|noise|transcript_fidelity",
+      "muse-spark-1.1|mock_audio_01|noise|temporal_alignment",
+      "muse-spark-1.1|mock_audio_01|noise|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|bandlimit",
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_01",
+   "variant": "bandlimit",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 1 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 1 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 1 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 1 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 1 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+      "answer": "1",
+      "span_ms": [
+       0,
+       3400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|mock_audio_01|bandlimit|transcript_fidelity",
+      "muse-spark-1.1|mock_audio_01|bandlimit|temporal_alignment",
+      "muse-spark-1.1|mock_audio_01|bandlimit|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_01|blind",
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_01",
+   "variant": "blind",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": []
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword1'? Answer with the turn number only.\n\nTranscript:\n\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"span_ms\": null, \"evidence\": \"no transcript\"}",
+      "answer": "unknown",
+      "span_ms": null
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": []
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|clean",
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_02",
+   "variant": "clean",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+      "answer": "2",
+      "span_ms": [
+       4000,
+       7400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|mock_audio_02|clean|transcript_fidelity",
+      "muse-spark-1.1|mock_audio_02|clean|temporal_alignment",
+      "muse-spark-1.1|mock_audio_02|clean|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|noise",
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_02",
+   "variant": "noise",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"1\", \"span_ms\": [0, 3400], \"evidence\": \"mock transcript\"}",
+      "answer": "1",
+      "span_ms": [
+       0,
+       3400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|mock_audio_02|noise|transcript_fidelity",
+      "muse-spark-1.1|mock_audio_02|noise|temporal_alignment",
+      "muse-spark-1.1|mock_audio_02|noise|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|bandlimit",
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_02",
+   "variant": "bandlimit",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "attach_audio",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": [
+      {
+       "index": 1,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 2,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 3,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 4,
+       "latency": 0.0,
+       "wer": 0.0
+      },
+      {
+       "index": 5,
+       "latency": 0.0,
+       "wer": 0.0
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n[turn 1 | 0.0-3.4 s] This is synthetic conversation 2 turn 1 with distinctiveword1.\n[turn 2 | 4.0-7.4 s] This is synthetic conversation 2 turn 2 with distinctiveword2.\n[turn 3 | 8.0-11.4 s] This is synthetic conversation 2 turn 3 with distinctiveword3.\n[turn 4 | 12.0-15.4 s] This is synthetic conversation 2 turn 4 with distinctiveword4.\n[turn 5 | 16.0-19.4 s] This is synthetic conversation 2 turn 5 with distinctiveword5.\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"2\", \"span_ms\": [4000, 7400], \"evidence\": \"mock transcript\"}",
+      "answer": "2",
+      "span_ms": [
+       4000,
+       7400
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": [
+      "muse-spark-1.1|mock_audio_02|bandlimit|transcript_fidelity",
+      "muse-spark-1.1|mock_audio_02|bandlimit|temporal_alignment",
+      "muse-spark-1.1|mock_audio_02|bandlimit|audio_stage_attribution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "muse-spark-1.1|mock_audio_02|blind",
+   "agent": "muse-spark-1.1",
+   "case_id": "mock_audio_02",
+   "variant": "blind",
+   "assets": [],
+   "spans": [
+    {
+     "id": "s1",
+     "name": "remove_media",
+     "type": "media",
+     "status": "completed",
+     "parent_span_ids": [],
+     "metadata": {
+      "asset_id": null
+     }
+    },
+    {
+     "id": "s2",
+     "name": "transcribe",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s1"
+     ],
+     "model": "muse-voice-transcribe-1.0",
+     "turns": []
+    },
+    {
+     "id": "s3",
+     "name": "model_call",
+     "type": "model",
+     "status": "completed",
+     "parent_span_ids": [
+      "s2"
+     ],
+     "model": "muse-spark-1.1",
+     "latency_s": 0.01,
+     "usage": {
+      "input_tokens": 900,
+      "output_tokens": 160
+     },
+     "input": {
+      "prompt": "You are an audio-transcript reading agent. Answer only from the supplied transcript.\nQuestion: In which turn does a speaker say the word 'distinctiveword2'? Answer with the turn number only.\n\nTranscript:\n\n\nReply with JSON only, no other text:\n{\"answer\":\"<turn number>\", \"span_ms\":[start,end], \"evidence\":\"<quoted transcript evidence>\"}\nspan_ms must cite the time range of the turn that proves the answer. If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
+     },
+     "output": {
+      "raw": "{\"answer\": \"unknown\", \"span_ms\": null, \"evidence\": \"no transcript\"}",
+      "answer": "unknown",
+      "span_ms": null
+     }
+    },
+    {
+     "id": "s4",
+     "name": "evaluation",
+     "type": "evaluation",
+     "status": "completed",
+     "parent_span_ids": [
+      "s3"
+     ],
+     "result_ids": []
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,698 @@
+[
+  {
+    "id": "conv_01",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_01.wav",
+    "duration_ms": 23840,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 1089,
+        "start_ms": 0,
+        "end_ms": 3445,
+        "text": "HE HAD THE FAITH IN HIM THAT MOVES MOUNTAINS",
+        "clip": "data/audio/conv_01_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 3729,
+        "start_ms": 4045,
+        "end_ms": 9310,
+        "text": "ALL THESE HONEST PERSONS ARE WAITING THEIR TURN TO GET THEIR SNUFF BOXES FILLED",
+        "clip": "data/audio/conv_01_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 7729,
+        "start_ms": 9910,
+        "end_ms": 13360,
+        "text": "THIS WAS AT THE MARCH ELECTION EIGHTEEN FIFTY FIVE",
+        "clip": "data/audio/conv_01_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 8455,
+        "start_ms": 13960,
+        "end_ms": 17905,
+        "text": "ONE OF US ALWAYS REMAINS ON BOARD WHILE THE OTHER IS ON SHORE",
+        "clip": "data/audio/conv_01_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 2094,
+        "start_ms": 18505,
+        "end_ms": 23840,
+        "text": "THAT'S THE WAY WITH YOU THAT'S THE ROAD YOU'D ALL LIKE TO GO HEADLONGS TO RUIN",
+        "clip": "data/audio/conv_01_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'remains'? Answer with the turn number only.",
+    "answer": "4",
+    "answer_type": "text",
+    "keyword": "remains",
+    "truth_span": [
+      13960,
+      17905
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  },
+  {
+    "id": "conv_02",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_02.wav",
+    "duration_ms": 40100,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 260,
+        "start_ms": 0,
+        "end_ms": 9985,
+        "text": "ALL MY DANGER AND SUFFERINGS WERE NEEDED TO STRIKE A SPARK OF HUMAN FEELING OUT OF HIM BUT NOW THAT I AM WELL HIS NATURE HAS RESUMED ITS SWAY",
+        "clip": "data/audio/conv_02_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 6829,
+        "start_ms": 10585,
+        "end_ms": 18005,
+        "text": "SHE WAS DRESSED IN THE REGULATION COSTUME OF THE MAIDS AT ELMHURST A PLAIN BLACK GOWN WITH WHITE APRON AND CAP",
+        "clip": "data/audio/conv_02_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 5639,
+        "start_ms": 18605,
+        "end_ms": 28095,
+        "text": "ON THE CONTRARY HE RESOLVED TO TELL THEM THAT REPENTING OF HIS VIOLENCE AND MOVED BY HER TEARS HE HAD ONLY CARRIED HER HALF WAY TOWARDS HIS HOUSE AND THEN LET HER GO",
+        "clip": "data/audio/conv_02_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 4446,
+        "start_ms": 28695,
+        "end_ms": 31990,
+        "text": "LAMB WOULDN'T CARE A GREAT DEAL ABOUT MANY OF THEM I FANCY",
+        "clip": "data/audio/conv_02_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 8230,
+        "start_ms": 32590,
+        "end_ms": 40100,
+        "text": "THE BEHAVIOURIST WHO ATTEMPTS TO MAKE PSYCHOLOGY A RECORD OF BEHAVIOUR HAS TO TRUST HIS MEMORY IN MAKING THE RECORD",
+        "clip": "data/audio/conv_02_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'repenting'? Answer with the turn number only.",
+    "answer": "3",
+    "answer_type": "text",
+    "keyword": "repenting",
+    "truth_span": [
+      18605,
+      28095
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  },
+  {
+    "id": "conv_03",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_03.wav",
+    "duration_ms": 28940,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 7127,
+        "start_ms": 0,
+        "end_ms": 8865,
+        "text": "WHEN SHE PERCEIVED THE YOUNG MAN SHE ROSE LIKE A WOMAN SURPRISED IN THE MIDST OF IDEAS SHE WAS DESIROUS OF CONCEALING FROM HERSELF",
+        "clip": "data/audio/conv_03_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 5105,
+        "start_ms": 9465,
+        "end_ms": 14195,
+        "text": "NEVER MIND NOW INTERPOSED THE CAPTAIN WE WILL TALK OF THAT BY AND BY",
+        "clip": "data/audio/conv_03_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 2300,
+        "start_ms": 14795,
+        "end_ms": 18915,
+        "text": "THERE SEEMS NO GOOD REASON FOR BELIEVING THAT IT WILL CHANGE",
+        "clip": "data/audio/conv_03_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 7176,
+        "start_ms": 19515,
+        "end_ms": 23560,
+        "text": "THE GREAT HAWK FOLLOWED HURRIEDLY TO RETRIEVE HIS PREY FROM THE GROUND",
+        "clip": "data/audio/conv_03_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 4077,
+        "start_ms": 24160,
+        "end_ms": 28940,
+        "text": "THE ARMY FOUND THE PEOPLE IN POVERTY AND LEFT THEM IN COMPARATIVE WEALTH",
+        "clip": "data/audio/conv_03_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'poverty'? Answer with the turn number only.",
+    "answer": "5",
+    "answer_type": "text",
+    "keyword": "poverty",
+    "truth_span": [
+      24160,
+      28940
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  },
+  {
+    "id": "conv_04",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_04.wav",
+    "duration_ms": 32810,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 1188,
+        "start_ms": 0,
+        "end_ms": 6625,
+        "text": "EVERY PLANT IN THE GRASS IS SET FORMALLY GROWS PERFECTLY AND MAY BE REALIZED COMPLETELY",
+        "clip": "data/audio/conv_04_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 237,
+        "start_ms": 7225,
+        "end_ms": 10885,
+        "text": "I GET WET TO MY KNEES WHEN I GO DOWN TO PICK CHERRIES",
+        "clip": "data/audio/conv_04_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 4970,
+        "start_ms": 11485,
+        "end_ms": 19555,
+        "text": "HE WELL KNEW THE PERILS OF THE FRONTIER THE SAVAGE STATE OF SOCIETY THE LURKING INDIANS AND THE DANGERS OF FEVER",
+        "clip": "data/audio/conv_04_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 4507,
+        "start_ms": 20155,
+        "end_ms": 27380,
+        "text": "TO TEACH READING MEANS TO LIGHT THE FIRE EVERY SYLLABLE SPELLED OUT SPARKLES",
+        "clip": "data/audio/conv_04_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 121,
+        "start_ms": 27980,
+        "end_ms": 32810,
+        "text": "IT WASN'T SIMPLY THAT SHE SAID SO BUT THAT I KNEW SHE HADN'T I WAS SURE I COULD SEE",
+        "clip": "data/audio/conv_04_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'lurking'? Answer with the turn number only.",
+    "answer": "3",
+    "answer_type": "text",
+    "keyword": "lurking",
+    "truth_span": [
+      11485,
+      19555
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  },
+  {
+    "id": "conv_05",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_05.wav",
+    "duration_ms": 27155,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 5142,
+        "start_ms": 0,
+        "end_ms": 4235,
+        "text": "SO I LIVED AND NOW AM YOUR TOOTH THRALL WELL IT IS THE LUCK OF WAR",
+        "clip": "data/audio/conv_05_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 1995,
+        "start_ms": 4835,
+        "end_ms": 8385,
+        "text": "SHE HAD ALMOST FORGOTTEN THAT IT WAS HERE WITHIN TOUCH AND SIGHT",
+        "clip": "data/audio/conv_05_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 5683,
+        "start_ms": 8985,
+        "end_ms": 12455,
+        "text": "I DID NOT EVEN TAKE THE PRECAUTION OF SMOKING UP THE CHIMNEY",
+        "clip": "data/audio/conv_05_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 3575,
+        "start_ms": 13055,
+        "end_ms": 22775,
+        "text": "AFTER THIS DISAPPOINTMENT I NEVER DARE RECKON WITH CERTAINTY ON THE ENJOYMENT OF A PLEASURE AGAIN IT SEEMS AS IF SOME FATALITY STOOD BETWEEN YOU AND ME",
+        "clip": "data/audio/conv_05_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 1221,
+        "start_ms": 23375,
+        "end_ms": 27155,
+        "text": "MOTHER CRIED SHE I SEE YOU HERE LOOK LOOK",
+        "clip": "data/audio/conv_05_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'forgotten'? Answer with the turn number only.",
+    "answer": "2",
+    "answer_type": "text",
+    "keyword": "forgotten",
+    "truth_span": [
+      4835,
+      8385
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  },
+  {
+    "id": "conv_06",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_06.wav",
+    "duration_ms": 31995,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 1320,
+        "start_ms": 0,
+        "end_ms": 4900,
+        "text": "THEY DREW BACK A LITTLE FROM THE ENTRANCE AND MOTIONED TO THE SUPPOSED CONJURER TO ENTER",
+        "clip": "data/audio/conv_06_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 8224,
+        "start_ms": 5500,
+        "end_ms": 10940,
+        "text": "HIS DEATH IN THIS CONJUNCTURE WAS A PUBLIC MISFORTUNE",
+        "clip": "data/audio/conv_06_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 908,
+        "start_ms": 11540,
+        "end_ms": 19155,
+        "text": "IF HE TO KEEP ONE OATH MUST LOSE ONE JOY BY HIS LIFE'S STAR FORETOLD",
+        "clip": "data/audio/conv_06_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 2830,
+        "start_ms": 19755,
+        "end_ms": 23175,
+        "text": "THE MOST THEY COULD CLAIM IS THAT THEY WERE SENT BY OTHERS",
+        "clip": "data/audio/conv_06_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 2961,
+        "start_ms": 23775,
+        "end_ms": 31995,
+        "text": "THERE IS NO DANGER OF THE MODERN COMMENTATORS ON THE TIMAEUS FALLING INTO THE ABSURDITIES OF THE NEO PLATONISTS",
+        "clip": "data/audio/conv_06_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'timaeus'? Answer with the turn number only.",
+    "answer": "5",
+    "answer_type": "text",
+    "keyword": "timaeus",
+    "truth_span": [
+      23775,
+      31995
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  },
+  {
+    "id": "conv_07",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_07.wav",
+    "duration_ms": 32275,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 1580,
+        "start_ms": 0,
+        "end_ms": 7065,
+        "text": "NOT ONLY THIS BUT ON THE TABLE I FOUND A SMALL BALL OF BLACK DOUGH OR CLAY WITH SPECKS OF SOMETHING WHICH LOOKS LIKE SAWDUST IN IT",
+        "clip": "data/audio/conv_07_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 3570,
+        "start_ms": 7665,
+        "end_ms": 14925,
+        "text": "BUT IT IS ON OTHER GROUNDS WORTH NOTING THAT THE TERM WASTE IN THE LANGUAGE OF EVERYDAY LIFE IMPLIES DEPRECATION OF WHAT IS CHARACTERIZED AS WASTEFUL",
+        "clip": "data/audio/conv_07_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 61,
+        "start_ms": 15525,
+        "end_ms": 23010,
+        "text": "WHAT IS THE TUMULT AND RIOTING CRIED OUT THE SQUIRE AUTHORITATIVELY AND HE BLEW TWICE ON A SILVER WHISTLE WHICH HUNG AT HIS BELT",
+        "clip": "data/audio/conv_07_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 672,
+        "start_ms": 23610,
+        "end_ms": 26660,
+        "text": "HOW IT WILL SHINE THIS EVENING",
+        "clip": "data/audio/conv_07_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 7021,
+        "start_ms": 27260,
+        "end_ms": 32275,
+        "text": "SEEING THAT I AM SO FINE I MAY AS WELL GO AND VISIT THE KING",
+        "clip": "data/audio/conv_07_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'evening'? Answer with the turn number only.",
+    "answer": "4",
+    "answer_type": "text",
+    "keyword": "evening",
+    "truth_span": [
+      23610,
+      26660
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  },
+  {
+    "id": "conv_08",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_08.wav",
+    "duration_ms": 26920,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 6930,
+        "start_ms": 0,
+        "end_ms": 3380,
+        "text": "VOLTAIRE PICKED UP SOMETHING FROM THE GROUND AND LOOKED AT IT",
+        "clip": "data/audio/conv_08_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 1284,
+        "start_ms": 3980,
+        "end_ms": 10245,
+        "text": "HE KNEW IT WOULD TAKE THEM TO THE HOUSE OF THE CROOKED MAGICIAN WHOM HE HAD NEVER SEEN BUT WHO WAS THEIR NEAREST NEIGHBOR",
+        "clip": "data/audio/conv_08_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 4992,
+        "start_ms": 10845,
+        "end_ms": 18905,
+        "text": "AND YET YOU MUST OWN HER BEHAVIOUR HAS WARRANTED THEM HAS IT NOT BEEN IN THIS PARTICULAR INCOHERENT AND UNACCOUNTABLE",
+        "clip": "data/audio/conv_08_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 8463,
+        "start_ms": 19505,
+        "end_ms": 23050,
+        "text": "IT IS HARDLY NECESSARY TO SAY MORE OF THEM HERE",
+        "clip": "data/audio/conv_08_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 8555,
+        "start_ms": 23650,
+        "end_ms": 26920,
+        "text": "YOU ARE MATE REPLIED THE SAILOR",
+        "clip": "data/audio/conv_08_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'replied'? Answer with the turn number only.",
+    "answer": "5",
+    "answer_type": "text",
+    "keyword": "replied",
+    "truth_span": [
+      23650,
+      26920
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  },
+  {
+    "id": "conv_09",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_09.wav",
+    "duration_ms": 28180,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 8230,
+        "start_ms": 0,
+        "end_ms": 3640,
+        "text": "FAMILIARITY IS A FEELING CAPABLE OF DEGREES",
+        "clip": "data/audio/conv_09_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 121,
+        "start_ms": 4240,
+        "end_ms": 11965,
+        "text": "THERE WAS A UNANIMOUS GROAN AT THIS AND MUCH REPROACH AFTER WHICH IN HIS PREOCCUPIED WAY HE EXPLAINED",
+        "clip": "data/audio/conv_09_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 7127,
+        "start_ms": 12565,
+        "end_ms": 17610,
+        "text": "I REMEMBER NOW AND I CONGRATULATE MYSELF DO YOU LOVE ANY ONE",
+        "clip": "data/audio/conv_09_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 1580,
+        "start_ms": 18210,
+        "end_ms": 21785,
+        "text": "LET US HEAR THE SUSPICIONS I WILL LOOK AFTER THE PROOFS",
+        "clip": "data/audio/conv_09_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 260,
+        "start_ms": 22385,
+        "end_ms": 28180,
+        "text": "I TAKE THIS AS MY ANSWER AND I LEAVE THE PROFESSOR TO BITE HIS LIPS WITH IMPATIENCE",
+        "clip": "data/audio/conv_09_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'suspicions'? Answer with the turn number only.",
+    "answer": "4",
+    "answer_type": "text",
+    "keyword": "suspicions",
+    "truth_span": [
+      18210,
+      21785
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  },
+  {
+    "id": "conv_10",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_10.wav",
+    "duration_ms": 37035,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 1580,
+        "start_ms": 0,
+        "end_ms": 9265,
+        "text": "IT WILL BE CLEAR TO YOU FROM WHAT I HAVE SAID THAT ONLY YOU COULD HAVE LET THIS YOUNG MAN OUT SINCE YOU WERE LEFT IN THE ROOM AND MUST HAVE LOCKED THE DOOR WHEN YOU WENT OUT",
+        "clip": "data/audio/conv_10_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 2094,
+        "start_ms": 9865,
+        "end_ms": 16705,
+        "text": "NO NO NO TOTTY UD GET HER FEET WET SAID MISSUS POYSER CARRYING AWAY HER IRON",
+        "clip": "data/audio/conv_10_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 8230,
+        "start_ms": 17305,
+        "end_ms": 20925,
+        "text": "BUT I DO NOT THINK SUCH AN INFERENCE IS WARRANTED",
+        "clip": "data/audio/conv_10_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 1188,
+        "start_ms": 21525,
+        "end_ms": 28150,
+        "text": "IT HAS NO BEAUTY WHATSOEVER NO SPECIALTY OF PICTURESQUENESS AND ALL ITS LINES ARE CRAMPED AND POOR",
+        "clip": "data/audio/conv_10_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 5105,
+        "start_ms": 28750,
+        "end_ms": 37035,
+        "text": "IT MUST BE OWNED AND NO ONE WAS MORE READY TO CONFESS IT THAN HIMSELF THAT HIS LITERARY ATTAINMENTS WERE BY NO MEANS OF A HIGH ORDER",
+        "clip": "data/audio/conv_10_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'carrying'? Answer with the turn number only.",
+    "answer": "2",
+    "answer_type": "text",
+    "keyword": "carrying",
+    "truth_span": [
+      9865,
+      16705
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  },
+  {
+    "id": "conv_11",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_11.wav",
+    "duration_ms": 27140,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 8463,
+        "start_ms": 0,
+        "end_ms": 7765,
+        "text": "ONE OF THE SAILORS LED ME TO THE AFTERDECK WHERE I STOOD IN THE PRESENCE OF A SMART LOOKING OFFICER WHO EXTENDED HIS HAND TO ME",
+        "clip": "data/audio/conv_11_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 8224,
+        "start_ms": 8365,
+        "end_ms": 12235,
+        "text": "OR HATH HE GIVEN US ANY GIFT",
+        "clip": "data/audio/conv_11_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 672,
+        "start_ms": 12835,
+        "end_ms": 17655,
+        "text": "SOMETHING BETTER SOMETHING STILL GRANDER MUST FOLLOW BUT WHAT",
+        "clip": "data/audio/conv_11_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 5142,
+        "start_ms": 18255,
+        "end_ms": 23240,
+        "text": "OH IT IS BETTER TO LIVE ON THE SEA AND LET OTHER MEN RAISE YOUR CROPS AND COOK YOUR MEALS",
+        "clip": "data/audio/conv_11_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 3729,
+        "start_ms": 23840,
+        "end_ms": 27140,
+        "text": "YOU DO ME A GREAT HONOUR",
+        "clip": "data/audio/conv_11_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'afterdeck'? Answer with the turn number only.",
+    "answer": "1",
+    "answer_type": "text",
+    "keyword": "afterdeck",
+    "truth_span": [
+      0,
+      7765
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  },
+  {
+    "id": "conv_12",
+    "modality": "audio",
+    "family": "librispeech_conversation",
+    "audio": "data/audio/conv_12.wav",
+    "duration_ms": 34260,
+    "turns": [
+      {
+        "index": 1,
+        "speaker_id": 1580,
+        "start_ms": 0,
+        "end_ms": 8940,
+        "text": "I WILL ENDEAVOUR IN MY STATEMENT TO AVOID SUCH TERMS AS WOULD SERVE TO LIMIT THE EVENTS TO ANY PARTICULAR PLACE OR GIVE A CLUE AS TO THE PEOPLE CONCERNED",
+        "clip": "data/audio/conv_12_t1.wav"
+      },
+      {
+        "index": 2,
+        "speaker_id": 3570,
+        "start_ms": 9540,
+        "end_ms": 12745,
+        "text": "THERE IS A MORE OR LESS ELABORATE SYSTEM OF RANK AND GRADES",
+        "clip": "data/audio/conv_12_t2.wav"
+      },
+      {
+        "index": 3,
+        "speaker_id": 7176,
+        "start_ms": 13345,
+        "end_ms": 20615,
+        "text": "IN NOVELS THE HERO HAS OFTEN PUSHED HIS MEALS AWAY UNTASTED BUT NO STAGE HERO WOULD DO ANYTHING SO UNNATURAL AS THIS",
+        "clip": "data/audio/conv_12_t3.wav"
+      },
+      {
+        "index": 4,
+        "speaker_id": 2830,
+        "start_ms": 21215,
+        "end_ms": 29345,
+        "text": "THIS SENTENCE ALSO DEFINES OUR SINS AS GREAT SO GREAT IN FACT THAT THE WHOLE WORLD COULD NOT MAKE AMENDS FOR A SINGLE SIN",
+        "clip": "data/audio/conv_12_t4.wav"
+      },
+      {
+        "index": 5,
+        "speaker_id": 4077,
+        "start_ms": 29945,
+        "end_ms": 34260,
+        "text": "THEIR SUFFERINGS HAVE NEVER YET BEEN FITLY CHRONICLED BY HUMAN SCRIBE",
+        "clip": "data/audio/conv_12_t5.wav"
+      }
+    ],
+    "question": "In which turn does a speaker say the word 'particular'? Answer with the turn number only.",
+    "answer": "1",
+    "answer_type": "text",
+    "keyword": "particular",
+    "truth_span": [
+      0,
+      8940
+    ],
+    "source": "LibriSpeech (CC BY 4.0)"
+  }
+]

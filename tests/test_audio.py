@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from evalverse import audio
+from evalverse import audio_run
 from evalverse import evaluators as ev
 
 
@@ -45,3 +46,14 @@ def test_audio_labels():
     assert ev.audio_label(CASE, run(answer="1", span=(1000, 2000))) == "misunderstood"
     assert ev.audio_label(CASE, run(answer="1", span=(3000, 4000))) == "mislocated"
     assert ev.audio_label(CASE, run(answer="unknown", span=None)) == "abstained"
+
+
+def test_mock_audio_runner_writes_results(tmp_path, monkeypatch):
+    monkeypatch.setattr(audio_run, "OUT", tmp_path)
+    monkeypatch.setattr("sys.argv", ["audio_run", "--mock", "--tag", "audio"])
+    audio_run.main()
+    result = tmp_path / "results_audio.json"
+    assert result.exists()
+    payload = __import__("json").loads(result.read_text())
+    assert payload["meta"]["modality"] == "audio"
+    assert payload["traces"][0]["spans"][1]["name"] == "transcribe"
