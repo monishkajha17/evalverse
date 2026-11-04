@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="960" viewBox="0 0 1280 960" role="img" aria-label="How Meta models power EvalVerse">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Rounded panel -->
+  <rect x="24" y="24" width="1232" height="912" rx="28" fill="#050A14"/>
+
+  <text x="64" y="78" font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="28" font-weight="600" fill="#E6F1FF">How Meta&#8217;s models power EvalVerse</text>
+  <text x="64" y="108" font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" fill="#94A3B8">One OpenAI-compatible client at https://api.meta.ai/v1</text>
+
+  <!-- Tier 1: inputs -->
+  <g font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+    <rect x="64" y="140" width="200" height="72" rx="12" fill="#0B1220" stroke="#334155" stroke-width="1.5"/>
+    <text x="164" y="172" text-anchor="middle" font-size="13" fill="#94A3B8">Image</text>
+    <text x="164" y="192" text-anchor="middle" font-size="12" fill="#E6F1FF">receipt / chart</text>
+
+    <rect x="292" y="140" width="200" height="72" rx="12" fill="#0B1220" stroke="#334155" stroke-width="1.5"/>
+    <text x="392" y="172" text-anchor="middle" font-size="13" fill="#94A3B8">Video frames</text>
+    <text x="392" y="192" text-anchor="middle" font-size="12" fill="#E6F1FF">sampled stills</text>
+
+    <rect x="520" y="140" width="200" height="72" rx="12" fill="#0B1220" stroke="#334155" stroke-width="1.5"/>
+    <text x="620" y="172" text-anchor="middle" font-size="13" fill="#94A3B8">Text</text>
+    <text x="620" y="192" text-anchor="middle" font-size="12" fill="#E6F1FF">question / claim</text>
+
+    <rect x="980" y="140" width="200" height="72" rx="12" fill="#0B1220" stroke="#334155" stroke-width="1.5"/>
+    <text x="1080" y="172" text-anchor="middle" font-size="13" fill="#94A3B8">Voice</text>
+    <text x="1080" y="192" text-anchor="middle" font-size="12" fill="#E6F1FF">spoken audio</text>
+  </g>
+
+  <!-- Arrows tier1 -> tier2 -->
+  <g stroke="#64748B" stroke-width="1.5" fill="none" stroke-linecap="round">
+    <path d="M164 212 V250"/>
+    <path d="M392 212 V250"/>
+    <path d="M620 212 V250"/>
+    <path d="M1080 212 V250"/>
+    <path d="M164 250 H620"/>
+    <path d="M392 250 H400"/>
+  </g>
+
+  <!-- Tier 2: Meta models -->
+  <g font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" filter="url(#shadow)">
+    <rect x="64" y="260" width="680" height="100" rx="14" fill="#2E1065" stroke="#A78BFA" stroke-width="1.5"/>
+    <text x="404" y="300" text-anchor="middle" font-size="16" font-weight="600" fill="#E9D5FF">Muse Spark 1.1 and 1.3  agent under test</text>
+    <text x="404" y="328" text-anchor="middle" font-size="13" fill="#C4B5FD">reads, answers, cites a region (01000) or time span, and may call tools</text>
+
+    <rect x="900" y="260" width="280" height="100" rx="14" fill="#2E1065" stroke="#A78BFA" stroke-width="1.5"/>
+    <text x="1040" y="300" text-anchor="middle" font-size="15" font-weight="600" fill="#E9D5FF">Muse Voice Transcribe</text>
+    <text x="1040" y="328" text-anchor="middle" font-size="13" fill="#C4B5FD">hearing: turns and times</text>
+  </g>
+
+  <!-- Voice -> Transcribe already above; Transcribe -> Spark -->
+  <g stroke="#A78BFA" stroke-width="1.5" fill="none" stroke-linecap="round">
+    <path d="M900 310 H760"/>
+    <path d="M770 304 l-10 6 10 6"/>
+  </g>
+  <text x="830" y="298" font-family="Inter, sans-serif" font-size="11" fill="#C4B5FD">transcript</text>
+
+  <!-- Arrows to trace -->
+  <g stroke="#2DD4BF" stroke-width="1.5" fill="none">
+    <path d="M404 360 V400"/>
+    <path d="M1040 360 V380 H404"/>
+  </g>
+
+  <!-- Tier 3: EvalVerse trace -->
+  <g font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" filter="url(#shadow)">
+    <rect x="64" y="410" width="1116" height="88" rx="14" fill="#042F2E" stroke="#2DD4BF" stroke-width="1.5"/>
+    <text x="622" y="450" text-anchor="middle" font-size="17" font-weight="600" fill="#99F6E4">EvalVerse trace</text>
+    <text x="622" y="476" text-anchor="middle" font-size="13" fill="#5EEAD4">media · spans · cited evidence · tool calls</text>
+  </g>
+
+  <path d="M400 498 V538" stroke="#2DD4BF" stroke-width="1.5" fill="none"/>
+  <path d="M880 498 V538" stroke="#2DD4BF" stroke-width="1.5" fill="none"/>
+
+  <!-- Tier 4: evaluators + Wonder -->
+  <g font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" filter="url(#shadow)">
+    <rect x="64" y="548" width="520" height="100" rx="14" fill="#042F2E" stroke="#2DD4BF" stroke-width="1.5"/>
+    <text x="324" y="590" text-anchor="middle" font-size="16" font-weight="600" fill="#99F6E4">Rule evaluators</text>
+    <text x="324" y="618" text-anchor="middle" font-size="13" fill="#5EEAD4">answer · region · time · tools</text>
+
+    <rect x="660" y="548" width="520" height="100" rx="14" fill="#2E1065" stroke="#A78BFA" stroke-width="1.5"/>
+    <text x="920" y="590" text-anchor="middle" font-size="16" font-weight="600" fill="#E9D5FF">Muse Wonder  independent judge</text>
+    <text x="920" y="618" text-anchor="middle" font-size="13" fill="#C4B5FD">grades answers and claims; audited with planted cases</text>
+  </g>
+
+  <path d="M324 648 V688" stroke="#2DD4BF" stroke-width="1.5" fill="none"/>
+  <path d="M920 648 V688" stroke="#2DD4BF" stroke-width="1.5" fill="none"/>
+  <path d="M324 688 H920" stroke="#2DD4BF" stroke-width="1.5" fill="none"/>
+  <path d="M622 688 V720" stroke="#2DD4BF" stroke-width="1.5" fill="none"/>
+
+  <!-- Tier 5: verdict -->
+  <g font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" filter="url(#shadow)">
+    <rect x="64" y="730" width="1116" height="88" rx="14" fill="#042F2E" stroke="#2DD4BF" stroke-width="1.5"/>
+    <text x="622" y="770" text-anchor="middle" font-size="17" font-weight="600" fill="#99F6E4">Verdict</text>
+    <text x="622" y="796" text-anchor="middle" font-size="13" fill="#5EEAD4">stage label · dimension scores · UMS</text>
+  </g>
+
+  <!-- Legend -->
+  <g font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+    <rect x="64" y="850" width="18" height="18" rx="4" fill="#2E1065" stroke="#A78BFA"/>
+    <text x="92" y="864" font-size="13" fill="#E6F1FF">Meta Model API</text>
+    <rect x="260" y="850" width="18" height="18" rx="4" fill="#042F2E" stroke="#2DD4BF"/>
+    <text x="288" y="864" font-size="13" fill="#E6F1FF">EvalVerse</text>
+    <text x="1216" y="864" text-anchor="end" font-size="12" fill="#64748B">SAM 3.1 reachable on the same key · segmentation evidence on the roadmap</text>
+  </g>
+</svg>

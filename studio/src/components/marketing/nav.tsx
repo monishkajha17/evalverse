@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const PRODUCT_ITEMS = [
+  { href: "/#shift", label: "The shift" },
   { href: "/#observe", label: "Observability" },
   { href: "/#evaluate", label: "Evaluation" },
   { href: "/try/", label: "Try it" },

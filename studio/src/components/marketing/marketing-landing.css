@@ -1,5 +1,9 @@
 /* Landing-only styles (keep Studio globals untouched). Scoped under .mk */
 
+.mk {
+  overflow-x: clip;
+}
+
 .mk .mk-gloss-wrap {
   position: relative;
   display: inline;
@@ -175,4 +179,332 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   font-weight: 500;
+}
+
+/* —— Hero title: two lines at wide viewports / clean wrap at ~390 —— */
+.mk .mk-hero-title {
+  max-width: min(56rem, 100%);
+  font-size: clamp(1.95rem, 1.1rem + 3.4vw, 3.55rem);
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+  font-weight: 300;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.mk .mk-hero-title-line {
+  display: block;
+}
+
+/* Prefer one line for the gradient at ≥1100px; never clip if it still wraps */
+@media (min-width: 1100px) {
+  .mk .mk-hero-title-grad {
+    white-space: nowrap;
+  }
+}
+
+/* —— Dual marquee under hero CTAs —— */
+.mk .mk-marquee-stack {
+  position: relative;
+  z-index: 1;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  overflow: hidden;
+  padding-block: 0.35rem;
+}
+
+.mk .mk-marquee {
+  position: relative;
+  overflow: hidden;
+  min-height: 1.5rem;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
+}
+
+.mk .mk-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 0;
+  will-change: transform;
+}
+
+.mk .mk-marquee-track-a {
+  animation: mk-marquee-ltr 45s linear infinite;
+}
+
+.mk .mk-marquee-track-b {
+  animation: mk-marquee-rtl 70s linear infinite;
+}
+
+.mk .mk-marquee:hover .mk-marquee-track {
+  animation-play-state: paused;
+}
+
+.mk .mk-marquee-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-right: 1.5rem;
+  gap: 0.85rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mk .mk-marquee-band-a .mk-marquee-group {
+  color: var(--mk-text);
+}
+
+.mk .mk-marquee-band-b .mk-marquee-group {
+  color: var(--mk-muted);
+}
+
+.mk .mk-marquee-diamond {
+  display: inline-block;
+  width: 0.35rem;
+  height: 0.35rem;
+  border: 1px solid currentColor;
+  transform: rotate(45deg);
+  opacity: 0.55;
+  flex-shrink: 0;
+}
+
+@keyframes mk-marquee-ltr {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes mk-marquee-rtl {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mk .mk-marquee-track-a,
+  .mk .mk-marquee-track-b {
+    animation: none !important;
+    transform: none !important;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1120px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+    row-gap: 0.35rem;
+    justify-content: center;
+  }
+  .mk .mk-marquee-group {
+    white-space: normal;
+    padding-right: 0.75rem;
+  }
+  .mk .mk-marquee {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+}
+
+/* —— The Shift: modality stepper —— */
+.mk .mk-shift-stepper {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 2.5rem;
+  padding-top: 0.25rem;
+}
+
+.mk .mk-shift-rail {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 1.15rem;
+  height: 1px;
+  background: var(--mk-line);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mk .mk-shift-pulse {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--mk-accent);
+  box-shadow: 0 0 10px rgba(142, 197, 255, 0.65);
+  animation: mk-shift-pulse 8s linear infinite;
+}
+
+@keyframes mk-shift-pulse {
+  from {
+    left: 0%;
+    opacity: 0.35;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  to {
+    left: calc(100% - 7px);
+    opacity: 0.35;
+  }
+}
+
+.mk .mk-shift-stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.45rem;
+  min-width: 0;
+  padding: 0 0.15rem;
+}
+
+.mk .mk-shift-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--mk-line);
+  background: #070d18;
+  color: var(--mk-accent);
+}
+
+.mk .mk-shift-stage-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mk-text);
+}
+
+.mk .mk-shift-stage-fail {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--mk-muted);
+  max-width: 9.5rem;
+}
+
+@media (max-width: 767px) {
+  .mk .mk-shift-stepper {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+  .mk .mk-shift-rail {
+    display: none;
+  }
+  .mk .mk-shift-stage {
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+  .mk .mk-shift-stage-fail {
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mk .mk-shift-pulse {
+    animation: none !important;
+    left: 50%;
+    opacity: 0.7;
+  }
+}
+
+/* —— The Shift: modality matrix —— */
+.mk .mk-modality-matrix {
+  margin-top: 2.75rem;
+  width: 100%;
+  border-top: 1px solid var(--mk-line);
+}
+
+.mk .mk-modality-matrix-head,
+.mk .mk-modality-matrix-row {
+  display: grid;
+  grid-template-columns: minmax(7rem, 11rem) 1fr 1.25fr;
+  gap: 1rem 1.25rem;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--mk-line);
+  align-items: start;
+}
+
+.mk .mk-modality-matrix-head {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mk-muted);
+}
+
+.mk .mk-modality-matrix-row {
+  text-decoration: none;
+  color: inherit;
+  transition: background 160ms ease;
+}
+
+.mk .mk-modality-matrix-row:hover {
+  background: rgba(142, 197, 255, 0.04);
+}
+
+.mk .mk-modality-matrix-row:focus-visible {
+  outline: 2px solid var(--mk-accent);
+  outline-offset: 2px;
+}
+
+.mk .mk-modality-name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--mk-text);
+}
+
+.mk .mk-modality-cell {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--mk-muted);
+}
+
+@media (max-width: 767px) {
+  .mk .mk-modality-matrix-head {
+    display: none;
+  }
+  .mk .mk-modality-matrix-row {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+  .mk .mk-modality-cell::before {
+    display: block;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mk-muted);
+    margin-bottom: 0.15rem;
+  }
+  .mk .mk-modality-matrix-row .mk-modality-cell:nth-child(2)::before {
+    content: "What goes in";
+  }
+  .mk .mk-modality-matrix-row .mk-modality-cell:nth-child(3)::before {
+    content: "What EvalVerse checks";
+  }
 }

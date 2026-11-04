@@ -26,6 +26,22 @@ export async function loadSuite(suite: string): Promise<SuiteData> {
   const res = await fetch(`/data/${encodeURIComponent(suite)}.json`, { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to load suite ${suite} (${res.status})`);
   const raw = (await res.json()) as Partial<SuiteData>;
+  let scores: SuiteData["scores"] =
+    raw.scores && typeof raw.scores === "object" ? (raw.scores as SuiteData["scores"]) : null;
+  // Cord export often omits scores; marketing (and Studio) can use the sidecar.
+  const scoreRows = scores?.rows || [];
+  const hasOverall = Boolean(scores && "overall" in scores && scores.overall != null);
+  if (suite === "cord" && !hasOverall && !scoreRows.length) {
+    try {
+      const side = await fetch("/data/cord-scores.json", { cache: "no-store" });
+      if (side.ok) {
+        const block = (await side.json()) as SuiteData["scores"];
+        if (block && typeof block === "object") scores = block;
+      }
+    } catch {
+      /* keep null */
+    }
+  }
   return {
     meta: raw.meta && typeof raw.meta === "object" ? raw.meta : {},
     cases: Array.isArray(raw.cases) ? raw.cases : [],
@@ -38,8 +54,7 @@ export async function loadSuite(suite: string): Promise<SuiteData> {
     traces: Array.isArray(raw.traces) ? raw.traces : [],
     plan: Array.isArray(raw.plan) ? raw.plan : [],
     conflicts: Array.isArray(raw.conflicts) ? raw.conflicts : [],
-    scores:
-      raw.scores && typeof raw.scores === "object" ? (raw.scores as SuiteData["scores"]) : null,
+    scores,
   };
 }
 

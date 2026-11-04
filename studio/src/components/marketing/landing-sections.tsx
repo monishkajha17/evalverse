@@ -725,6 +725,100 @@ function FindingBars({
   );
 }
 
+const MARQUEE_MODALITIES = [
+  "Multimodal evals",
+  "Images",
+  "Video",
+  "Voice",
+  "Text",
+  "Tool calls",
+  "Cross-modal",
+] as const;
+
+const MARQUEE_DIMENSIONS = [
+  "Perception",
+  "Groundedness",
+  "Temporal grounding",
+  "Hallucination",
+  "Completeness",
+  "Reasoning",
+  "Cross-modal consistency",
+] as const;
+
+const SHIFT_STAGES = [
+  { label: "Text", fail: "Fluent but wrong", glyph: "Aa" },
+  { label: "Image", fail: "Looked at the wrong place", glyph: "▣" },
+  { label: "Voice", fail: "Misheard or misunderstood", glyph: "⌁" },
+  { label: "Video", fail: "Right answer, wrong moment", glyph: "▶" },
+  { label: "Actions", fail: "Acted when unsure", glyph: "⇒" },
+] as const;
+
+const MODALITY_MATRIX = [
+  {
+    name: "Image",
+    input: "the photo",
+    checks: "the answer, the region it cited, and what changes when the photo is blurred or noisy.",
+    href: "/docs/concepts/modalities/",
+  },
+  {
+    name: "Video",
+    input: "sampled frames with timestamps",
+    checks: "the moment it cited, event order, and the same questions with no frames.",
+    href: "/docs/concepts/modalities/",
+  },
+  {
+    name: "Voice",
+    input: "a transcript per speaker turn",
+    checks: "which stage failed, hearing or reasoning, and whether it cited the right moment.",
+    href: "/docs/concepts/modalities/",
+  },
+  {
+    name: "Text",
+    input: "the prompt and the reply",
+    checks: "which claims are supported by the evidence and which are not.",
+    href: "/docs/concepts/evidence/",
+  },
+  {
+    name: "Tool calls",
+    input: "the arguments and the result",
+    checks: "valid arguments, the right amount, the right order, and no action when unsure.",
+    href: "/docs/concepts/traces-and-spans/",
+  },
+  {
+    name: "Voice with image",
+    input: "a spoken claim and a photo",
+    checks: "whether what was said matches what the photo shows.",
+    href: "/docs/concepts/cross-modal-consistency/",
+  },
+] as const;
+
+function MarqueeBand({
+  items,
+  band,
+}: {
+  items: readonly string[];
+  band: "a" | "b";
+}) {
+  const group = (
+    <div className="mk-marquee-group">
+      {items.map((item, i) => (
+        <span key={`${item}-${i}`} className="inline-flex items-center gap-3">
+          {i > 0 ? <span className="mk-marquee-diamond" aria-hidden /> : null}
+          <span>{item}</span>
+        </span>
+      ))}
+    </div>
+  );
+  return (
+    <div className={`mk-marquee mk-marquee-band-${band}`} aria-hidden="true">
+      <div className={`mk-marquee-track mk-marquee-track-${band}`}>
+        {group}
+        {group}
+      </div>
+    </div>
+  );
+}
+
 export function LandingSections() {
   const data = useLandingData();
 
@@ -735,16 +829,16 @@ export function LandingSections() {
         <div className="mk-aurora" aria-hidden />
         <div className="mk-grid-fade" aria-hidden />
         <div className="relative z-10 mx-auto max-w-[1120px]">
-          <p className="mk-label">Testing and monitoring for AI agents</p>
-          <h1 className="mk-headline mt-4 max-w-3xl text-4xl sm:text-6xl">
-            Test AI agents that see,
-            <br />
-            <span className="mk-headline-grad">hear, read and act.</span>
+          <p className="mk-label">Evaluation and observability for multimodal AI agents</p>
+          <h1 className="mk-hero-title mt-4">
+            <span className="mk-hero-title-line">Multimodal evals</span>
+            <span className="mk-hero-title-line mk-headline-grad mk-hero-title-grad">
+              for AI agents that see, hear and act.
+            </span>
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-[var(--mk-muted)] sm:text-lg">
-            EvalVerse records every step your agent takes, checks its answers against the{" "}
-            <GlossaryTerm term="evidence">evidence</GlossaryTerm> in the file it was given, and
-            shows you exactly where it went wrong.
+            Agents are moving from reading text to seeing images, hearing voices and watching video.
+            EvalVerse checks what they did with each one, and shows you where it went wrong.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link href="/signup/" className="mk-btn mk-btn-primary">
@@ -761,9 +855,68 @@ export function LandingSections() {
           <p className="mk-mono mt-6 text-[11px] text-[var(--mk-muted)]">
             Built on the Meta Model API · Muse Spark · Muse Wonder · Muse Voice Transcribe
           </p>
+        </div>
+        <div className="mk-marquee-stack">
+          <p className="sr-only">
+            EvalVerse covers multimodal evals across images, video, voice, text, tool calls and
+            cross-modal checks, including perception, groundedness, temporal grounding,
+            hallucination, completeness, reasoning and cross-modal consistency.
+          </p>
+          <MarqueeBand items={MARQUEE_MODALITIES} band="a" />
+          <MarqueeBand items={MARQUEE_DIMENSIONS} band="b" />
+        </div>
+        <div className="relative z-10 mx-auto mt-10 max-w-[1120px] px-4 sm:px-6">
           <HeroFlow />
         </div>
       </section>
+
+      {/* The Shift */}
+      <FadeUp id="shift" className="border-t border-[var(--mk-line)]">
+        <div className="mx-auto max-w-[1120px] px-4 py-20 sm:px-6">
+          <p className="mk-label">The shift</p>
+          <h2 className="mk-headline mt-3 max-w-3xl text-3xl sm:text-4xl">
+            Agents moved from reading text to seeing, hearing and watching.
+          </h2>
+          <p className="mk-def">
+            Agents used to take text in and give text back. Now they read receipts from photos,
+            listen to calls, watch screen recordings and take actions. Most evaluation still only
+            grades the words they return.
+          </p>
+
+          <div className="mk-shift-stepper" aria-label="Modalities and the failures they can hide">
+            <div className="mk-shift-rail" aria-hidden>
+              <span className="mk-shift-pulse" />
+            </div>
+            {SHIFT_STAGES.map((stage) => (
+              <div key={stage.label} className="mk-shift-stage">
+                <span className="mk-shift-glyph" aria-hidden>
+                  <span className="mk-mono text-[11px] leading-none">{stage.glyph}</span>
+                </span>
+                <span className="mk-shift-stage-label">{stage.label}</span>
+                <span className="mk-shift-stage-fail">{stage.fail}</span>
+              </div>
+            ))}
+          </div>
+
+          <h3 className="mt-14 text-xl font-light tracking-tight sm:text-2xl">
+            One platform, every modality
+          </h3>
+          <div className="mk-modality-matrix">
+            <div className="mk-modality-matrix-head" aria-hidden>
+              <span>Modality</span>
+              <span>What goes in</span>
+              <span>What EvalVerse checks</span>
+            </div>
+            {MODALITY_MATRIX.map((row) => (
+              <Link key={row.name} href={row.href} className="mk-modality-matrix-row">
+                <span className="mk-modality-name">{row.name}</span>
+                <span className="mk-modality-cell">{row.input}</span>
+                <span className="mk-modality-cell">{row.checks}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </FadeUp>
 
       {/* How it works */}
       <FadeUp className="border-t border-[var(--mk-line)]">
@@ -1103,7 +1256,7 @@ export function LandingSections() {
       <FadeUp id="measured" className="border-t border-[var(--mk-line)]">
         <div className="mx-auto max-w-[1120px] px-4 py-20 sm:px-6">
           <SectionHead title="What we found" def={FINDINGS.sampleLine} />
-          <div className="mt-10 grid gap-8 lg:grid-cols-3">
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
             {FINDINGS.items.map((item) => (
               <div key={item.id} className="border-t border-[var(--mk-line)] pt-5">
                 <h3 className="text-lg font-light tracking-tight">{item.title}</h3>

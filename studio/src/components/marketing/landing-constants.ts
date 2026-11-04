@@ -5,11 +5,11 @@ export const GITHUB = "https://github.com/monishkajha17/evalverse";
 export const RELEASE = "0.1";
 export const RUN_DATE = "2026-11-04";
 
-/** Findings bars — numbers from /data cord, audio, video suites (Release 0.1). */
+/** Findings bars — numbers from /data cord, audio, video, crossmodal suites (Release 0.1). */
 export const FINDINGS = {
   runDate: RUN_DATE,
   sampleLine:
-    "Release 0.1 was run on 30 real receipts (CORD v2), 12 spoken conversations (LibriSpeech) and 12 generated register videos.",
+    "Release 0.1 was run on 30 real receipts (CORD v2), 12 spoken conversations (LibriSpeech), 12 generated register videos and 30 spoken-claim pairs (cross-modal).",
   items: [
     {
       id: "degraded",
@@ -41,6 +41,16 @@ export const FINDINGS = {
       bars: [
         { label: "Blind order correct", value: 6, max: 12 },
         { label: "Chance", value: 6, max: 12 },
+      ],
+    },
+    {
+      id: "crossmodal",
+      title: "The receipt stopped a false match",
+      body: "With the receipt, the agent never said a spoken amount matched when it did not (0 of 80 runs); without the receipt it did 6 times in 30. It declined to decide in 22 of 80 runs.",
+      bars: [
+        { label: "False match with receipt", value: 0, max: 80 },
+        { label: "False match without receipt", value: 6, max: 30 },
+        { label: "Declined with receipt", value: 22, max: 80 },
       ],
     },
   ],
