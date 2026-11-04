@@ -2,3 +2,13 @@ out/
 __pycache__/
 *.pyc
 .env
+
+.env
+*.db
+out/
+studio/node_modules/
+studio/.next/
+data/images_cord/
+data/audio/
+.pytest_cache/
+__pycache__/
