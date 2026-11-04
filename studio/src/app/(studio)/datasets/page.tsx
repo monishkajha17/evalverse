@@ -23,11 +23,33 @@ import {
 } from "@/lib/api";
 import { caseTags } from "@/lib/metrics";
 import type { CaseRow } from "@/lib/types";
+import { posterFrameSrc, videoSrc } from "@/lib/video";
 
 export default function DatasetsPage() {
   const { mode } = useApiMode();
   if (mode === "live") return <LiveDatasets />;
   return <SnapshotDatasets />;
+}
+
+function VideoPoster({ caseRow }: { caseRow: CaseRow }) {
+  const [ok, setOk] = useState(true);
+  const src = posterFrameSrc(caseRow);
+  if (!src || !ok) {
+    return (
+      <div className="mb-2 flex h-28 items-center justify-center rounded border border-dashed text-ink/40">
+        No poster frame
+      </div>
+    );
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      className="mb-2 h-28 w-full rounded border object-cover"
+      onError={() => setOk(false)}
+    />
+  );
 }
 
 function LiveDatasets() {
@@ -262,41 +284,86 @@ function SnapshotDatasets() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((c) => (
-                <tr
-                  key={c.id}
-                  className="cursor-pointer border-t border-border hover:bg-muted/60"
-                  onClick={() => setSelected(c)}
-                >
-                  <td className="px-3 py-1.5">
-                    {c.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={c.image} alt="" className="h-10 w-10 rounded border object-cover" />
-                    ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded border border-dashed text-[10px]">
-                        AUD
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-3 py-1.5 font-medium">{c.id}</td>
-                  <td className="px-3 py-1.5">{c.family || "—"}</td>
-                  <td className="max-w-md truncate px-3 py-1.5">{c.question || "—"}</td>
-                  <td className="px-3 py-1.5">{c.answer || "—"}</td>
-                  <td className="px-3 py-1.5">
-                    {caseTags(c.tags).map((t) => (
-                      <Badge key={t} className="mr-1 border-border bg-muted">
-                        {t}
-                      </Badge>
-                    ))}
-                  </td>
-                </tr>
-              ))}
+              {rows.map((c) => {
+                const isVideo = c.modality === "video" || !!c.video;
+                const thumb = isVideo ? posterFrameSrc(c) : c.image;
+                return (
+                  <tr
+                    key={c.id}
+                    className="cursor-pointer border-t border-border hover:bg-muted/60"
+                    onClick={() => setSelected(c)}
+                  >
+                    <td className="px-3 py-1.5">
+                      {thumb ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={thumb}
+                          alt=""
+                          className="h-10 w-10 rounded border object-cover"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).style.display = "none";
+                          }}
+                        />
+                      ) : (
+                        <div className="flex h-10 w-10 items-center justify-center rounded border border-dashed text-[10px]">
+                          {isVideo ? "VID" : c.audio ? "AUD" : "—"}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-3 py-1.5 font-medium">{c.id}</td>
+                    <td className="px-3 py-1.5">{c.family || "—"}</td>
+                    <td className="max-w-md truncate px-3 py-1.5">{c.question || "—"}</td>
+                    <td className="px-3 py-1.5">{c.answer || "—"}</td>
+                    <td className="px-3 py-1.5">
+                      {caseTags(c.tags).map((t) => (
+                        <Badge key={t} className="mr-1 border-border bg-muted">
+                          {t}
+                        </Badge>
+                      ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
         <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
           <SheetContent title={selected?.id || "Case"}>
-            {selected ? <pre className="mono text-[11px]">{JSON.stringify(selected, null, 2)}</pre> : null}
+            {selected ? (
+              <div className="space-y-3 text-xs">
+                {(selected.modality === "video" || selected.video) && (
+                  <>
+                    <div>
+                      <VideoPoster caseRow={selected} />
+                      {videoSrc(selected) ? (
+                        <video controls className="mb-2 w-full rounded border" src={videoSrc(selected)} />
+                      ) : null}
+                    </div>
+                    <div>
+                      <div className="mb-1 text-[11px] font-semibold uppercase text-ink/45">Events</div>
+                      {(selected.events || []).length === 0 ? (
+                        <p className="text-ink/50">No events on this case.</p>
+                      ) : (
+                        <ul className="space-y-1">
+                          {(selected.events || []).map((ev, i) => (
+                            <li key={i} className="rounded border border-border bg-paper px-2 py-1.5">
+                              <span className="font-mono text-[10px] uppercase text-teal">
+                                {ev.type || "event"}
+                              </span>{" "}
+                              <span className="text-ink/50">
+                                @ {ev.t_ms != null ? `${(Number(ev.t_ms) / 1000).toFixed(1)}s` : "?"}
+                              </span>
+                              <div className="mt-0.5 text-ink/80">{ev.text || "—"}</div>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </>
+                )}
+                <pre className="mono overflow-auto text-[11px]">{JSON.stringify(selected, null, 2)}</pre>
+              </div>
+            ) : null}
           </SheetContent>
         </Sheet>
       </main>

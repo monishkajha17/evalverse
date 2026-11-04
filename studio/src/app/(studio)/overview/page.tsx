@@ -11,17 +11,21 @@ import { useApiMode } from "@/context/api-mode";
 import { useSuite } from "@/context/suite-context";
 import {
   agentKpis,
-  dimensionPivot,
+  dimensionPivotSparse,
   groundedSeries,
   judgeTrust,
   outcomeStack,
+  videoByQuestionType,
+  videoOverviewKpis,
 } from "@/lib/metrics";
 import { getQueue, listSessions, listTraces, type QueueStats, type SessionSummary, type TraceListItem } from "@/lib/api";
 import { pct } from "@/lib/utils";
 
 export default function OverviewPage() {
   const { mode } = useApiMode();
-  if (mode === "live") return <LiveOverview />;
+  const { entry } = useSuite();
+  // Video suite overview is snapshot-driven (by-question table from /data/video.json).
+  if (mode === "live" && entry?.modality !== "video") return <LiveOverview />;
   return <SnapshotOverview />;
 }
 
@@ -129,17 +133,20 @@ function LiveOverview() {
 }
 
 function SnapshotOverview() {
-  const { data, loading, error } = useSuite();
+  const { data, loading, error, entry } = useSuite();
+  const isVideo = (entry?.modality || data.meta.modality) === "video";
   const agents = data.meta.agents || [...new Set(data.runs.map((r) => r.agent))];
   const [agentFilter, setAgentFilter] = useState<string>("all");
   const kpis = useMemo(() => agentKpis(data), [data]);
+  const videoKpis = useMemo(() => videoOverviewKpis(data), [data]);
+  const byQ = useMemo(() => videoByQuestionType(data), [data]);
   const pivot = useMemo(
-    () => dimensionPivot(data, agentFilter === "all" ? undefined : agentFilter),
+    () => dimensionPivotSparse(data, agentFilter === "all" ? undefined : agentFilter),
     [data, agentFilter],
   );
   const stack = useMemo(() => outcomeStack(data), [data]);
   const series = useMemo(() => groundedSeries(data), [data]);
-  const trust = useMemo(() => judgeTrust(data.judged || []), [data]);
+  const trust = useMemo(() => judgeTrust(data.judged || []), [data.judged]);
 
   return (
     <>
@@ -149,29 +156,101 @@ function SnapshotOverview() {
         {error ? <ErrorBlock title="Could not load suite" detail={error} /> : null}
         {!loading && !error ? (
           <>
-            <section className="grid gap-3 md:grid-cols-2">
-              {kpis.map((k) => (
-                <Card key={k.agent}>
+            {isVideo ? (
+              <>
+                <p className="rounded-md border border-border bg-paper/80 px-3 py-2 text-xs text-ink/65">
+                  Video is evaluated as timestamped frames.
+                </p>
+                <section className="grid gap-3 sm:grid-cols-3">
+                  <Card>
+                    <CardContent className="pt-4">
+                      <Kpi label="Grounded %" value={pct(videoKpis.grounded, 0)} hint={`${videoKpis.n} runs excl. blind`} />
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-4">
+                      <Kpi label="Abstained %" value={pct(videoKpis.abstained, 0)} />
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-4">
+                      <Kpi
+                        label="Confident-error %"
+                        value={pct(videoKpis.confidentError, 0)}
+                        hint="incorrect, non-abstained"
+                      />
+                    </CardContent>
+                  </Card>
+                </section>
+                <Card>
                   <CardHeader>
-                    <CardTitle>{k.agent}</CardTitle>
-                    <CardDescription>Snapshot suite KPIs</CardDescription>
+                    <CardTitle>By question type</CardTitle>
+                    <CardDescription>
+                      clean · sparse · blur · no frames (forced guess). Chance: order 50%, time/third ≈ 0%.
+                    </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                      <Kpi label="Grounded" value={pct(k.grounded, 0)} />
-                      <Kpi label="Confident error" value={pct(k.confidentError, 0)} />
-                      <Kpi label="Media required" value={pct(k.mediaRequired, 0)} />
-                      <Kpi label="Robustness" value={pct(k.robustness, 0)} />
-                    </div>
+                  <CardContent className="overflow-auto">
+                    <table className="sticky-table w-full min-w-[640px] border-collapse text-left text-xs">
+                      <thead>
+                        <tr className="text-ink/60">
+                          <th className="px-2 py-2">Type</th>
+                          <th className="px-2 py-2">clean</th>
+                          <th className="px-2 py-2">sparse</th>
+                          <th className="px-2 py-2">blur</th>
+                          <th className="px-2 py-2">no frames (forced guess)</th>
+                          <th className="px-2 py-2">chance level</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {byQ.map((row) => (
+                          <tr key={row.kind} className="border-t border-border">
+                            <td className="px-2 py-1.5 font-medium">{row.kind}</td>
+                            {(["clean", "sparse", "blur", "blind_guess"] as const).map((col) => {
+                              const cell = row.cells[col] || { correct: 0, total: 0 };
+                              return (
+                                <td key={col} className="px-2 py-1.5 tabular-nums">
+                                  {cell.total ? `${cell.correct} / ${cell.total}` : "—"}
+                                </td>
+                              );
+                            })}
+                            <td className="px-2 py-1.5 tabular-nums text-ink/60">
+                              {row.chance === 0 ? "~0%" : pct(row.chance, 0)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <p className="mt-3 text-xs text-ink/55">
+                      Questions whose no-frames score is near chance cannot show that the video was needed.
+                    </p>
                   </CardContent>
                 </Card>
-              ))}
-            </section>
+              </>
+            ) : (
+              <section className="grid gap-3 md:grid-cols-2">
+                {kpis.map((k) => (
+                  <Card key={k.agent}>
+                    <CardHeader>
+                      <CardTitle>{k.agent}</CardTitle>
+                      <CardDescription>Snapshot suite KPIs</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                        <Kpi label="Grounded" value={pct(k.grounded, 0)} />
+                        <Kpi label="Confident error" value={pct(k.confidentError, 0)} />
+                        <Kpi label="Media required" value={pct(k.mediaRequired, 0)} />
+                        <Kpi label="Robustness" value={pct(k.robustness, 0)} />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </section>
+            )}
             <Card>
               <CardHeader className="flex flex-row items-center justify-between gap-3">
                 <div>
                   <CardTitle>Scores by dimension</CardTitle>
-                  <CardDescription>From dimension_summary</CardDescription>
+                  <CardDescription>From dimension_summary (empty dimensions hidden)</CardDescription>
                 </div>
                 <div className="w-40">
                   <Select value={agentFilter} onValueChange={setAgentFilter}>
@@ -190,30 +269,34 @@ function SnapshotOverview() {
                 </div>
               </CardHeader>
               <CardContent className="overflow-auto">
-                <table className="sticky-table w-full min-w-[640px] border-collapse text-left text-xs">
-                  <thead>
-                    <tr>
-                      <th className="px-2 py-2">Dimension</th>
-                      {pivot.variants.map((v) => (
-                        <th key={v} className="px-2 py-2">
-                          {v}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {pivot.dims.map((dim) => (
-                      <tr key={dim} className="border-t border-border">
-                        <td className="px-2 py-1.5 font-medium">{dim}</td>
+                {pivot.dims.length === 0 ? (
+                  <EmptyBlock title="No dimension scores" />
+                ) : (
+                  <table className="sticky-table w-full min-w-[640px] border-collapse text-left text-xs">
+                    <thead>
+                      <tr>
+                        <th className="px-2 py-2">Dimension</th>
                         {pivot.variants.map((v) => (
-                          <td key={v} className="px-2 py-1.5 tabular-nums">
-                            {pct(pivot.cell(dim, v), 0)}
-                          </td>
+                          <th key={v} className="px-2 py-2">
+                            {v}
+                          </th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {pivot.dims.map((dim) => (
+                        <tr key={dim} className="border-t border-border">
+                          <td className="px-2 py-1.5 font-medium">{dim}</td>
+                          {pivot.variants.map((v) => (
+                            <td key={v} className="px-2 py-1.5 tabular-nums">
+                              {pct(pivot.cell(dim, v), 0)}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </CardContent>
             </Card>
             <div className="grid gap-3 xl:grid-cols-2">

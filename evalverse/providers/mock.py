@@ -14,6 +14,7 @@ class MockProvider:
     MODELS = [
         "muse-spark-1.1",
         "muse-spark-1.3",
+        "muse-wonder-1.0",
         "muse-voice-transcribe-1.0",
     ]
 
@@ -42,9 +43,27 @@ class MockProvider:
         schema: dict[str, Any] | None = None,
     ) -> tuple[str, dict[str, Any]]:
         text = ""
+        n_images = 0
         for b in content_blocks:
             if b.get("type") == "text":
                 text += str(b.get("text") or "")
+            elif b.get("type") in ("image", "image_url"):
+                n_images += 1
+        lower = text.lower()
+        # Playground / Q&A style prompts
+        if "question:" in lower or "transcript" in lower or "video frames" in lower:
+            if "total" in lower:
+                ans = "12.00"
+            elif "describe" in lower:
+                ans = "A receipt showing purchased items."
+            elif n_images > 1:
+                ans = "Event visible across sampled frames."
+            elif "transcript" in lower:
+                ans = "mock transcript answer"
+            else:
+                ans = "12.00"
+            payload = {"answer": ans, "evidence": "mock", "box": [100, 100, 200, 200]}
+            return json.dumps(payload), {"input_tokens": 10, "output_tokens": 5}
         # Tiny deterministic answer for tests.
         payload = {"answer": "12.00", "box": [100, 100, 200, 200], "evidence": "mock"}
         if schema:

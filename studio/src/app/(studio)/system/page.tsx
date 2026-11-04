@@ -146,7 +146,10 @@ export default function SystemPage() {
     return { n, agrees, rate: n ? agrees / n : null };
   }, [data.judged]);
 
-  const audioExample = useMemo(() => findParallelTranscribeTrace(data.traces || []), [data.traces]);
+  const audioExample = useMemo(
+    () => findParallelTranscribeTrace(data.traces || []) || findVideoFrameJoinTrace(data.traces || []),
+    [data.traces],
+  );
 
   const umsRows = data.scores?.rows || [];
   const primaryUms: UmsRow | null = umsRows[0] || null;
@@ -406,11 +409,11 @@ export default function SystemPage() {
           </div>
           <Card>
             <CardHeader>
-              <CardTitle>Real example · parallel ASR joins</CardTitle>
+              <CardTitle>Real example · parallel joins</CardTitle>
               <CardDescription>
                 {audioExample
-                  ? `Trace ${audioExample.id} — five transcribe spans join into model_call`
-                  : "Need an audio suite trace with ≥5 transcribe spans"}
+                  ? `Trace ${audioExample.id} — parallel spans join into model_call`
+                  : "Need an audio/video suite with parallel transcribe or frame spans"}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -418,8 +421,8 @@ export default function SystemPage() {
                 <SpanDag spans={audioExample.spans || []} title={audioExample.id} />
               ) : (
                 <EmptyBlock
-                  title="No parallel-transcribe DAG in this suite"
-                  detail="Switch the suite selector to audio (or a snapshot that includes conv_* traces with joined transcibes)."
+                  title="No parallel-join DAG in this suite"
+                  detail="Switch the suite selector to audio or video (parallel transcibes / sample frames joining model_call)."
                 />
               )}
             </CardContent>
@@ -439,10 +442,17 @@ export default function SystemPage() {
             </CardHeader>
             <CardContent>
               {!primaryUms ? (
-                <EmptyBlock
-                  title="No UMS rows in this suite"
-                  detail="scores.rows is missing (re-export cord or a scored run into /data). Pipeline still shows live result counts when available."
-                />
+                <div className="space-y-3">
+                  <EmptyBlock
+                    title="No UMS rows in this suite"
+                    detail="scores.rows is missing (re-export a scored run into /data). Dimension means below still come from dimension_summary when present."
+                  />
+                  {(data.dimension_summary || []).length > 0 ? (
+                    <DimensionSummaryTable
+                      rows={(data.dimension_summary || []).filter((r) => r.mean_score != null)}
+                    />
+                  ) : null}
+                </div>
               ) : (
                 <div className="space-y-3">
                   <div className="grid gap-2 sm:grid-cols-4">
@@ -477,6 +487,32 @@ export default function SystemPage() {
                   <p className="text-xs text-ink/70">
                     UMS is a weighted view. The dimensions beside it are the evidence.
                   </p>
+                  {primaryUms.dimensions ? (
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {Object.entries(primaryUms.dimensions)
+                        .filter(([, v]) => {
+                          const score = typeof v === "number" ? v : v?.score;
+                          return score != null && Number.isFinite(score);
+                        })
+                        .map(([name, v]) => {
+                          const score = (typeof v === "number" ? v : v?.score) as number;
+                          return (
+                            <div key={name}>
+                              <div className="mb-0.5 flex justify-between text-[11px] text-ink/55">
+                                <span>{name}</span>
+                                <span className="tabular-nums">{score.toFixed(2)}</span>
+                              </div>
+                              <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                                <div
+                                  className="h-full rounded-full bg-teal"
+                                  style={{ width: `${Math.min(100, Math.max(0, score * 100))}%` }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  ) : null}
                   {umsRows.length > 1 ? (
                     <div className="overflow-auto">
                       <table className="w-full min-w-[560px] border-collapse text-left text-xs">
@@ -575,6 +611,16 @@ function findParallelTranscribeTrace(traces: TraceRow[]): TraceRow | null {
   return null;
 }
 
+function findVideoFrameJoinTrace(traces: TraceRow[]): TraceRow | null {
+  for (const t of traces) {
+    const spans = t.spans || [];
+    const frames = spans.filter((s) => /^sample frame\b/i.test(s.name || ""));
+    const join = spans.some((s) => (s.parent_span_ids || []).length >= 3);
+    if (frames.length >= 3 && join) return t;
+  }
+  return null;
+}
+
 function formatCi(ci: UmsRow["ci_95"]): string {
   if (!ci) return "—";
   if (Array.isArray(ci) && ci.length >= 2) return `${ci[0].toFixed(3)}–${ci[1].toFixed(3)}`;
@@ -591,6 +637,41 @@ function Stat({ label, value }: { label: string; value: string }) {
     <div className="rounded-md border border-border bg-paper/60 px-2.5 py-2">
       <div className="text-[11px] uppercase tracking-wide text-ink/45">{label}</div>
       <div className="text-sm font-semibold tabular-nums text-ink">{value}</div>
+    </div>
+  );
+}
+
+function DimensionSummaryTable({
+  rows,
+}: {
+  rows: Array<{ dimension?: string; variant?: string; mean_score?: number | null; n?: number }>;
+}) {
+  const shown = rows.filter((r) => r.mean_score != null).slice(0, 24);
+  if (!shown.length) return null;
+  return (
+    <div className="overflow-auto">
+      <table className="w-full min-w-[480px] border-collapse text-left text-xs">
+        <thead>
+          <tr className="text-ink/60">
+            <th className="px-2 py-1">Dimension</th>
+            <th className="px-2 py-1">Variant</th>
+            <th className="px-2 py-1">Mean</th>
+            <th className="px-2 py-1">n</th>
+          </tr>
+        </thead>
+        <tbody>
+          {shown.map((r, i) => (
+            <tr key={i} className="border-t border-border">
+              <td className="px-2 py-1">{r.dimension || "—"}</td>
+              <td className="px-2 py-1">{r.variant || "—"}</td>
+              <td className="px-2 py-1 tabular-nums">
+                {r.mean_score == null ? "—" : r.mean_score.toFixed(3)}
+              </td>
+              <td className="px-2 py-1 tabular-nums">{r.n ?? "—"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

@@ -115,6 +115,12 @@ class _Sender:
                 )
             elif kind == "upload_and_attach":
                 self._upload_and_attach(ev)
+            elif kind == "add_events":
+                self._with_retries(
+                    "POST",
+                    f"/api/v1/traces/{ev['trace_id']}/events",
+                    json={"events": ev["events"]},
+                )
         except Exception as exc:  # noqa: BLE001 — never raise into caller
             log.warning("EvalVerse SDK send failed (%s): %s", kind, exc)
 
@@ -240,6 +246,40 @@ class SpanHandle:
         self.trace._register_span(child)
         self.trace._queue_span(child)
         return child
+
+    def event(
+        self,
+        label: str,
+        start_ms: float | int | None,
+        end_ms: float | int | None,
+        source: str = "sdk",
+        media: str | None = None,
+        speaker: str | None = None,
+        time_base: str = "media",
+        payload: Any = None,
+    ) -> None:
+        """Record a temporal event on this span (queued to the platform)."""
+        self.trace._ensure_created()
+        self.trace.client._enqueue(
+            {
+                "kind": "add_events",
+                "trace_id": self.trace.id,
+                "events": [
+                    {
+                        "client_id": uuid.uuid4().hex,
+                        "span_id": self.id,
+                        "media_id": media,
+                        "source": source or "sdk",
+                        "label": label,
+                        "speaker": speaker,
+                        "start_ms": float(start_ms) if start_ms is not None else None,
+                        "end_ms": float(end_ms) if end_ms is not None else None,
+                        "time_base": time_base or "media",
+                        "payload": _jsonable(payload) if payload is not None else None,
+                    }
+                ],
+            }
+        )
 
     def _finish(self, *, failed: bool = False, error: str | None = None) -> None:
         self.ended_at = _now()

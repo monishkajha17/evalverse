@@ -15,6 +15,7 @@ from fastapi import HTTPException, UploadFile
 from evalverse.server.db import Database
 from evalverse.server.experiments import ExperimentsMixin, ReviewsMixin
 from evalverse.server.platform import PlatformMixin
+from evalverse.server.playground import PlaygroundMixin
 from evalverse.server.schemas import (
     EvalResultOut,
     MediaAttach,
@@ -26,6 +27,8 @@ from evalverse.server.schemas import (
     SpanOut,
     SpanStatus,
     SpanType,
+    TemporalEventIn,
+    TemporalEventOut,
     TraceCreate,
     TraceDetail,
     TraceListItem,
@@ -33,6 +36,11 @@ from evalverse.server.schemas import (
     TraceSource,
     TraceStatus,
 )
+
+VALID_EVENT_SOURCES = frozenset(
+    {"asr", "agent_citation", "ground_truth", "evaluator", "sdk", "sampled_frame"}
+)
+VALID_TIME_BASES = frozenset({"media", "trace"})
 
 MAX_MEDIA_BYTES = 10 * 1024 * 1024
 VALID_TRACE_STATUS = {s.value for s in TraceStatus}
@@ -158,7 +166,7 @@ def _validate_span_graph_with_existing(
     _validate_span_graph(list(by_id.values()), existing_ids=set(by_id.keys()))
 
 
-class Service(PlatformMixin, ExperimentsMixin, ReviewsMixin):
+class Service(PlaygroundMixin, PlatformMixin, ExperimentsMixin, ReviewsMixin):
     def __init__(self, db: Database, media_dir: Path):
         self.db = db
         self.media_dir = Path(media_dir)
@@ -444,6 +452,142 @@ class Service(PlatformMixin, ExperimentsMixin, ReviewsMixin):
             self._insert_spans(conn, trace_id, spans, replace=True)
         return self.get_trace(project, trace_id)
 
+    def add_events(
+        self, project: str, trace_id: str, events: list[TemporalEventIn] | list[dict]
+    ) -> list[TemporalEventOut]:
+        """Batch insert temporal events; idempotent by (trace_id, client_id)."""
+        self._require_trace(project, trace_id)
+        out: list[TemporalEventOut] = []
+        for raw in events or []:
+            if isinstance(raw, dict):
+                ev = TemporalEventIn.model_validate(raw)
+            else:
+                ev = raw
+            if ev.source not in VALID_EVENT_SOURCES:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"invalid event source: {ev.source}",
+                )
+            tb = ev.time_base or "media"
+            if tb not in VALID_TIME_BASES:
+                raise HTTPException(status_code=400, detail=f"invalid time_base: {tb}")
+            if ev.client_id:
+                existing = self.db.fetchone(
+                    "SELECT * FROM temporal_events WHERE trace_id=? AND client_id=?",
+                    (trace_id, ev.client_id),
+                )
+                if existing is not None:
+                    out.append(self._event_out(existing))
+                    continue
+            eid = ev.id or uuid.uuid4().hex
+            created = _now()
+            try:
+                self.db.execute(
+                    """INSERT INTO temporal_events
+                       (id, trace_id, span_id, media_id, source, label, speaker,
+                        start_ms, end_ms, time_base, confidence, payload_json, client_id, created_at)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (
+                        eid,
+                        trace_id,
+                        ev.span_id,
+                        ev.media_id,
+                        ev.source,
+                        ev.label,
+                        ev.speaker,
+                        ev.start_ms,
+                        ev.end_ms,
+                        tb,
+                        ev.confidence,
+                        _dumps(ev.payload),
+                        ev.client_id,
+                        created,
+                    ),
+                )
+            except Exception:
+                # Race on unique client_id — return existing
+                if ev.client_id:
+                    existing = self.db.fetchone(
+                        "SELECT * FROM temporal_events WHERE trace_id=? AND client_id=?",
+                        (trace_id, ev.client_id),
+                    )
+                    if existing is not None:
+                        out.append(self._event_out(existing))
+                        continue
+                raise
+            row = self.db.fetchone("SELECT * FROM temporal_events WHERE id=?", (eid,))
+            out.append(self._event_out(row))
+        return out
+
+    def list_trace_events(
+        self,
+        project: str,
+        trace_id: str,
+        *,
+        source: str | None = None,
+        media_id: str | None = None,
+        from_ms: float | None = None,
+        to_ms: float | None = None,
+    ) -> list[TemporalEventOut]:
+        self._require_trace(project, trace_id)
+        clauses = ["trace_id = ?"]
+        params: list[Any] = [trace_id]
+        if source:
+            clauses.append("source = ?")
+            params.append(source)
+        if media_id:
+            clauses.append("media_id = ?")
+            params.append(media_id)
+        if from_ms is not None:
+            clauses.append("(end_ms IS NULL OR end_ms >= ?)")
+            params.append(from_ms)
+        if to_ms is not None:
+            clauses.append("(start_ms IS NULL OR start_ms <= ?)")
+            params.append(to_ms)
+        where = " AND ".join(clauses)
+        rows = self.db.fetchall(
+            f"""SELECT * FROM temporal_events WHERE {where}
+                ORDER BY IFNULL(start_ms, 0) ASC, created_at ASC""",
+            params,
+        )
+        return [self._event_out(r) for r in rows]
+
+    def list_media_events(self, project: str, media_id: str) -> list[TemporalEventOut]:
+        m = self.db.fetchone("SELECT * FROM media WHERE id=? AND project=?", (media_id, project))
+        if m is None:
+            raise HTTPException(status_code=404, detail="Media not found")
+        rows = self.db.fetchall(
+            """SELECT * FROM temporal_events WHERE media_id=?
+               ORDER BY IFNULL(start_ms, 0) ASC, created_at ASC""",
+            (media_id,),
+        )
+        return [self._event_out(r) for r in rows]
+
+    def _events_summary(self, trace_id: str) -> dict[str, int]:
+        rows = self.db.fetchall(
+            "SELECT source, COUNT(*) AS c FROM temporal_events WHERE trace_id=? GROUP BY source",
+            (trace_id,),
+        )
+        return {r["source"]: int(r["c"]) for r in rows}
+
+    def _event_out(self, row) -> TemporalEventOut:
+        return TemporalEventOut(
+            id=row["id"],
+            trace_id=row["trace_id"],
+            span_id=row["span_id"],
+            media_id=row["media_id"],
+            source=row["source"],
+            label=row["label"],
+            speaker=row["speaker"],
+            start_ms=row["start_ms"],
+            end_ms=row["end_ms"],
+            time_base=row["time_base"] or "media",
+            confidence=row["confidence"],
+            payload=_loads(row["payload_json"]),
+            client_id=row["client_id"] if "client_id" in row.keys() else None,
+            created_at=row["created_at"],
+        )
+
     def list_traces(
         self,
         project: str,
@@ -533,6 +677,7 @@ class Service(PlatformMixin, ExperimentsMixin, ReviewsMixin):
             input_tokens=tokens[0],
             output_tokens=tokens[1],
             score_summary=summary,
+            events_summary=self._events_summary(trace_id),
         )
 
     # ------------------------------------------------------------------ sessions

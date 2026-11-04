@@ -269,6 +269,101 @@ CREATE TABLE IF NOT EXISTS reviews (
 
 CREATE INDEX IF NOT EXISTS idx_reviews_project ON reviews(project);
 CREATE INDEX IF NOT EXISTS idx_reviews_result ON reviews(result_id);
+
+CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    name TEXT,
+    password_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+    token_hash TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
+
+CREATE TABLE IF NOT EXISTS api_keys (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    project TEXT NOT NULL,
+    name TEXT NOT NULL,
+    key_hash TEXT NOT NULL UNIQUE,
+    prefix TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    last_used_at TEXT,
+    revoked_at TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (project) REFERENCES projects(name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_api_keys_user ON api_keys(user_id);
+CREATE INDEX IF NOT EXISTS idx_api_keys_project ON api_keys(project);
+CREATE INDEX IF NOT EXISTS idx_api_keys_hash ON api_keys(key_hash);
+
+CREATE TABLE IF NOT EXISTS project_members (
+    project TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    role TEXT NOT NULL,
+    PRIMARY KEY (project, user_id),
+    FOREIGN KEY (project) REFERENCES projects(name),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_project_members_user ON project_members(user_id);
+
+CREATE TABLE IF NOT EXISTS temporal_events (
+    id TEXT PRIMARY KEY,
+    trace_id TEXT NOT NULL,
+    span_id TEXT,
+    media_id TEXT,
+    source TEXT NOT NULL,
+    label TEXT,
+    speaker TEXT,
+    start_ms REAL,
+    end_ms REAL,
+    time_base TEXT NOT NULL DEFAULT 'media',
+    confidence REAL,
+    payload_json TEXT,
+    client_id TEXT,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (trace_id) REFERENCES traces(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_temporal_events_trace ON temporal_events(trace_id);
+CREATE INDEX IF NOT EXISTS idx_temporal_events_media_start ON temporal_events(media_id, start_ms);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_temporal_events_client
+    ON temporal_events(trace_id, client_id) WHERE client_id IS NOT NULL;
+
+CREATE TABLE IF NOT EXISTS playground_runs (
+    id TEXT PRIMARY KEY,
+    project TEXT NOT NULL,
+    session_id TEXT NOT NULL,
+    status TEXT NOT NULL,
+    question TEXT NOT NULL,
+    agent_model TEXT,
+    judge_model TEXT,
+    evaluator_ids_json TEXT,
+    conditions_json TEXT,
+    mock INTEGER NOT NULL DEFAULT 0,
+    files_meta_json TEXT,
+    answer_json TEXT,
+    trace_ids_json TEXT,
+    eval_run_id TEXT,
+    error_json TEXT,
+    created_at TEXT NOT NULL,
+    started_at TEXT,
+    ended_at TEXT,
+    FOREIGN KEY (project) REFERENCES projects(name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_playground_runs_project_created
+    ON playground_runs(project, created_at);
+CREATE INDEX IF NOT EXISTS idx_playground_runs_status ON playground_runs(status);
 """
 
 

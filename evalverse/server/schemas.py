@@ -218,6 +218,54 @@ class TraceDetail(BaseModel):
     input_tokens: Optional[int] = None
     output_tokens: Optional[int] = None
     score_summary: ScoreSummary = Field(default_factory=ScoreSummary)
+    events_summary: dict[str, int] = Field(default_factory=dict)
+
+
+class TemporalEventIn(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: Optional[str] = None
+    client_id: Optional[str] = None
+    span_id: Optional[str] = None
+    media_id: Optional[str] = None
+    source: str
+    label: Optional[str] = None
+    speaker: Optional[str] = None
+    start_ms: Optional[float] = None
+    end_ms: Optional[float] = None
+    time_base: str = "media"
+    confidence: Optional[float] = None
+    payload: Optional[Any] = None
+
+    @field_validator("speaker", "label", mode="before")
+    @classmethod
+    def _coerce_str(cls, v):  # noqa: ANN001
+        if v is None:
+            return None
+        return str(v)
+
+
+class TemporalEventsCreate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    events: list[TemporalEventIn] = Field(default_factory=list)
+
+
+class TemporalEventOut(BaseModel):
+    id: str
+    trace_id: str
+    span_id: Optional[str] = None
+    media_id: Optional[str] = None
+    source: str
+    label: Optional[str] = None
+    speaker: Optional[str] = None
+    start_ms: Optional[float] = None
+    end_ms: Optional[float] = None
+    time_base: str = "media"
+    confidence: Optional[float] = None
+    payload: Optional[Any] = None
+    client_id: Optional[str] = None
+    created_at: str
 
 
 class SessionSummary(BaseModel):
@@ -391,3 +439,25 @@ class ReviewCreate(BaseModel):
     label: Optional[str] = None
     notes: Optional[str] = None
     reviewer: Optional[str] = None
+
+
+class RegisterRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    email: str
+    password: str = Field(min_length=8)
+    name: Optional[str] = None
+
+
+class LoginRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    email: str
+    password: str
+
+
+class ApiKeyCreate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    name: str
+    project: str

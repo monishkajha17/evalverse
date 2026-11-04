@@ -26,6 +26,12 @@ export const OUTCOME_META: Record<
     fg: "text-crimson",
     border: "border-crimson/30",
   },
+  mistimed: {
+    text: "mistimed",
+    bg: "bg-crimson/10",
+    fg: "text-crimson",
+    border: "border-crimson/30",
+  },
   heard_wrong: {
     text: "heard wrong",
     bg: "bg-slateish/10",
@@ -63,6 +69,7 @@ export const OUTCOME_COLORS: Record<string, string> = {
   correct_ungrounded: "#C98512",
   misread: "#6A7B93",
   mislocated: "#D4285C",
+  mistimed: "#D4285C",
   heard_wrong: "#6A7B93",
   misunderstood: "#C98512",
   abstained: "#A9B3C1",

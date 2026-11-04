@@ -1,34 +1,80 @@
 import Link from "next/link";
+import { GITHUB, RELEASE } from "@/components/marketing/landing-constants";
 
-const GITHUB = "https://github.com/monishkajha17/evalverse";
+const COLS: Array<{ title: string; links: Array<{ href: string; label: string; external?: boolean }> }> = [
+  {
+    title: "Product",
+    links: [
+      { href: "/#observe", label: "Observability" },
+      { href: "/#evaluate", label: "Evaluation" },
+      { href: "/try/", label: "Try it" },
+      { href: "/#monitor", label: "Offline and online" },
+      { href: "/overview/", label: "Open Studio" },
+    ],
+  },
+  {
+    title: "Developers",
+    links: [
+      { href: "/docs/quickstart/", label: "Quickstart" },
+      { href: "/docs/sdk/", label: "SDK" },
+      { href: "/docs/api/", label: "API reference" },
+      { href: "/signup/", label: "Create an account" },
+    ],
+  },
+  {
+    title: "Open source",
+    links: [
+      { href: GITHUB, label: "GitHub", external: true },
+      { href: `${GITHUB}/blob/main/LICENSE`, label: "License", external: true },
+      { href: "/#measured", label: "What we found" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { href: "/marketing/ATTRIBUTION.txt", label: "Dataset attribution" },
+      { href: "/#trust", label: "Judge disclosure" },
+    ],
+  },
+];
 
 export function MarketingFooter() {
   return (
     <footer className="border-t border-[var(--mk-line)]">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-12 sm:flex-row sm:items-start sm:justify-between sm:px-6">
-        <div>
-          <div className="text-sm font-medium tracking-tight">EvalVerse</div>
-          <p className="mt-2 max-w-sm text-xs leading-relaxed text-[var(--mk-muted)]">
-            Built on the Meta Model API. Release 0.1.
+      <div className="mx-auto grid max-w-[1120px] gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
+        {COLS.map((col) => (
+          <div key={col.title}>
+            <div className="mk-label">{col.title}</div>
+            <ul className="mt-4 space-y-2.5">
+              {col.links.map((l) => (
+                <li key={l.label}>
+                  {l.external ? (
+                    <a
+                      href={l.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-[var(--mk-muted)] hover:text-[var(--mk-text)]"
+                    >
+                      {l.label}
+                    </a>
+                  ) : (
+                    <Link href={l.href} className="text-sm text-[var(--mk-muted)] hover:text-[var(--mk-text)]">
+                      {l.label}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="border-t border-[var(--mk-line)] px-4 py-5 sm:px-6">
+        <div className="mx-auto flex max-w-[1120px] flex-col gap-2 text-[11px] leading-relaxed text-[var(--mk-muted)] sm:flex-row sm:items-center sm:justify-between">
+          <p>Built on the Meta Model API · Muse Spark · Muse Wonder · Muse Voice Transcribe</p>
+          <p>
+            CORD v2 (CC BY 4.0) · LibriSpeech (CC BY 4.0) · Release {RELEASE}
           </p>
         </div>
-        <div className="flex flex-wrap gap-x-6 gap-y-2 mk-mono text-xs text-[var(--mk-muted)]">
-          <a href={GITHUB} target="_blank" rel="noreferrer" className="hover:text-[var(--mk-text)]">
-            GitHub ↗
-          </a>
-          <Link href="/quickstart/" className="hover:text-[var(--mk-text)]">
-            Docs
-          </Link>
-          <Link href="/overview/" className="hover:text-[var(--mk-text)]">
-            Studio
-          </Link>
-          <Link href="/connect/" className="hover:text-[var(--mk-text)]">
-            Connect
-          </Link>
-        </div>
-      </div>
-      <div className="border-t border-[var(--mk-line)] px-4 py-4 text-center text-[11px] leading-relaxed text-[var(--mk-muted)] sm:px-6">
-        Meta Model API · CORD v2 (CC BY 4.0) · LibriSpeech (CC BY 4.0) · Release 0.1
       </div>
     </footer>
   );

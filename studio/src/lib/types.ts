@@ -20,6 +20,13 @@ export interface CaseTurn {
   asr?: string;
 }
 
+export interface VideoEvent {
+  type?: string;
+  text?: string;
+  t_ms?: number;
+  box?: Box | null;
+}
+
 export interface CaseRow {
   id: string;
   family?: string;
@@ -29,13 +36,20 @@ export interface CaseRow {
   distractor?: string;
   truth_box?: Box | null;
   truth_span?: SpanMs | null;
+  /** Video suites export truth_span_ms; prefer this when present. */
+  truth_span_ms?: SpanMs | null;
   size?: [number, number];
   image?: string;
   audio?: string;
+  video?: string;
   modality?: string;
+  duration_ms?: number;
+  fps?: number;
+  events?: VideoEvent[];
   turns?: CaseTurn[];
   tags?: string[] | string | null;
   keyword?: string;
+  tolerance_s?: number;
 }
 
 export interface RunRow {
@@ -144,6 +158,7 @@ export interface TraceSpan {
   result_ids?: string[];
   model?: string;
   metadata?: Record<string, unknown>;
+  attributes?: Record<string, unknown>;
   error?: string | null;
 }
 

@@ -58,6 +58,24 @@ class EvalWorkerPool:
 
     def _loop(self) -> None:
         while not self._stop.is_set():
+            # Prefer playground runs (long multimodal jobs), then eval jobs.
+            playground = None
+            try:
+                playground = self.service.claim_next_playground_run()
+            except Exception:
+                playground = None
+            if playground is not None:
+                with self._lock:
+                    self.running_count += 1
+                try:
+                    self.service.execute_playground_run(playground)
+                except Exception as exc:  # noqa: BLE001
+                    log.exception("worker crashed on playground %s: %s", playground.get("id"), exc)
+                finally:
+                    with self._lock:
+                        self.running_count -= 1
+                continue
+
             job = self.service.claim_next_job()
             if job is None:
                 time.sleep(0.05)

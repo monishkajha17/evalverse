@@ -16,6 +16,8 @@ from typing import Any
 
 import httpx
 
+from evalverse.events import build_events_for_trace
+
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "out"
 
@@ -53,6 +55,57 @@ def _modality_for(path: Path) -> str:
     if mime and mime.startswith("video/"):
         return "video"
     return "image"
+
+
+def _resolve_media_id_for_trace(
+    tr: dict[str, Any],
+    case: dict | None,
+    media_cache: dict[str, str],
+) -> str | None:
+    for asset in tr.get("assets") or []:
+        apath = asset.get("path")
+        if apath and apath in media_cache:
+            return media_cache[apath]
+    if case:
+        for key in ("audio", "video", "image"):
+            rel = case.get(key)
+            if rel and rel in media_cache:
+                return media_cache[rel]
+    return None
+
+
+def _events_payload_for_trace(
+    tr: dict[str, Any],
+    *,
+    case: dict | None,
+    run: dict | None,
+    media_id: str | None,
+) -> list[dict[str, Any]]:
+    if tr.get("events"):
+        out = []
+        for ev in tr["events"]:
+            e = dict(ev)
+            if media_id and not e.get("media_id"):
+                e["media_id"] = media_id
+            out.append(e)
+        return out
+    spans = []
+    for sp in tr.get("spans") or []:
+        attrs: dict[str, Any] = {}
+        if isinstance(sp.get("attributes"), dict):
+            attrs.update(sp["attributes"])
+        if isinstance(sp.get("metadata"), dict):
+            attrs.update(sp["metadata"])
+        spans.append(
+            {
+                "id": sp.get("id"),
+                "name": sp.get("name"),
+                "type": sp.get("type"),
+                "attributes": attrs or None,
+                "output": sp.get("output"),
+            }
+        )
+    return build_events_for_trace(case=case, run=run, spans=spans, media_id=media_id)
 
 
 def upload_media(
@@ -108,9 +161,15 @@ def import_results(
         "media": 0,
         "results": 0,
         "results_skipped": 0,
+        "events": 0,
     }
     run_id = f"import:{tag}"
     media_cache: dict[str, str] = {}  # source path -> media_id
+    runs_by_key: dict[tuple, dict] = {}
+    for r in raw.get("runs") or []:
+        runs_by_key[
+            (r.get("agent"), r.get("case_id"), r.get("condition") or r.get("variant") or "clean")
+        ] = r
 
     try:
         # Pre-register case images under data/.
@@ -242,6 +301,36 @@ def import_results(
                     stats["traces"] += 1
                     trace_ids.append(tid)
 
+            # Always upsert temporal events (idempotent by client_id), including skipped traces.
+            if tid in trace_ids or existing.status_code == 200:
+                if tid not in trace_ids:
+                    trace_ids.append(tid)
+                case = cases.get(tr.get("case_id") or "")
+                run = runs_by_key.get(
+                    (tr.get("agent"), tr.get("case_id"), tr.get("variant") or "clean")
+                )
+                mid = _resolve_media_id_for_trace(tr, case, media_cache)
+                if mid is None and case:
+                    for key in ("audio", "video", "image"):
+                        rel = case.get(key)
+                        if rel and rel in media_cache:
+                            mid = media_cache[rel]
+                            break
+                evs = _events_payload_for_trace(tr, case=case, run=run, media_id=mid)
+                if evs:
+                    er = client.post(
+                        f"/api/v1/traces/{tid}/events",
+                        headers=_headers(project),
+                        json={"events": evs},
+                    )
+                    if er.status_code < 400:
+                        stats["events"] += len(er.json() if isinstance(er.json(), list) else [])
+                    else:
+                        print(
+                            f"  events {tid} failed: {er.status_code} {er.text[:200]}",
+                            file=sys.stderr,
+                        )
+
         # Attach evaluator results once per result id (idempotent).
         known = set(trace_ids)
         for res in results:
@@ -317,9 +406,21 @@ def import_results_local(
     traces = raw.get("traces") or []
     results = raw.get("results") or []
     cases = {c["id"]: c for c in (raw.get("cases") or []) if c.get("id")}
-    stats = {"traces": 0, "traces_skipped": 0, "media": 0, "results": 0, "results_skipped": 0}
+    stats = {
+        "traces": 0,
+        "traces_skipped": 0,
+        "media": 0,
+        "results": 0,
+        "results_skipped": 0,
+        "events": 0,
+    }
     run_id = f"import:{tag}"
     media_cache: dict[str, str] = {}
+    runs_by_key: dict[tuple, dict] = {}
+    for r in raw.get("runs") or []:
+        runs_by_key[
+            (r.get("agent"), r.get("case_id"), r.get("condition") or r.get("variant") or "clean")
+        ] = r
 
     for case in cases.values():
         for key in ("image", "audio", "video"):
@@ -449,6 +550,24 @@ def import_results_local(
             )
             stats["traces"] += 1
             known.append(tid)
+
+        # Upsert temporal events (idempotent by client_id) for new and existing traces.
+        if tid in known:
+            case = cases.get(tr.get("case_id") or "")
+            run = runs_by_key.get(
+                (tr.get("agent"), tr.get("case_id"), tr.get("variant") or "clean")
+            )
+            mid = _resolve_media_id_for_trace(tr, case, media_cache)
+            evs = _events_payload_for_trace(tr, case=case, run=run, media_id=mid)
+            if evs:
+                from evalverse.server.schemas import TemporalEventIn
+
+                posted = service.add_events(
+                    project,
+                    tid,
+                    [TemporalEventIn.model_validate(e) for e in evs],
+                )
+                stats["events"] += len(posted)
 
     known_set = set(known)
     for res in results:

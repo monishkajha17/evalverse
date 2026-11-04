@@ -6,14 +6,17 @@ import os
 from pathlib import Path
 from typing import Optional
 
-from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse, Response
+from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse
+import json as _json
 
 from evalverse.providers.registry import list_providers
+from evalverse.server.auth import AuthService
 from evalverse.server.db import Database
 from evalverse.server.otlp import ingest_otlp_json
 from evalverse.server.schemas import (
+    ApiKeyCreate,
     DatasetCreate,
     DatasetItemCreate,
     DatasetVersionCreate,
@@ -23,11 +26,14 @@ from evalverse.server.schemas import (
     EvalResultIn,
     ExperimentCreate,
     ExperimentRunRequest,
+    LoginRequest,
     PolicyCreate,
     PolicyUpdate,
     PromoteRequest,
+    RegisterRequest,
     ReviewCreate,
     SpansCreate,
+    TemporalEventsCreate,
     TraceCreate,
     TracePatch,
 )
@@ -43,6 +49,10 @@ def _api_key() -> str:
     return os.environ.get("EVALVERSE_API_KEY", "dev")
 
 
+def _allow_dev_key_default() -> bool:
+    return os.environ.get("EVALVERSE_ALLOW_DEV_KEY", "true").lower() in ("1", "true", "yes", "on")
+
+
 def create_app(
     db_path: str | Path | None = None,
     media_dir: str | Path | None = None,
@@ -50,15 +60,18 @@ def create_app(
     *,
     start_workers: bool = True,
     worker_size: int | None = None,
+    allow_dev_key: bool | None = None,
 ) -> FastAPI:
     db = Database(db_path or os.environ.get("EVALVERSE_DB", str(DEFAULT_DB)))
     media = Path(media_dir or os.environ.get("EVALVERSE_MEDIA_DIR", str(DEFAULT_MEDIA)))
     expected_key = api_key if api_key is not None else _api_key()
+    allow_dev = _allow_dev_key_default() if allow_dev_key is None else allow_dev_key
     svc = Service(db, media)
     pool = EvalWorkerPool(svc, size=worker_size)
     svc.worker = pool
     if start_workers:
         pool.start()
+    accounts = AuthService(svc, allow_dev_key=allow_dev, dev_key=expected_key)
 
     app = FastAPI(title="EvalVerse", version="0.1.0")
     app.state.db = db
@@ -66,6 +79,8 @@ def create_app(
     app.state.api_key = expected_key
     app.state.media_dir = media
     app.state.worker = pool
+    app.state.accounts = accounts
+    app.state.allow_dev_key = allow_dev
 
     app.add_middleware(
         CORSMiddleware,
@@ -75,17 +90,33 @@ def create_app(
         allow_headers=["*"],
     )
 
+    def _bearer_token(authorization: Optional[str]) -> str:
+        if not authorization or not authorization.lower().startswith("bearer "):
+            raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
+        return authorization.split(" ", 1)[1].strip()
+
     def auth(
         authorization: Optional[str] = Header(default=None),
         x_project: Optional[str] = Header(default=None, alias="X-Project"),
     ) -> tuple[str, str]:
-        if not authorization or not authorization.lower().startswith("bearer "):
-            raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
-        token = authorization.split(" ", 1)[1].strip()
-        if token != app.state.api_key:
-            raise HTTPException(status_code=401, detail="Invalid API key")
-        project = (x_project or "default").strip() or "default"
-        return token, project
+        token = _bearer_token(authorization)
+        ctx = accounts.resolve_bearer(token, x_project)
+        return token, ctx.project
+
+    def session_auth(
+        authorization: Optional[str] = Header(default=None),
+    ) -> tuple[str, str]:
+        token = _bearer_token(authorization)
+        ctx = accounts.require_session(token)
+        return token, ctx.user_id  # type: ignore[return-value]
+
+    def api_key_auth(
+        authorization: Optional[str] = Header(default=None),
+        x_project: Optional[str] = Header(default=None, alias="X-Project"),
+    ) -> tuple[str, str]:
+        token = _bearer_token(authorization)
+        ctx = accounts.require_api_key(token, x_project)
+        return token, ctx.project
 
     @app.exception_handler(HTTPException)
     async def http_exc_handler(_request: Request, exc: HTTPException):
@@ -101,11 +132,57 @@ def create_app(
     def _shutdown():
         pool.stop()
 
-    # ---- health / traces / sessions / media (unchanged surface) ----
+    # ---- health ----
     @app.get("/api/v1/health")
     def health():
         return {"status": "ok"}
 
+    # ---- auth (public: register / login) ----
+    @app.post("/api/v1/auth/register", status_code=status.HTTP_201_CREATED)
+    def register(body: RegisterRequest):
+        return accounts.register(email=body.email, password=body.password, name=body.name)
+
+    @app.post("/api/v1/auth/login")
+    def login(body: LoginRequest, request: Request):
+        ip = request.client.host if request.client else "unknown"
+        return accounts.login(email=body.email, password=body.password, ip=ip)
+
+    @app.post("/api/v1/auth/logout")
+    def logout(ctx: tuple[str, str] = Depends(session_auth)):
+        token, _ = ctx
+        return accounts.logout(token)
+
+    @app.get("/api/v1/auth/me")
+    def auth_me(ctx: tuple[str, str] = Depends(session_auth)):
+        _, user_id = ctx
+        return accounts.me(user_id)
+
+    @app.post("/api/v1/api-keys", status_code=status.HTTP_201_CREATED)
+    def create_api_key(body: ApiKeyCreate, ctx: tuple[str, str] = Depends(session_auth)):
+        _, user_id = ctx
+        return accounts.create_api_key(user_id, name=body.name, project=body.project)
+
+    @app.get("/api/v1/api-keys")
+    def list_api_keys(ctx: tuple[str, str] = Depends(session_auth)):
+        _, user_id = ctx
+        return accounts.list_api_keys(user_id)
+
+    @app.delete("/api/v1/api-keys/{key_id}")
+    def revoke_api_key(key_id: str, ctx: tuple[str, str] = Depends(session_auth)):
+        _, user_id = ctx
+        return accounts.revoke_api_key(user_id, key_id)
+
+    @app.get("/api/v1/projects")
+    def list_projects(ctx: tuple[str, str] = Depends(session_auth)):
+        _, user_id = ctx
+        return accounts.list_projects(user_id)
+
+    @app.post("/api/v1/onboarding/sample-trace")
+    def onboarding_sample_trace(ctx: tuple[str, str] = Depends(api_key_auth)):
+        _, project = ctx
+        return accounts.create_sample_trace(project)
+
+    # ---- traces / sessions / media ----
     @app.post("/api/v1/traces")
     def create_trace(body: TraceCreate, ctx: tuple[str, str] = Depends(auth)):
         _, project = ctx
@@ -120,6 +197,30 @@ def create_app(
     def add_spans(trace_id: str, body: SpansCreate, ctx: tuple[str, str] = Depends(auth)):
         _, project = ctx
         return svc.add_spans(project, trace_id, body.spans or [])
+
+    @app.post("/api/v1/traces/{trace_id}/events")
+    def add_events(trace_id: str, body: TemporalEventsCreate, ctx: tuple[str, str] = Depends(auth)):
+        _, project = ctx
+        return svc.add_events(project, trace_id, body.events or [])
+
+    @app.get("/api/v1/traces/{trace_id}/events")
+    def list_trace_events(
+        trace_id: str,
+        source: Optional[str] = None,
+        media_id: Optional[str] = None,
+        from_ms: Optional[float] = None,
+        to_ms: Optional[float] = None,
+        ctx: tuple[str, str] = Depends(auth),
+    ):
+        _, project = ctx
+        return svc.list_trace_events(
+            project,
+            trace_id,
+            source=source,
+            media_id=media_id,
+            from_ms=from_ms,
+            to_ms=to_ms,
+        )
 
     @app.get("/api/v1/traces")
     def list_traces(
@@ -189,6 +290,11 @@ def create_app(
         _, project = ctx
         path, mime = svc.get_media_file(project, media_id)
         return FileResponse(path, media_type=mime, filename=path.name)
+
+    @app.get("/api/v1/media/{media_id}/events")
+    def list_media_events(media_id: str, ctx: tuple[str, str] = Depends(auth)):
+        _, project = ctx
+        return svc.list_media_events(project, media_id)
 
     @app.post("/api/v1/eval_results")
     def upsert_eval_result(body: EvalResultIn, ctx: tuple[str, str] = Depends(auth)):
@@ -359,12 +465,8 @@ def create_app(
         x_project: Optional[str] = Header(default=None, alias="X-Project"),
     ):
         # Auth (OTLP exporters often send Authorization / custom headers)
-        if not authorization or not authorization.lower().startswith("bearer "):
-            raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
-        token = authorization.split(" ", 1)[1].strip()
-        if token != app.state.api_key:
-            raise HTTPException(status_code=401, detail="Invalid API key")
-        project = (x_project or "default").strip() or "default"
+        token = _bearer_token(authorization)
+        project = accounts.resolve_bearer(token, x_project).project
 
         ctype = (request.headers.get("content-type") or "").lower()
         body = await request.body()
@@ -459,6 +561,59 @@ def create_app(
     def calibration(evaluator_id: str = Query(...), ctx: tuple[str, str] = Depends(auth)):
         _, project = ctx
         return svc.calibration(project, evaluator_id)
+
+    # ---- playground (Try-it) ----
+    @app.post("/api/v1/playground/runs", status_code=status.HTTP_202_ACCEPTED)
+    async def playground_create_run(
+        request: Request,
+        question: str = Form(...),
+        agent_model: Optional[str] = Form(default="muse-spark-1.3"),
+        judge_model: Optional[str] = Form(default="muse-wonder-1.0"),
+        mock: bool = Form(default=False),
+        files: list[UploadFile] = File(default=[]),
+        ctx: tuple[str, str] = Depends(auth),
+    ):
+        _, project = ctx
+        form = await request.form()
+        # Repeated form fields: evaluator_ids / conditions (and files[] aliases)
+        eids: list[str] = []
+        conds: list[str] = []
+        upload_files: list[UploadFile] = list(files or [])
+        for key, value in form.multi_items():
+            if key in ("evaluator_ids", "evaluator_ids[]") and isinstance(value, str) and value.strip():
+                eids.append(value.strip())
+            elif key in ("conditions", "conditions[]") and isinstance(value, str) and value.strip():
+                conds.append(value.strip())
+            elif key in ("files", "files[]") and hasattr(value, "read"):
+                # Already captured via File() when named "files"; also accept files[]
+                if value not in upload_files:
+                    upload_files.append(value)  # type: ignore[arg-type]
+        # JSON-encoded list fallbacks
+        for key, dest in (("evaluator_ids_json", eids), ("conditions_json", conds)):
+            raw = form.get(key)
+            if isinstance(raw, str) and raw.strip().startswith("["):
+                try:
+                    parsed = _json.loads(raw)
+                    if isinstance(parsed, list):
+                        dest.clear()
+                        dest.extend(str(x) for x in parsed)
+                except _json.JSONDecodeError:
+                    pass
+        return await svc.create_playground_run(
+            project,
+            files=upload_files,
+            question=question,
+            agent_model=agent_model,
+            judge_model=judge_model,
+            evaluator_ids=eids or None,
+            conditions=conds or None,
+            mock=mock,
+        )
+
+    @app.get("/api/v1/playground/runs/{run_id}")
+    def playground_get_run(run_id: str, ctx: tuple[str, str] = Depends(auth)):
+        _, project = ctx
+        return svc.get_playground_run(project, run_id)
 
     # ---- providers ----
     @app.get("/api/v1/providers")

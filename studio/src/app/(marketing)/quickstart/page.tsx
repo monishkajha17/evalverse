@@ -69,11 +69,14 @@ export default function QuickstartPage() {
       </ol>
 
       <div className="mt-16 flex flex-wrap gap-3 border-t border-[var(--mk-line)] pt-8">
-        <Link href="/connect/" className="mk-btn mk-btn-primary">
-          Connect Studio
+        <Link href="/signup/" className="mk-btn mk-btn-primary">
+          Start building
         </Link>
-        <Link href="/overview/" className="mk-btn mk-btn-secondary">
-          Open the demo
+        <Link href="/settings/" className="mk-btn mk-btn-secondary">
+          Connect a server
+        </Link>
+        <Link href="/overview/" className="mk-btn mk-btn-ghost">
+          Open the demo →
         </Link>
       </div>
     </div>

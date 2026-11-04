@@ -1,16 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useApiMode } from "@/context/api-mode";
 import { useSuite } from "@/context/suite-context";
+import { clearSession, readSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
 export function Topbar({ title, children }: { title: string; children?: React.ReactNode }) {
+  const router = useRouter();
   const { index, suite, setSuite, entry, loading } = useSuite();
   const { mode, checking, error, hostLabel, hasStoredConnection, disconnect } = useApiMode();
+  const [email, setEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    setEmail(readSession()?.email || null);
+  }, [mode, hasStoredConnection]);
 
   const badgeLabel =
     checking
@@ -18,6 +27,12 @@ export function Topbar({ title, children }: { title: string; children?: React.Re
       : mode === "live"
         ? `Connected to ${hostLabel}`
         : "Demo";
+
+  function onSignOut() {
+    clearSession();
+    disconnect();
+    router.push("/signin/");
+  }
 
   return (
     <header className="sticky top-0 z-20 flex h-12 items-center gap-3 border-b border-border bg-paper/95 px-4 backdrop-blur">
@@ -42,13 +57,22 @@ export function Topbar({ title, children }: { title: string; children?: React.Re
         >
           {badgeLabel}
         </Badge>
-        {mode === "live" || hasStoredConnection ? (
+        {email ? (
+          <>
+            <span className="hidden max-w-[140px] truncate text-xs text-ink/55 sm:inline" title={email}>
+              {email}
+            </span>
+            <Button type="button" variant="ghost" size="sm" onClick={onSignOut}>
+              Sign out
+            </Button>
+          </>
+        ) : mode === "live" || hasStoredConnection ? (
           <Button type="button" variant="ghost" size="sm" onClick={disconnect}>
             Disconnect
           </Button>
         ) : (
           <Button asChild variant="ghost" size="sm">
-            <Link href="/connect/">Connect</Link>
+            <Link href="/settings/">Settings</Link>
           </Button>
         )}
         {entry ? (

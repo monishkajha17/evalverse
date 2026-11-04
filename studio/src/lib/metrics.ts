@@ -162,3 +162,58 @@ export function caseTags(tags: unknown): string[] {
   if (typeof tags === "string") return tags.split(/[,|]/).map((s) => s.trim()).filter(Boolean);
   return [];
 }
+
+export function videoOverviewKpis(data: SuiteData) {
+  const runs = (data.runs || []).filter((r) => r.condition !== "blind");
+  const n = runs.length || 1;
+  const grounded = runs.filter((r) => r.label === "grounded_correct").length / n;
+  const abstained = runs.filter((r) => r.label === "abstained").length / n;
+  const confidentError =
+    runs.filter((r) => r.correct === false && r.label !== "abstained").length / n;
+  return { grounded, abstained, confidentError, n: runs.length };
+}
+
+export type VideoQuestionTable = {
+  kind: "time" | "order" | "third";
+  chance: number;
+  cells: Record<string, { correct: number; total: number }>;
+};
+
+/** By question type × condition, with chance baseline. */
+export function videoByQuestionType(data: SuiteData): VideoQuestionTable[] {
+  const kinds = ["time", "order", "third"] as const;
+  const cols = ["clean", "sparse", "blur", "blind_guess"] as const;
+  const caseKind = (id: string) => {
+    const part = id.split("_").pop() || "";
+    return kinds.includes(part as (typeof kinds)[number])
+      ? (part as (typeof kinds)[number])
+      : null;
+  };
+
+  return kinds.map((kind) => {
+    const cells: Record<string, { correct: number; total: number }> = {};
+    for (const col of cols) {
+      const rs = (data.runs || []).filter(
+        (r) => caseKind(r.case_id) === kind && r.condition === col,
+      );
+      cells[col] = {
+        correct: rs.filter((r) => r.correct).length,
+        total: rs.length,
+      };
+    }
+    return {
+      kind,
+      chance: kind === "order" ? 0.5 : 0,
+      cells,
+    };
+  });
+}
+
+/** Drop dimensions where every variant cell is empty. */
+export function dimensionPivotSparse(data: SuiteData, agent?: string) {
+  const pivot = dimensionPivot(data, agent);
+  const dims = pivot.dims.filter((dim) =>
+    pivot.variants.some((v) => pivot.cell(dim, v) != null),
+  );
+  return { ...pivot, dims };
+}

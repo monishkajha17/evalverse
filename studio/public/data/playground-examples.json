@@ -1,0 +1,74 @@
+{
+  "examples": [
+    {
+      "id": "image-receipt",
+      "modality": "image",
+      "title": "Receipt total (image)",
+      "question": "Describe this receipt and say what the total is",
+      "media_url": "/media/cord/cord_total_01_clean.jpg",
+      "answer": "148,127",
+      "trace_id": "example|cord_total_01|clean",
+      "claim_grounding": {
+        "score": 1.0,
+        "label": "grounded",
+        "groundedness": 1.0,
+        "hallucination": 0.0,
+        "completeness": null,
+        "completeness_skipped": true,
+        "completeness_reason": "no reference facts",
+        "claims": [
+          {
+            "claim": "The total amount due is 148,127",
+            "verdict": "supported",
+            "explanation": "The total line on the receipt shows 148,127.",
+            "evidence_box": [170, 965, 819, 995]
+          },
+          {
+            "claim": "This is a printed sales receipt",
+            "verdict": "supported",
+            "explanation": "Layout and line items match a retail receipt.",
+            "evidence_box": [40, 40, 960, 900]
+          }
+        ]
+      }
+    },
+    {
+      "id": "audio-conversation",
+      "modality": "audio",
+      "title": "Spoken turn (audio)",
+      "question": "What is said, and by whom?",
+      "media_url": "/media/audio/conv_01.wav",
+      "answer": "Turn 2 mentions the keyword; speaker B.",
+      "trace_id": "example|conv_01|clean",
+      "claim_grounding": {
+        "score": 0.67,
+        "label": "partially_grounded",
+        "groundedness": 0.67,
+        "hallucination": 0.33,
+        "completeness": null,
+        "completeness_skipped": true,
+        "completeness_reason": "no reference facts",
+        "claims": [
+          {
+            "claim": "Speaker B says the keyword in turn 2",
+            "verdict": "supported",
+            "explanation": "ASR turn 2 text matches the cited speaker.",
+            "evidence_box": null
+          },
+          {
+            "claim": "The clip is about five turns long",
+            "verdict": "supported",
+            "explanation": "Five ASR turn spans were recorded.",
+            "evidence_box": null
+          },
+          {
+            "claim": "The answer is given in Spanish",
+            "verdict": "not_found",
+            "explanation": "Transcript is English; no Spanish spans.",
+            "evidence_box": null
+          }
+        ]
+      }
+    }
+  ]
+}

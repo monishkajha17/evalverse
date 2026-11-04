@@ -13,6 +13,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AudioEvidencePanel, ImageEvidenceOverlay } from "@/components/trace/media-panel";
+import { VideoMediaPanel } from "@/components/trace/video-media-panel";
+import { SpanDag } from "@/components/system/span-dag";
+import type { TraceSpan } from "@/lib/types";
 import { useApiMode } from "@/context/api-mode";
 import { useSuite } from "@/context/suite-context";
 import { findCase, findRun, findTrace, loadSuite, resultsForTrace } from "@/lib/data";
@@ -103,13 +106,19 @@ function TraceViewInner() {
             input: s.input,
             output: s.output,
             error: s.error,
+            attributes: { ...(s.attributes || {}), ...(s.metadata || {}) },
           })),
           media: (t.assets || []).map((a, i) => ({
             id: a.id || `asset-${i}`,
             url: a.path || undefined,
             modality: a.modality,
             transformation: a.transformation,
-            mime: a.modality === "audio" ? "audio/wav" : "image/jpeg",
+            mime:
+              a.modality === "audio"
+                ? "audio/wav"
+                : a.modality === "video"
+                  ? "video/mp4"
+                  : "image/jpeg",
           })),
           results,
           output: run ? { answer: run.answer, box: run.box, span_ms: run.span_ms } : undefined,
@@ -137,11 +146,28 @@ function TraceViewInner() {
   const isAudio =
     snap?.caseRow?.modality === "audio" ||
     (trace?.media || []).some((m) => (m.modality || "").includes("audio") || (m.mime || "").startsWith("audio/"));
+  const isVideo =
+    snap?.caseRow?.modality === "video" ||
+    !!snap?.caseRow?.video ||
+    (trace?.media || []).some((m) => (m.modality || "").includes("video") || (m.mime || "").startsWith("video/"));
 
   const imageSrc =
     resolveMediaSrc((trace?.media || []).find((m) => (m.modality || "image").includes("image") || (m.mime || "").startsWith("image/"))) ||
     snap?.caseRow?.image ||
     "";
+
+  const dagSpans: TraceSpan[] = useMemo(
+    () =>
+      (trace?.spans || []).map((s) => ({
+        id: s.id,
+        name: s.name || s.id,
+        type: s.type,
+        parent_span_ids: s.parent_ids,
+        attributes: s.attributes,
+        error: s.error,
+      })),
+    [trace],
+  );
 
   return (
     <>
@@ -242,58 +268,71 @@ function TraceViewInner() {
                 <CardHeader>
                   <CardTitle>Span DAG</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-1.5">
-                  {(trace.spans || []).length === 0 ? (
+                <CardContent>
+                  {dagSpans.length === 0 ? (
                     <p className="text-xs text-ink/50">No spans.</p>
                   ) : (
-                    (trace.spans || []).map((span) => {
-                      const depth = span.parent_ids?.length || 0;
-                      return (
-                        <div
-                          key={span.id}
-                          className="rounded border border-border bg-paper/60 px-2 py-1.5"
-                          style={{ marginLeft: depth * 12 }}
-                        >
-                          <div className="flex flex-wrap items-center gap-1.5">
-                            <Badge className="border-border bg-white text-[10px] uppercase">
-                              {span.type || "span"}
-                            </Badge>
-                            <span className="text-xs font-medium">{span.name}</span>
-                            {span.error ? (
-                              <Badge className="border-crimson/30 bg-crimson/10 text-crimson">error</Badge>
-                            ) : null}
-                          </div>
-                          <div className="mt-1 flex flex-wrap gap-2 text-[11px] text-ink/55">
-                            <span>{fmtMs(span.latency_ms)}</span>
-                            <span>
-                              tokens{" "}
-                              {span.usage
-                                ? (span.usage.input_tokens || 0) + (span.usage.output_tokens || 0)
-                                : "—"}
-                            </span>
-                            <span>parents {(span.parent_ids || []).join(", ") || "—"}</span>
-                          </div>
-                          {span.error ? <div className="mt-1 text-[11px] text-crimson">{span.error}</div> : null}
-                        </div>
-                      );
-                    })
+                    <SpanDag spans={dagSpans} title={isVideo ? "video frames → model" : undefined} />
                   )}
                 </CardContent>
               </Card>
 
               <Card>
                 <CardContent className="pt-3">
-                  <Tabs defaultValue="evidence">
+                  <Tabs defaultValue="media">
                     <TabsList>
-                      <TabsTrigger value="evidence">Evidence</TabsTrigger>
+                      <TabsTrigger value="media">Media</TabsTrigger>
                       <TabsTrigger value="tools">Tool calls</TabsTrigger>
                       <TabsTrigger value="evaluations">Evaluations</TabsTrigger>
                       <TabsTrigger value="prompt">Prompt &amp; output</TabsTrigger>
                       <TabsTrigger value="raw">Raw JSON</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="evidence">
-                      {isAudio ? (
+                    <TabsContent value="media">
+                      {isVideo ? (
+                        <VideoMediaPanel
+                          caseRow={snap?.caseRow}
+                          run={
+                            snap?.run ||
+                            ({
+                              agent: trace.agent || "",
+                              case_id: String(trace.metadata?.case_id || ""),
+                              condition: String(trace.metadata?.variant || ""),
+                              answer:
+                                trace.output &&
+                                typeof trace.output === "object" &&
+                                "answer" in (trace.output as object)
+                                  ? String((trace.output as { answer?: unknown }).answer ?? "")
+                                  : undefined,
+                              span_ms:
+                                trace.output &&
+                                typeof trace.output === "object" &&
+                                "span_ms" in (trace.output as object)
+                                  ? (trace.output as { span_ms?: [number, number] }).span_ms
+                                  : undefined,
+                              label: stage || undefined,
+                            } as RunRow)
+                          }
+                          trace={
+                            snap
+                              ? {
+                                  id: trace.id,
+                                  agent: trace.agent || "",
+                                  case_id: snap.caseRow?.id || "",
+                                  variant: String(trace.metadata?.variant || snap.run?.condition || ""),
+                                  spans: dagSpans,
+                                }
+                              : {
+                                  id: trace.id,
+                                  agent: trace.agent || "",
+                                  case_id: String(trace.metadata?.case_id || ""),
+                                  variant: String(trace.metadata?.variant || ""),
+                                  spans: dagSpans,
+                                }
+                          }
+                          stageLabel={stage || snap?.run?.label}
+                        />
+                      ) : isAudio ? (
                         <AudioEvidencePanel
                           caseRow={
                             snap?.caseRow || {

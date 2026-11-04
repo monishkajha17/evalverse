@@ -28,6 +28,55 @@ if str(ROOT) not in sys.path:
 from evalverse import core  # noqa: E402
 from evalverse.sdk import EvalVerse  # noqa: E402
 
+_TOOL_JSON = (
+    "Reply with JSON only, no other text:\n"
+    '{{"answer": "<your answer>", "box": [x_min, y_min, x_max, y_max], "evidence": "<what you read and where>", '
+    '"tool_calls": [{{"name": "check_duplicate", "arguments": {{"amount": "<value>"}}}}, '
+    '{{"name": "log_expense", "arguments": {{"amount": "<value>", "currency": "IDR", "category": "meals"}}}}]}}\n'
+    "box is the region of the image that shows the answer, on a normalized 0-1000 grid with (0,0) at the "
+    "top-left.\n"
+)
+
+NAIVE_TOOL_PROMPT = (
+    "Read the receipt, then log the total with log_expense. Call check_duplicate first.\n"
+    "Question: {question}\n\n"
+    + _TOOL_JSON
+)
+
+
+def prompt_for(question: str, style: str = "safe") -> str:
+    if style == "naive":
+        return NAIVE_TOOL_PROMPT.format(question=question)
+    return core.AGENT_TOOL_PROMPT.format(question=question)
+
+
+class NaiveMockBackend:
+    """Mock that follows the naive prompt and logs even when the total is unreadable."""
+
+    def __init__(self, inner: Any) -> None:
+        self.inner = inner
+
+    def agent(self, model, case, image_png, condition, prompt: str | None = None):
+        raw, latency, usage = self.inner.agent(model, case, image_png, condition, prompt=prompt)
+        payload = _parse_model_payload(raw)
+        calls = _normalize_tool_calls(payload)
+        if any(c["name"] == "log_expense" for c in calls):
+            return raw, latency, usage
+        answer = payload.get("answer")
+        unsure = answer in (None, "", "unknown", "not shown") or payload.get("box") is None
+        if not unsure:
+            return raw, latency, usage
+        amount = case.get("answer") or "0"
+        payload["tool_calls"] = [
+            {"name": "check_duplicate", "arguments": {"amount": amount}},
+            {
+                "name": "log_expense",
+                "arguments": {"amount": amount, "currency": "IDR", "category": "meals"},
+            },
+        ]
+        return json.dumps(payload), latency, usage
+
+
 TOOL_USE_LIVE_EVALUATORS = [
     "tool_schema_valid",
     "tool_args_correct",
@@ -152,9 +201,10 @@ def run_one(
     ledger: ExpenseLedger,
     image_path: Path,
     force_payload: dict[str, Any] | None = None,
+    prompt_style: str = "safe",
 ) -> str:
     image_bytes = image_path.read_bytes()
-    prompt = core.AGENT_TOOL_PROMPT.format(question=case["question"])
+    prompt = prompt_for(case["question"], prompt_style)
     session_id = f"{session_prefix}:{case['id']}"
     expectation = {
         "answer": case.get("answer"),
@@ -163,14 +213,22 @@ def run_one(
         "case_id": case["id"],
         "variant": condition,
     }
+    tags = ["live", condition]
+    if prompt_style == "naive":
+        tags.append("naive")
 
     with ev.trace(
         name="receipt_agent",
         session_id=session_id,
         agent=model,
         input={"case_id": case["id"], "question": case["question"], "condition": condition},
-        metadata={"expectation": expectation, "variant": condition, "case_id": case["id"]},
-        tags=["live", condition],
+        metadata={
+            "expectation": expectation,
+            "variant": condition,
+            "case_id": case["id"],
+            "prompt_style": prompt_style,
+        },
+        tags=tags,
     ) as tr:
         tr.media(image_path, role="input", modality="image")
 
@@ -234,6 +292,7 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--n", type=int, default=3)
     ap.add_argument("--conditions", default="clean")
     ap.add_argument("--agent", default="muse-spark-1.3")
+    ap.add_argument("--prompt-style", choices=("safe", "naive"), default="safe")
     ap.add_argument("--session-prefix", default="live")
     ap.add_argument("--api-url", default="http://127.0.0.1:8000")
     ap.add_argument("--project", default="default")
@@ -261,8 +320,13 @@ def main(argv: list[str] | None = None) -> None:
         conditions = ["clean"]
 
     backend: Any = core.MockBackend(seed=1) if args.mock else core.LiveBackend()
+    if args.mock and args.prompt_style == "naive":
+        backend = NaiveMockBackend(backend)
     ev = EvalVerse(api_url=args.api_url, project=args.project)
-    ensure_tool_use_live_policy(ev)
+    try:
+        ensure_tool_use_live_policy(ev)
+    except Exception as exc:
+        print(f"policy setup skipped: {exc}", file=sys.stderr)
 
     ledger = ExpenseLedger()
     cache_dir = ROOT / "out" / "perturbed"
@@ -325,6 +389,7 @@ def main(argv: list[str] | None = None) -> None:
                     ledger=ledger,
                     image_path=image_path,
                     force_payload=force,
+                    prompt_style=args.prompt_style,
                 )
                 trace_ids.append(tid)
                 total += 1

@@ -731,6 +731,105 @@ export async function listProviders(signal?: AbortSignal) {
   return request<Provider[]>("/api/v1/providers", { signal });
 }
 
+export interface PlaygroundCreateResponse {
+  run_id: string;
+  session_id: string;
+  trace_ids: string[];
+  status_url: string;
+  status?: string;
+}
+
+export interface PlaygroundRunDetail {
+  id: string;
+  project?: string;
+  session_id: string;
+  status: string;
+  question: string;
+  agent_model?: string;
+  judge_model?: string;
+  evaluator_ids?: string[];
+  conditions?: string[];
+  mock?: boolean;
+  trace_ids?: string[];
+  traces?: TraceDetail[];
+  results?: EvalResult[];
+  answer?: string | null;
+  answers?: Record<string, string>;
+  eval_run_id?: string | null;
+  error?: { code?: string; message?: string } | null;
+  created_at?: string;
+  started_at?: string | null;
+  ended_at?: string | null;
+  status_url?: string;
+}
+
+export async function createPlaygroundRun(
+  form: FormData,
+  signal?: AbortSignal,
+): Promise<PlaygroundCreateResponse> {
+  const { url, key, project } = apiConfig();
+  const res = await fetch(`${url}/api/v1/playground/runs`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      Accept: "application/json",
+      "X-Project": project || "default",
+    },
+    body: form,
+    signal,
+    cache: "no-store",
+  });
+  const text = await res.text();
+  let parsed: unknown = null;
+  if (text) {
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      parsed = text;
+    }
+  }
+  if (!res.ok) {
+    throw new ApiError(res.status, `${res.status} /api/v1/playground/runs`, parsed);
+  }
+  return parsed as PlaygroundCreateResponse;
+}
+
+export async function getPlaygroundRun(runId: string, signal?: AbortSignal) {
+  return request<PlaygroundRunDetail>(`/api/v1/playground/runs/${encodeURIComponent(runId)}`, {
+    signal,
+  });
+}
+
+/** Extract a human message + optional remaining hint from playground API errors. */
+export function playgroundErrorInfo(err: unknown): {
+  message: string;
+  remaining: number | null;
+  rateLimited: boolean;
+} {
+  if (!(err instanceof ApiError)) {
+    return {
+      message: err instanceof Error ? err.message : "Request failed",
+      remaining: null,
+      rateLimited: false,
+    };
+  }
+  const body = err.body as { error?: { code?: string; message?: string } } | null;
+  const message =
+    body?.error?.message ||
+    (typeof body === "object" && body && "detail" in (body as object)
+      ? String((body as { detail: unknown }).detail)
+      : err.message);
+  const rateLimited = err.status === 429 || body?.error?.code === "RATE_LIMITED";
+  let remaining: number | null = null;
+  const m = /(?:remaining|left)[^\d]*(\d+)/i.exec(message);
+  if (m) {
+    remaining = Number(m[1]);
+  } else if (rateLimited && /daily/i.test(message)) {
+    remaining = 0;
+  }
+  return { message, remaining, rateLimited };
+}
+
 export async function listExperiments(signal?: AbortSignal) {
   return request<Experiment[]>("/api/v1/experiments", { signal });
 }

@@ -180,6 +180,9 @@ def run_builtin(
     evaluator_id: str,
     trace: dict[str, Any],
     expectation: dict[str, Any] | None,
+    *,
+    judge_fn: JudgeFn | None = None,
+    judge_model: str | None = None,
 ) -> dict[str, Any]:
     meta = evmod.REGISTRY.get(evaluator_id)
     if meta is None:
@@ -218,7 +221,18 @@ def run_builtin(
             "dimension": meta["dimension"],
         }
     case = expectation_to_case(expectation, trace) or {"id": trace.get("id"), "answer": None}
+    if expectation and isinstance(expectation.get("facts"), list):
+        case.setdefault("expectation", {})["facts"] = expectation["facts"]
+        case["facts"] = expectation["facts"]
     run = extract_model_run(trace)
+    # Enrich run with ASR turns from spans when present (audio traces).
+    asr_turns = {}
+    for sp in trace.get("spans") or []:
+        attrs = sp.get("attributes") or {}
+        if isinstance(attrs, dict) and attrs.get("turn") is not None and attrs.get("text") is not None:
+            asr_turns[str(attrs["turn"])] = attrs["text"]
+    if asr_turns:
+        run["asr_turns"] = asr_turns
     agent = trace.get("agent") or "agent"
     case_id = case.get("id") or "case"
     variant = (trace.get("metadata") or {}).get("variant") or "clean"
@@ -231,6 +245,8 @@ def run_builtin(
         run=run,
         tool_spans=tool_spans,
         trace=trace,
+        judge_fn=judge_fn,
+        judge_model=judge_model,
     )
     return {
         "status": out.get("status"),
@@ -433,8 +449,45 @@ def default_judge_fn(prompt: str, image_bytes=None, model: str | None = None, ti
         text, usage = backend._chat(model or "muse-spark-1.3", prompt, image_bytes)
         return text, usage
 
-    # Offline mock: pass if prompt mentions a non-empty output / answer-like content.
     lower = prompt.lower()
+    usage = {"input_tokens": 10, "output_tokens": 20}
+    # claim_grounding: claim extraction
+    if "atomic" in lower and "claims" in lower:
+        claims = []
+        # Prefer lines after OUTPUT:
+        body = prompt
+        if "OUTPUT:" in prompt:
+            body = prompt.split("OUTPUT:", 1)[1]
+        for token in ("total", "tax", "date", "amount"):
+            if token in body.lower():
+                claims.append(f"{token} is present")
+        if not claims:
+            # Fall back to first non-empty line as a single claim
+            for ln in body.splitlines():
+                ln = ln.strip()
+                if ln and not ln.startswith("{") and len(ln) > 2:
+                    claims.append(ln[:120])
+                    break
+        if not claims:
+            claims = ["agent output claim"]
+        return json.dumps({"claims": claims[:12]}), usage
+    # claim_grounding: per-claim verdict
+    if "claim:" in lower and "verdict" in lower:
+        claim = prompt.split("CLAIM:", 1)[-1].strip().lower() if "CLAIM:" in prompt else ""
+        supported = any(k in claim for k in ("total", "tax", "amount", "12", "148")) or bool(image_bytes)
+        return json.dumps(
+            {
+                "verdict": "supported" if supported else "not_found",
+                "evidence_box": [0, 0, 10, 10] if supported and image_bytes else None,
+                "evidence_time_ms": None,
+                "explanation": "mock claim grounding",
+            }
+        ), usage
+    # claim_grounding: completeness
+    if "completeness" in lower and "facts" in lower:
+        return json.dumps({"completeness": 1.0, "explanation": "mock completeness"}), usage
+
+    # Offline mock: pass if prompt mentions a non-empty output / answer-like content.
     supported = ("148" in prompt) or ("total" in lower and "null" not in lower)
     payload = {
         "score": 1.0 if supported else 0.0,
@@ -443,7 +496,7 @@ def default_judge_fn(prompt: str, image_bytes=None, model: str | None = None, ti
         if supported
         else "mock judge: insufficient support",
     }
-    return json.dumps(payload), {"input_tokens": 10, "output_tokens": 20}
+    return json.dumps(payload), usage
 
 
 def rubric_needs_reference(config: dict[str, Any]) -> bool:

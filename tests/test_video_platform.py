@@ -99,9 +99,12 @@ def test_policy_video_mapping():
     assert "temporal_alignment_video" in g
     assert "event_order" in policy["dimensions"]["Reasoning"]["evaluators"]
     assert "media_dependence_guess" in policy["dimensions"]["Media dependence"]["evaluators"]
-    assert policy["profiles"]["balanced"]["Reasoning"] == pytest.approx(0.1)
-    # Reasoning weight taken from others: balanced still sums to 1.0
+    assert policy["profiles"]["balanced"]["Reasoning"] == pytest.approx(0.09)
+    # Completeness/Hallucination at 0.05 each; balanced still sums to 1.0
     assert sum(policy["profiles"]["balanced"].values()) == pytest.approx(1.0)
+    assert policy["profiles"]["balanced"]["Completeness"] == pytest.approx(0.05)
+    assert policy["profiles"]["balanced"]["Hallucination"] == pytest.approx(0.05)
+    assert "claim_grounding" in policy["dimensions"]["Groundedness"]["evaluators"]
 
     results = [
         {

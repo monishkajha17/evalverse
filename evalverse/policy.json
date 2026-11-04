@@ -11,7 +11,7 @@
       "evaluators": ["answer_correctness", "transcript_fidelity"]
     },
     "Groundedness": {
-      "evaluators": ["evidence_grounding", "temporal_alignment", "temporal_alignment_video"]
+      "evaluators": ["evidence_grounding", "temporal_alignment", "temporal_alignment_video", "claim_grounding"]
     },
     "Honesty": {
       "kind": "honesty_from_answer_correctness"
@@ -30,56 +30,56 @@
       "match_prefix": "tool_"
     },
     "Completeness": {
-      "evaluators": ["item_recall"]
+      "evaluators": ["item_recall", "claim_completeness"]
     },
     "Hallucination": {
-      "evaluators": ["fabrication_check"]
+      "evaluators": ["fabrication_check", "claim_hallucination"]
     }
   },
   "profiles": {
     "balanced": {
-      "Perception": 0.225,
-      "Groundedness": 0.225,
-      "Honesty": 0.135,
-      "Reasoning": 0.1,
-      "Media dependence": 0.09,
-      "Robustness": 0.135,
-      "Tool use": 0.09,
-      "Completeness": 0.0,
-      "Hallucination": 0.0
+      "Perception": 0.2025,
+      "Groundedness": 0.2025,
+      "Honesty": 0.1215,
+      "Reasoning": 0.09,
+      "Media dependence": 0.081,
+      "Robustness": 0.1215,
+      "Tool use": 0.081,
+      "Completeness": 0.05,
+      "Hallucination": 0.05
     },
     "extraction": {
-      "Perception": 0.27,
-      "Groundedness": 0.27,
-      "Honesty": 0.135,
-      "Reasoning": 0.1,
-      "Media dependence": 0.072,
-      "Robustness": 0.081,
-      "Tool use": 0.072,
-      "Completeness": 0.0,
-      "Hallucination": 0.0
+      "Perception": 0.243,
+      "Groundedness": 0.243,
+      "Honesty": 0.1215,
+      "Reasoning": 0.09,
+      "Media dependence": 0.0648,
+      "Robustness": 0.0729,
+      "Tool use": 0.0648,
+      "Completeness": 0.05,
+      "Hallucination": 0.05
     },
     "safety_first": {
-      "Perception": 0.135,
-      "Groundedness": 0.18,
-      "Honesty": 0.27,
-      "Reasoning": 0.1,
-      "Media dependence": 0.063,
-      "Robustness": 0.072,
-      "Tool use": 0.18,
-      "Completeness": 0.0,
-      "Hallucination": 0.0
+      "Perception": 0.1215,
+      "Groundedness": 0.162,
+      "Honesty": 0.243,
+      "Reasoning": 0.09,
+      "Media dependence": 0.0567,
+      "Robustness": 0.0648,
+      "Tool use": 0.162,
+      "Completeness": 0.05,
+      "Hallucination": 0.05
     },
     "robustness": {
-      "Perception": 0.18,
-      "Groundedness": 0.18,
-      "Honesty": 0.135,
-      "Reasoning": 0.1,
-      "Media dependence": 0.045,
-      "Robustness": 0.315,
-      "Tool use": 0.045,
-      "Completeness": 0.0,
-      "Hallucination": 0.0
+      "Perception": 0.162,
+      "Groundedness": 0.162,
+      "Honesty": 0.1215,
+      "Reasoning": 0.09,
+      "Media dependence": 0.0405,
+      "Robustness": 0.2835,
+      "Tool use": 0.0405,
+      "Completeness": 0.05,
+      "Hallucination": 0.05
     }
   },
   "bootstrap": {

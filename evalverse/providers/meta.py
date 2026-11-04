@@ -15,6 +15,7 @@ _CACHE_TTL = 600.0  # 10 minutes
 DEFAULT_MODELS = [
     "muse-spark-1.1",
     "muse-spark-1.3",
+    "muse-wonder-1.0",
     "muse-voice-transcribe-1.0",
 ]
 
@@ -76,7 +77,7 @@ class MetaProvider:
 
         backend = LiveBackend()
         prompt_parts: list[str] = []
-        image_png: bytes | None = None
+        images: list[bytes] = []
         for b in content_blocks:
             btype = b.get("type")
             if btype == "text":
@@ -90,11 +91,14 @@ class MetaProvider:
                 if isinstance(raw, str):
                     raw = base64.b64decode(raw)
                 if isinstance(raw, (bytes, bytearray)):
-                    image_png = bytes(raw)
+                    images.append(bytes(raw))
         prompt = "\n".join(prompt_parts)
         if schema:
             prompt += "\nReply with JSON matching the requested schema."
-        return backend._chat(model, prompt, image_png)
+        if len(images) > 1:
+            framed = [(f"Image {i + 1}:", img) for i, img in enumerate(images)]
+            return backend.chat_images(model, prompt, framed)
+        return backend._chat(model, prompt, images[0] if images else None)
 
     def transcribe(self, audio: bytes, *, model: str | None = None, **kwargs: Any) -> dict[str, Any]:
         from evalverse import audio as audio_mod

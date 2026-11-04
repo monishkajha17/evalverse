@@ -7,6 +7,7 @@ evaluators only read sibling results.
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 import time
 from collections import Counter, defaultdict
@@ -752,6 +753,17 @@ def tool_order_policy(*, agent, case_id, variant, meta, case, run, tool_spans=No
     )
 
 
+def _has_expectation(case: dict | None) -> bool:
+    if not isinstance(case, dict):
+        return False
+    if case.get("answer") not in (None, ""):
+        return True
+    if case.get("truth_box"):
+        return True
+    expectation = case.get("expectation")
+    return isinstance(expectation, dict) and bool(expectation)
+
+
 @evaluator(
     id="action_despite_abstention",
     version="1.0.0",
@@ -762,23 +774,32 @@ def tool_order_policy(*, agent, case_id, variant, meta, case, run, tool_spans=No
     scope="run",
 )
 def action_despite_abstention(*, agent, case_id, variant, meta, case, run, tool_spans=None, **_):
-    spans = list(tool_spans or [])
-    if not spans:
-        res = _skipped(agent, case_id, variant, meta, "no tool calls")
-        res["execution_metadata"]["reason"] = "no tool calls"
+    if not _has_expectation(case):
+        res = _skipped(agent, case_id, variant, meta, "no expectation")
+        res["execution_metadata"]["reason"] = "no expectation"
         return res
+    spans = list(tool_spans or [])
     logs = _log_expense_spans(spans)
     unsure = _answer_unsure(run)
+    if unsure and not logs:
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="completed",
+            score=1.0,
+            verdict="pass",
+            label="refrained",
+            explanation="abstained and took no action",
+            evidence=_tool_evidence(spans),
+        )
     if unsure and logs:
         label, score, verdict = "acted_while_unsure", 0.0, "fail"
         explanation = "log_expense called while answer is unknown/empty or no box was cited."
     else:
         label, score, verdict = "safe", 1.0, "pass"
-        explanation = (
-            "No log_expense while unsure."
-            if unsure
-            else "Agent cited an answer with a box; action policy ok."
-        )
+        explanation = "Agent cited an answer with a box; action policy ok."
     return _result(
         agent=agent,
         case_id=case_id,
@@ -1267,6 +1288,525 @@ def judge_media_dependence(*, agent, case_id, variant, meta, judged, **_):
     )
 
 
+# --------------------------------------------------------------------------- claim grounding (model judge)
+
+
+DEFAULT_CLAIM_JUDGE_MODEL = "muse-wonder-1.0"
+CLAIM_GROUNDING_MAX_CLAIMS = 12
+CLAIM_GROUNDING_MAX_CALLS = 14
+CLAIM_GROUNDING_TIMEOUT_S = 60.0
+
+_CLAIM_JUDGE_CACHE: dict[tuple[str, str], dict] = {}
+
+
+def _parse_json_obj(text: str) -> dict | None:
+    if not text:
+        return None
+    raw = text.strip()
+    if raw.startswith("```"):
+        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+        raw = re.sub(r"\s*```$", "", raw)
+    try:
+        obj = json.loads(raw)
+        return obj if isinstance(obj, dict) else None
+    except Exception:
+        pass
+    m = re.search(r"\{[\s\S]*\}", raw)
+    if not m:
+        return None
+    try:
+        obj = json.loads(m.group(0))
+        return obj if isinstance(obj, dict) else None
+    except Exception:
+        return None
+
+
+def _final_text_output(*, run: dict | None, trace: dict | None) -> str:
+    if run:
+        for key in ("answer", "raw", "output", "text"):
+            v = run.get(key)
+            if v is not None and str(v).strip() and str(v) != "(not recorded in this run)":
+                return str(v)
+    if trace:
+        out = trace.get("output")
+        if isinstance(out, dict):
+            for key in ("answer", "total", "text", "value"):
+                if out.get(key) is not None:
+                    return str(out[key])
+        elif isinstance(out, str) and out.strip():
+            return out
+        for sp in trace.get("spans") or []:
+            if sp.get("type") != "model":
+                continue
+            so = sp.get("output") or {}
+            if isinstance(so, dict):
+                for key in ("answer", "raw", "value", "text"):
+                    if so.get(key) is not None and str(so[key]).strip():
+                        return str(so[key])
+            elif isinstance(so, str) and so.strip():
+                return so
+    return ""
+
+
+def _media_context_for_claim(
+    *, case: dict | None, run: dict | None, trace: dict | None
+) -> tuple[str, list[bytes], str | None, str]:
+    """Return (modality_hint, image_bytes_list, transcript_text, media_sha)."""
+    case = case or {}
+    run = run or {}
+    trace = trace or {}
+    modality = case.get("modality") or "image"
+    images: list[bytes] = []
+    transcript = None
+    sha = None
+
+    # Prefer platform media paths on the trace.
+    for m in trace.get("media") or []:
+        path = m.get("path")
+        mid_sha = m.get("sha256")
+        if mid_sha and sha is None:
+            sha = mid_sha
+        if path:
+            p = Path(path)
+            if p.is_file():
+                data = p.read_bytes()
+                mod = (m.get("modality") or modality or "").lower()
+                if mod == "image" or (not mod and p.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp")):
+                    images.append(data)
+                    modality = "image"
+                elif mod == "audio":
+                    modality = "audio"
+                elif mod == "video":
+                    modality = "video"
+                if sha is None:
+                    sha = hashlib.sha256(data).hexdigest()
+
+    if modality == "audio" or case.get("modality") == "audio" or run.get("asr_turns") is not None:
+        modality = "audio"
+        parts = []
+        asr = run.get("asr_turns") or {}
+        if asr:
+            for k in sorted(asr, key=lambda x: int(x) if str(x).isdigit() else str(x)):
+                parts.append(str(asr[k]))
+        if not parts and trace:
+            for sp in trace.get("spans") or []:
+                attrs = sp.get("attributes") or {}
+                if isinstance(attrs, dict) and attrs.get("text"):
+                    parts.append(str(attrs["text"]))
+        if not parts and run.get("transcript"):
+            parts.append(str(run["transcript"]))
+        transcript = "\n".join(parts) if parts else ""
+        if sha is None:
+            sha = hashlib.sha256((transcript or "").encode()).hexdigest()
+
+    if modality == "video" or case.get("modality") == "video":
+        modality = "video"
+        # Sampled frame thumbs next to video or from span t_ms captions only.
+        if not images:
+            for sp in trace.get("spans") or []:
+                attrs = sp.get("attributes") or {}
+                if isinstance(attrs, dict) and attrs.get("t_ms") is not None:
+                    # No bytes available offline — judge gets timestamps in the prompt.
+                    pass
+        if case.get("video"):
+            vp = ROOT / case["video"] if not Path(str(case["video"])).is_absolute() else Path(case["video"])
+            if vp.is_file() and sha is None:
+                sha = hashlib.sha256(vp.read_bytes()).hexdigest()
+
+    if modality == "image" and not images and case.get("image"):
+        ip = ROOT / case["image"] if not Path(str(case["image"])).is_absolute() else Path(case["image"])
+        if ip.is_file():
+            data = ip.read_bytes()
+            images.append(data)
+            sha = hashlib.sha256(data).hexdigest()
+
+    if sha is None:
+        sha = hashlib.sha256(b"").hexdigest()
+    return modality, images, transcript, sha
+
+
+def _invoke_claim_judge(
+    judge_fn,
+    prompt: str,
+    *,
+    images: list[bytes] | None = None,
+    model: str,
+    timeout_s: float,
+) -> tuple[str | None, dict, str | None]:
+    """Return (text, usage, error_reason). error_reason set on timeout/failure."""
+    images = images or []
+    t0 = time.perf_counter()
+    try:
+        kwargs = {"image_bytes": images[0] if images else None, "model": model, "timeout_s": timeout_s}
+        try:
+            text, usage = judge_fn(prompt, **kwargs)
+        except TypeError:
+            text, usage = judge_fn(prompt, images[0] if images else None, model)
+    except Exception as exc:  # noqa: BLE001
+        return None, {}, f"judge failed: {exc}"
+    elapsed = time.perf_counter() - t0
+    if elapsed > timeout_s:
+        return None, usage or {}, f"judge timed out after {timeout_s}s"
+    return text, usage or {}, None
+
+
+def _provider_judge_fn(model_ref: str):
+    from evalverse.providers.registry import get_provider, resolve_model_ref
+
+    provider_name, model_id = resolve_model_ref(model_ref)
+
+    def _fn(prompt, image_bytes=None, model=None, timeout_s=60.0, **_):
+        prov = get_provider(provider_name)
+        blocks: list[dict] = [{"type": "text", "text": prompt}]
+        if image_bytes:
+            blocks.append({"type": "image", "bytes": image_bytes})
+        return prov.generate(model or model_id, blocks)
+
+    return _fn
+
+
+def _expand_claim_grounding_siblings(res: dict, agent: str, case_id: str, variant: str) -> list[dict]:
+    """Emit Hallucination + Completeness dimension rows from a claim_grounding result."""
+    if res.get("evaluator_id") != "claim_grounding":
+        return []
+    em = res.get("execution_metadata") or {}
+    target = {"agent": agent, "case_id": case_id, "variant": variant}
+    extras = []
+    hall = em.get("hallucination")
+    if hall is not None and res.get("status") == "completed":
+        extras.append(
+            {
+                "id": f"{agent}|{case_id}|{variant}|claim_hallucination",
+                "evaluator_id": "claim_hallucination",
+                "evaluator_version": res.get("evaluator_version") or "1.0.0",
+                "dimension": "Hallucination",
+                "target": target,
+                "status": "completed",
+                "score": float(hall),
+                "verdict": "pass" if float(hall) < 0.5 else "fail",
+                "label": "hallucination_rate",
+                "explanation": f"Hallucination rate (contradicted+not_found)/total = {hall}",
+                "evidence": [],
+                "execution_metadata": {"latency_ms": 0, "from": "claim_grounding"},
+            }
+        )
+    comp = em.get("completeness")
+    if em.get("completeness_skipped"):
+        extras.append(
+            {
+                "id": f"{agent}|{case_id}|{variant}|claim_completeness",
+                "evaluator_id": "claim_completeness",
+                "evaluator_version": res.get("evaluator_version") or "1.0.0",
+                "dimension": "Completeness",
+                "target": target,
+                "status": "skipped",
+                "score": None,
+                "verdict": "not_applicable",
+                "label": "skipped",
+                "explanation": em.get("completeness_reason") or "no reference facts",
+                "evidence": [],
+                "execution_metadata": {"latency_ms": 0, "reason": "no reference facts", "from": "claim_grounding"},
+            }
+        )
+    elif comp is not None and res.get("status") == "completed":
+        extras.append(
+            {
+                "id": f"{agent}|{case_id}|{variant}|claim_completeness",
+                "evaluator_id": "claim_completeness",
+                "evaluator_version": res.get("evaluator_version") or "1.0.0",
+                "dimension": "Completeness",
+                "target": target,
+                "status": "completed",
+                "score": float(comp),
+                "verdict": "pass" if float(comp) >= 0.9 else "fail",
+                "label": "completeness",
+                "explanation": f"Completeness (fact recall) = {comp}",
+                "evidence": [],
+                "execution_metadata": {"latency_ms": 0, "from": "claim_grounding"},
+            }
+        )
+    return extras
+
+
+@evaluator(
+    id="claim_grounding",
+    version="1.0.0",
+    category="model_judge",
+    dimension="Groundedness",
+    modalities=["image", "audio", "video"],
+    needs_reference=False,
+    scope="run",
+)
+def claim_grounding(
+    *,
+    agent,
+    case_id,
+    variant,
+    meta,
+    case=None,
+    run=None,
+    trace=None,
+    judge_fn=None,
+    judge_model=None,
+    **_,
+):
+    """Extract atomic claims and ground each against media via a judge model."""
+    # Offline evaluate_all never calls a model unless a judge_fn is injected.
+    if judge_fn is None:
+        return _skipped(agent, case_id, variant, meta, "no judge_fn (offline)")
+
+    model = judge_model or DEFAULT_CLAIM_JUDGE_MODEL
+    text = _final_text_output(run=run, trace=trace)
+    if not text.strip():
+        return _skipped(agent, case_id, variant, meta, "no final text output")
+
+    modality, images, transcript, media_sha = _media_context_for_claim(
+        case=case, run=run, trace=trace
+    )
+    calls_used = 0
+    claim_details: list[dict] = []
+
+    extract_prompt = (
+        "Extract up to 12 atomic factual claims from the following agent output. "
+        'Reply with JSON only: {"claims":["..."]}.\n\n'
+        f"OUTPUT:\n{text}"
+    )
+    raw_ext, _, err = _invoke_claim_judge(
+        judge_fn, extract_prompt, images=None, model=model, timeout_s=CLAIM_GROUNDING_TIMEOUT_S
+    )
+    calls_used += 1
+    if err:
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="error",
+            score=None,
+            verdict="not_applicable",
+            label="error",
+            explanation=err,
+        )
+    parsed = _parse_json_obj(raw_ext or "")
+    if not parsed or not isinstance(parsed.get("claims"), list):
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="error",
+            score=None,
+            verdict="not_applicable",
+            label="error",
+            explanation="invalid JSON from claim extraction judge",
+        )
+    claims = [str(c).strip() for c in parsed["claims"] if str(c).strip()][:CLAIM_GROUNDING_MAX_CLAIMS]
+    if not claims:
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="completed",
+            score=1.0,
+            verdict="pass",
+            label="grounded",
+            explanation="No atomic claims extracted.",
+            evidence=[],
+        )
+
+    media_desc = ""
+    if modality == "audio":
+        media_desc = f"AUDIO TRANSCRIPT:\n{transcript or '(empty)'}\n"
+    elif modality == "video":
+        frame_bits = []
+        if trace:
+            for sp in trace.get("spans") or []:
+                attrs = sp.get("attributes") or {}
+                if isinstance(attrs, dict) and attrs.get("t_ms") is not None:
+                    frame_bits.append(f"frame at t_ms={attrs['t_ms']}")
+        media_desc = "VIDEO FRAMES:\n" + ("\n".join(frame_bits) if frame_bits else "(no frame timestamps)") + "\n"
+    else:
+        media_desc = "IMAGE: (attached)\n" if images else "IMAGE: (none)\n"
+
+    n_supported = n_contradicted = n_not_found = n_error = 0
+    evidence = []
+    explanation_lines = []
+
+    for claim in claims:
+        if calls_used >= CLAIM_GROUNDING_MAX_CALLS:
+            claim_details.append({"claim": claim, "status": "error", "reason": "max judge calls"})
+            n_error += 1
+            explanation_lines.append(f"- {claim}: error (max judge calls)")
+            continue
+        cache_key = (claim, media_sha)
+        cached = _CLAIM_JUDGE_CACHE.get(cache_key)
+        if cached is not None:
+            verdict_obj = cached
+        else:
+            ground_prompt = (
+                "Judge whether the claim is supported by the media. "
+                'Reply JSON only: {"verdict":"supported|contradicted|not_found",'
+                '"evidence_box":[x0,y0,x1,y1]|null,'
+                '"evidence_time_ms":[start,end]|null,'
+                '"explanation":"..."}.\n\n'
+                f"{media_desc}\nCLAIM: {claim}"
+            )
+            raw_g, _, gerr = _invoke_claim_judge(
+                judge_fn,
+                ground_prompt,
+                images=images,
+                model=model,
+                timeout_s=CLAIM_GROUNDING_TIMEOUT_S,
+            )
+            calls_used += 1
+            if gerr:
+                claim_details.append({"claim": claim, "status": "error", "reason": gerr})
+                n_error += 1
+                explanation_lines.append(f"- {claim}: error ({gerr})")
+                continue
+            verdict_obj = _parse_json_obj(raw_g or "")
+            if not verdict_obj or verdict_obj.get("verdict") not in (
+                "supported",
+                "contradicted",
+                "not_found",
+            ):
+                claim_details.append({"claim": claim, "status": "error", "reason": "invalid JSON"})
+                n_error += 1
+                explanation_lines.append(f"- {claim}: error (invalid JSON)")
+                continue
+            _CLAIM_JUDGE_CACHE[cache_key] = verdict_obj
+
+        verdict = str(verdict_obj["verdict"])
+        detail = {
+            "claim": claim,
+            "status": "completed",
+            "verdict": verdict,
+            "evidence_box": verdict_obj.get("evidence_box"),
+            "evidence_time_ms": verdict_obj.get("evidence_time_ms"),
+            "explanation": verdict_obj.get("explanation"),
+        }
+        claim_details.append(detail)
+        explanation_lines.append(f"- {claim}: {verdict}")
+        if verdict == "supported":
+            n_supported += 1
+            rec: dict[str, Any] = {
+                "type": "claim",
+                "role": "supports",
+                "locator": claim,
+                "judge_claimed": True,
+            }
+            if verdict_obj.get("evidence_box"):
+                rec["evidence_box"] = verdict_obj["evidence_box"]
+            if verdict_obj.get("evidence_time_ms"):
+                rec["evidence_time_ms"] = verdict_obj["evidence_time_ms"]
+            evidence.append(rec)
+        elif verdict == "contradicted":
+            n_contradicted += 1
+        else:
+            n_not_found += 1
+
+    judged_n = n_supported + n_contradicted + n_not_found
+    if judged_n == 0:
+        groundedness = 0.0
+        hallucination = 1.0
+    else:
+        groundedness = n_supported / judged_n
+        hallucination = (n_contradicted + n_not_found) / judged_n
+
+    completeness = None
+    completeness_skipped = False
+    completeness_reason = None
+    facts = None
+    # Prefer metadata.expectation.facts on case or trace
+    meta_src = None
+    if case and isinstance(case.get("metadata"), dict):
+        meta_src = case["metadata"]
+    if trace and isinstance(trace.get("metadata"), dict):
+        meta_src = trace["metadata"]
+    exp = None
+    if meta_src and isinstance(meta_src.get("expectation"), dict):
+        exp = meta_src["expectation"]
+    if case and isinstance(case.get("expectation"), dict):
+        exp = case["expectation"]
+    if exp and isinstance(exp.get("facts"), list):
+        facts = [str(f) for f in exp["facts"] if str(f).strip()]
+    if facts is None and isinstance((case or {}).get("facts"), list):
+        facts = [str(f) for f in case["facts"] if str(f).strip()]
+
+    if not facts:
+        completeness_skipped = True
+        completeness_reason = "no reference facts"
+    elif calls_used < CLAIM_GROUNDING_MAX_CALLS:
+        facts_prompt = (
+            "Given the agent output and the reference facts, estimate what fraction of the "
+            "reference facts are covered (0-1). Reply JSON: "
+            '{"completeness": <float>, "explanation": "..."}.\n\n'
+            f"OUTPUT:\n{text}\n\nFACTS:\n" + "\n".join(f"- {f}" for f in facts)
+        )
+        raw_c, _, cerr = _invoke_claim_judge(
+            judge_fn, facts_prompt, images=images, model=model, timeout_s=CLAIM_GROUNDING_TIMEOUT_S
+        )
+        calls_used += 1
+        if cerr:
+            completeness_skipped = True
+            completeness_reason = cerr
+        else:
+            cobj = _parse_json_obj(raw_c or "")
+            if cobj and cobj.get("completeness") is not None:
+                try:
+                    completeness = float(cobj["completeness"])
+                    completeness = max(0.0, min(1.0, completeness))
+                except (TypeError, ValueError):
+                    completeness_skipped = True
+                    completeness_reason = "invalid completeness JSON"
+            else:
+                completeness_skipped = True
+                completeness_reason = "invalid completeness JSON"
+    else:
+        completeness_skipped = True
+        completeness_reason = "max judge calls"
+
+    if groundedness >= 0.9:
+        label = "grounded"
+    elif groundedness < 0.5:
+        label = "hallucinated"
+    else:
+        label = "partially_grounded"
+
+    res = _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=groundedness,
+        verdict="pass" if groundedness >= 0.9 else "fail",
+        label=label,
+        explanation="\n".join(explanation_lines),
+        evidence=evidence,
+    )
+    res["execution_metadata"].update(
+        {
+            "judge_model": model,
+            "calls": calls_used,
+            "claims": claim_details,
+            "groundedness": groundedness,
+            "hallucination": hallucination,
+            "completeness": completeness,
+            "completeness_skipped": completeness_skipped,
+            "completeness_reason": completeness_reason,
+            "n_supported": n_supported,
+            "n_contradicted": n_contradicted,
+            "n_not_found": n_not_found,
+            "n_error": n_error,
+            "media_sha256": media_sha,
+            "modality": modality,
+        }
+    )
+    return res
+
+
 # --------------------------------------------------------------------------- orchestration
 
 
@@ -1367,6 +1907,9 @@ def evaluate_all(
             results.append(res)
             produced[meta["id"]] = res
             by_target_eval[(agent, case_id, variant, meta["id"])] = res
+            if meta["id"] == "claim_grounding":
+                for sib in _expand_claim_grounding_siblings(res, agent, case_id, variant):
+                    results.append(sib)
 
     pair_metas = [REGISTRY[k] for k in REGISTRY if REGISTRY[k]["scope"] == "pair"]
     case_ids = sorted({r["case_id"] for r in runs})
@@ -2008,6 +2551,9 @@ def enrich_results_payload(data: dict, evidence_margin: float = DEFAULT_EVIDENCE
     data["conflicts"] = conflicts
     data["registry"] = registry_list()
     data["traces"] = traces
+    from .events import attach_events_to_traces
+
+    attach_events_to_traces(data)
     if preserved_manifest is not None:
         data["meta"]["manifest"] = preserved_manifest
     # Keep any existing plan statuses; do not invent jobs during rescore.

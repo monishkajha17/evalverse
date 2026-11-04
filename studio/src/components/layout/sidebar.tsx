@@ -11,7 +11,9 @@ import {
   LayoutDashboard,
   ListTree,
   Network,
+  Play,
   Scale,
+  Settings,
   Shield,
   Sparkles,
   Users,
@@ -28,6 +30,7 @@ const GROUPS: Array<{
       { href: "/overview/", label: "Overview", icon: LayoutDashboard },
       { href: "/sessions/", label: "Sessions", icon: Users },
       { href: "/traces/", label: "Traces", icon: ListTree },
+      { href: "/try/", label: "Try it", icon: Play },
       { href: "/system/", label: "System", icon: Network },
     ],
   },
@@ -50,6 +53,10 @@ const GROUPS: Array<{
   {
     label: "Judge",
     items: [{ href: "/judge/", label: "Judge", icon: Gavel }],
+  },
+  {
+    label: "Account",
+    items: [{ href: "/settings/", label: "Settings", icon: Settings }],
   },
 ];
 

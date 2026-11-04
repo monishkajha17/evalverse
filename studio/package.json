@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "NEXT_DIST_DIR=.next-dev next dev",
+    "docs:gen": "node scripts/gen-api-docs.mjs",
+    "docs:check-links": "node scripts/check-docs-links.mjs",
+    "prebuild": "npm run docs:gen",
+    "build": "NEXT_DIST_DIR=.next next build",
+    "docs:check": "npm run docs:gen && npm run docs:check-links",
+    "start": "npx --yes serve out -l 3000",
     "lint": "next lint"
   },
   "dependencies": {
@@ -19,12 +23,16 @@
     "@radix-ui/react-tooltip": "^1.1.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "gray-matter": "^4.0.3",
     "lucide-react": "^0.469.0",
     "next": "15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
     "recharts": "^2.15.0",
-    "tailwind-merge": "^2.6.0"
+    "remark-gfm": "^4.0.1",
+    "tailwind-merge": "^2.6.0",
+    "unist-util-visit": "^5.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",

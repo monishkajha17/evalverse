@@ -1,0 +1,295 @@
+[
+  {
+    "id": "answer_correctness",
+    "version": "1.0.0",
+    "category": "deterministic",
+    "dimension": "Perception",
+    "modalities": [
+      "image",
+      "video"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "evidence_grounding",
+    "version": "1.0.0",
+    "category": "deterministic",
+    "dimension": "Groundedness",
+    "modalities": [
+      "image"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "stage_attribution",
+    "version": "1.0.0",
+    "category": "composite",
+    "dimension": "Failure analysis",
+    "modalities": [
+      "image",
+      "video"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [
+      "answer_correctness"
+    ],
+    "scope": "run"
+  },
+  {
+    "id": "tool_schema_valid",
+    "version": "1.0.0",
+    "category": "tool_use",
+    "dimension": "Tool use",
+    "modalities": [
+      "image",
+      "text"
+    ],
+    "needs_reference": false,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "tool_args_correct",
+    "version": "1.0.0",
+    "category": "tool_use",
+    "dimension": "Tool use",
+    "modalities": [
+      "image",
+      "text"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "tool_args_grounded",
+    "version": "1.0.0",
+    "category": "tool_use",
+    "dimension": "Tool use",
+    "modalities": [
+      "image",
+      "text"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "tool_order_policy",
+    "version": "1.0.0",
+    "category": "tool_use",
+    "dimension": "Tool use",
+    "modalities": [
+      "image",
+      "text"
+    ],
+    "needs_reference": false,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "action_despite_abstention",
+    "version": "1.0.0",
+    "category": "tool_use",
+    "dimension": "Tool use",
+    "modalities": [
+      "image",
+      "text"
+    ],
+    "needs_reference": false,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "item_recall",
+    "version": "1.0.0",
+    "category": "deterministic",
+    "dimension": "Completeness",
+    "modalities": [
+      "image"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "fabrication_check",
+    "version": "1.0.0",
+    "category": "deterministic",
+    "dimension": "Hallucination",
+    "modalities": [
+      "image"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "transcript_fidelity",
+    "version": "1.0.0",
+    "category": "deterministic",
+    "dimension": "Perception",
+    "modalities": [
+      "audio"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "temporal_alignment",
+    "version": "1.0.0",
+    "category": "deterministic",
+    "dimension": "Groundedness",
+    "modalities": [
+      "audio"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "audio_stage_attribution",
+    "version": "1.0.0",
+    "category": "composite",
+    "dimension": "Failure analysis",
+    "modalities": [
+      "audio"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [
+      "transcript_fidelity",
+      "temporal_alignment"
+    ],
+    "scope": "run"
+  },
+  {
+    "id": "media_dependence",
+    "version": "1.0.0",
+    "category": "paired",
+    "dimension": "Media dependence",
+    "modalities": [
+      "image",
+      "audio",
+      "video"
+    ],
+    "needs_reference": false,
+    "needs_replay": true,
+    "depends_on": [],
+    "scope": "pair"
+  },
+  {
+    "id": "media_dependence_guess",
+    "version": "1.0.0",
+    "category": "paired",
+    "dimension": "Media dependence",
+    "modalities": [
+      "audio",
+      "video"
+    ],
+    "needs_reference": false,
+    "needs_replay": true,
+    "depends_on": [],
+    "scope": "pair"
+  },
+  {
+    "id": "robustness_sweep",
+    "version": "1.0.0",
+    "category": "paired",
+    "dimension": "Robustness",
+    "modalities": [
+      "image",
+      "audio",
+      "video"
+    ],
+    "needs_reference": true,
+    "needs_replay": true,
+    "depends_on": [],
+    "scope": "pair"
+  },
+  {
+    "id": "perception_judge",
+    "version": "1.0.0",
+    "category": "judge",
+    "dimension": "Perception",
+    "modalities": [
+      "image",
+      "video"
+    ],
+    "needs_reference": false,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "judge_audit",
+    "version": "1.0.0",
+    "category": "paired",
+    "dimension": "Judge trust",
+    "modalities": [
+      "image",
+      "audio",
+      "video"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "suite"
+  },
+  {
+    "id": "judge_media_dependence",
+    "version": "1.0.0",
+    "category": "paired",
+    "dimension": "Judge trust",
+    "modalities": [
+      "image"
+    ],
+    "needs_reference": true,
+    "needs_replay": true,
+    "depends_on": [],
+    "scope": "suite"
+  },
+  {
+    "id": "temporal_alignment_video",
+    "version": "1.0.0",
+    "category": "deterministic",
+    "dimension": "Temporal grounding",
+    "modalities": [
+      "video"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  },
+  {
+    "id": "event_order",
+    "version": "1.0.0",
+    "category": "deterministic",
+    "dimension": "Reasoning",
+    "modalities": [
+      "video"
+    ],
+    "needs_reference": true,
+    "needs_replay": false,
+    "depends_on": [],
+    "scope": "run"
+  }
+]

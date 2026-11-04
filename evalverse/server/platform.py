@@ -747,7 +747,14 @@ class PlatformMixin:
     ) -> dict:
         etype = ev.get("type") or ev.get("source")
         if etype == "builtin" or (ev.get("id") in evmod.REGISTRY and ev.get("source") == "builtin"):
-            result = run_builtin(ev["id"], trace_dict, expectation)
+            cfg = ev.get("config") or {}
+            result = run_builtin(
+                ev["id"],
+                trace_dict,
+                expectation,
+                judge_fn=self.judge_fn,
+                judge_model=cfg.get("judge_model") or getattr(self, "judge_model", None),
+            )
         elif etype == "rule":
             cfg = ev.get("config") or {}
             result = run_rule_evaluator(cfg, trace_dict, expectation)
