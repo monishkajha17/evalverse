@@ -69,7 +69,7 @@ function SpanFlowNode({ data, selected }: NodeProps) {
     >
       <Handle type="target" position={Position.Left} className="!h-2 !w-2 !bg-slateish" />
       <div className="truncate text-[11px] font-semibold leading-tight">{model.label}</div>
-      <div className="mt-0.5 flex flex-wrap gap-x-2 text-[10px] opacity-80">
+      <div className="mt-0.5 flex flex-wrap gap-x-2 text-[10px] text-ink-muted">
         {model.kind === "media" && model.sha ? (
           <span className="font-mono">sha {(model.sha || "").slice(0, 10)}</span>
         ) : (
@@ -81,7 +81,7 @@ function SpanFlowNode({ data, selected }: NodeProps) {
         )}
       </div>
       {isGroup ? (
-        <div className="mt-1 text-[10px] font-medium underline-offset-2 opacity-70">Click to expand</div>
+        <div className="mt-1 text-[10px] font-medium text-ink-muted underline-offset-2">Click to expand</div>
       ) : null}
       <Handle type="source" position={Position.Right} className="!h-2 !w-2 !bg-slateish" />
     </div>

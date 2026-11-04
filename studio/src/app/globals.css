@@ -183,17 +183,42 @@ body {
 .studio .opacity-60,
 .studio .opacity-70,
 .studio .opacity-75,
-.studio .opacity-80 {
+.studio .opacity-80,
+.studio .opacity-90,
+.studio [class*="opacity-"] {
   opacity: 1 !important;
 }
 
-/* text-ink/NN → full-opacity muted token (never translucent ink) */
-.studio [class*="text-ink/"] {
+/* Disabled / aria-disabled must not dim via opacity — use muted tokens */
+.studio :disabled,
+.studio [disabled],
+.studio [aria-disabled="true"],
+.studio [data-disabled],
+.studio [data-disabled="true"] {
+  opacity: 1 !important;
+}
+.studio button:disabled,
+.studio button[disabled],
+.studio [aria-disabled="true"] {
+  color: var(--text-muted);
+}
+
+/*
+ * text-ink/NN → full-opacity muted token (never translucent ink).
+ * Avoid matching Tailwind state prefixes like disabled:text-ink-muted —
+ * those class *names* contain the substring even when the state is inactive.
+ */
+.studio [class*="text-ink/"]:not([class*="disabled:text-ink"]):not([class*="data-[disabled]"]),
+.studio .text-ink-muted,
+.studio .text-ink-subtle {
   color: var(--text-muted) !important;
   opacity: 1 !important;
 }
-.studio [class*="text-ink-muted"],
-.studio [class*="text-ink-subtle"] {
+.studio :disabled.text-ink-muted,
+.studio :disabled[class*="text-ink-muted"],
+.studio [disabled].text-ink-muted,
+.studio [aria-disabled="true"].text-ink-muted,
+.studio [data-disabled].text-ink-muted {
   color: var(--text-muted) !important;
   opacity: 1 !important;
 }
@@ -260,31 +285,25 @@ html.light .studio .text-accent,
 html.light .studio a.text-accent {
   color: #066557 !important;
 }
-html.light .studio .text-teal,
-html.light .studio [class*="text-teal"] {
+html.light .studio .text-teal {
   color: #066557 !important;
 }
-html.light .studio .text-amber,
-html.light .studio [class*="text-amber"] {
+html.light .studio .text-amber {
   color: #8a5a08 !important;
 }
-html.light .studio .text-crimson,
-html.light .studio [class*="text-crimson"] {
+html.light .studio .text-crimson {
   color: #b01e4a !important;
 }
-html.light .studio .text-slateish,
-html.light .studio [class*="text-slateish"] {
+html.light .studio .text-slateish {
   color: #4a5a70 !important;
 }
 
 html.dark .studio .text-accent,
 html.dark .studio a.text-accent,
-html.dark .studio .text-teal,
-html.dark .studio [class*="text-teal"] {
+html.dark .studio .text-teal {
   color: #5eead4 !important;
 }
-html.dark .studio .text-amber,
-html.dark .studio [class*="text-amber"] {
+html.dark .studio .text-amber {
   color: #fbbf24 !important;
 }
 

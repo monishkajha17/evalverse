@@ -74,7 +74,7 @@ export function TraceTimeline({
                 }}
               >
                 <span className="truncate">{b.label}</span>
-                <span className="ml-auto shrink-0 pl-1 opacity-70">{fmtMsShort(b.durationMs)}</span>
+                <span className="ml-auto shrink-0 pl-1 text-ink-muted">{fmtMsShort(b.durationMs)}</span>
               </button>
             );
           })}

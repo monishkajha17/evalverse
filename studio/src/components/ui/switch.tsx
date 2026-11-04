@@ -27,7 +27,7 @@ export function Switch({
       className={cn(
         "relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border transition-colors",
         checked ? "border-teal bg-teal" : "border-border bg-muted",
-        disabled && "cursor-not-allowed opacity-50",
+        disabled && "cursor-not-allowed border-border bg-muted",
       )}
     >
       <span

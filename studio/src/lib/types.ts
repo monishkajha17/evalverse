@@ -8,6 +8,8 @@ export interface SuiteIndexEntry {
   agents: string[];
   variants: string[];
   created?: string | null;
+  /** When true, suite is excluded from marketing “measured” aggregates. */
+  mock?: boolean;
 }
 
 export interface CaseTurn {

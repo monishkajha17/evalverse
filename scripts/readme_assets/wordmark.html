@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>EvalVerse wordmark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050A14;
+      --eval: #E6F1FF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg); }
+    body {
+      font-family: Inter, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+      color: var(--eval);
+      -webkit-font-smoothing: antialiased;
+    }
+    .frame {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(230,241,255,0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(230,241,255,0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+    .glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 55% 70% at 16% -5%, rgba(142,197,255,0.28), rgba(45,212,191,0.08) 45%, transparent 70%);
+      pointer-events: none;
+    }
+    .wordmark {
+      position: relative;
+      z-index: 1;
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .wordmark .eval { color: var(--eval); }
+    .wordmark .verse {
+      background: linear-gradient(90deg, #8EC5FF, #2DD4BF);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .tagline {
+      position: relative;
+      z-index: 1;
+      color: rgba(230,241,255,0.72);
+      font-weight: 400;
+      max-width: 36em;
+    }
+
+    /* Banner 1280×320 logical → rendered at 2560×640 */
+    #banner {
+      width: 1280px;
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 56px;
+      gap: 32px;
+    }
+    #banner .copy { flex: 1; min-width: 0; }
+    #banner .wordmark { font-size: 72px; margin-bottom: 22px; }
+    #banner .tagline { font-size: 18px; line-height: 1.45; }
+
+    .flow {
+      position: relative;
+      z-index: 1;
+      width: 420px;
+      height: 220px;
+      flex-shrink: 0;
+      color: rgba(230,241,255,0.55);
+    }
+    .flow svg { width: 100%; height: 100%; }
+
+    /* Social 1280×640 */
+    #social {
+      width: 1280px;
+      height: 640px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 96px;
+    }
+    #social .wordmark { font-size: 96px; margin-bottom: 28px; }
+    #social .tagline { font-size: 24px; line-height: 1.5; max-width: 28em; }
+    #social .flow-wrap {
+      position: absolute;
+      right: 72px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 380px;
+      height: 240px;
+      z-index: 1;
+    }
+    #social .flow-wrap svg { width: 100%; height: 100%; opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <div id="banner" class="frame">
+    <div class="grid"></div>
+    <div class="glow"></div>
+    <div class="copy">
+      <div class="wordmark"><span class="eval">Eval</span><span class="verse">Verse</span></div>
+      <p class="tagline">Evaluation and observability for AI agents that see, hear, read and act.</p>
+    </div>
+    <div class="flow" aria-hidden="true">
+      <svg viewBox="0 0 420 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+          <!-- glyphs -->
+          <g transform="translate(8,8)">
+            <rect x="0" y="0" width="28" height="36" rx="2"/>
+            <path d="M6 10h16M6 16h16M6 22h10"/>
+          </g>
+          <g transform="translate(4,62)">
+            <rect x="0" y="0" width="36" height="28" rx="2"/>
+            <path d="M8 0v28M28 0v28M12 8h12v12H12z"/>
+            <path d="M3 6h2M3 14h2M3 22h2M31 6h2M31 14h2M31 22h2" stroke-width="1"/>
+          </g>
+          <g transform="translate(6,118)">
+            <path d="M2 4h32a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H14l-6 8v-8H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+            <path d="M8 12h16M8 17h10"/>
+          </g>
+          <g transform="translate(8,178)">
+            <path d="M2 14v0M8 8v12M14 4v20M20 10v8M26 6v16M32 12v4"/>
+          </g>
+          <!-- converge -->
+          <path d="M48 26 C88 26, 88 110, 130 110"/>
+          <path d="M48 76 C88 76, 88 110, 130 110"/>
+          <path d="M48 134 C88 134, 88 110, 130 110"/>
+          <path d="M48 192 C88 192, 88 110, 130 110"/>
+          <rect x="130" y="94" width="58" height="32" rx="3"/>
+          <text x="159" y="114" text-anchor="middle" fill="rgba(230,241,255,0.8)" stroke="none" font-family="Inter, sans-serif" font-size="12">agent</text>
+          <path d="M188 110 H220"/>
+          <path d="M214 106 l6 4 -6 4"/>
+          <rect x="220" y="94" width="58" height="32" rx="3"/>
+          <text x="249" y="114" text-anchor="middle" fill="rgba(230,241,255,0.8)" stroke="none" font-family="Inter, sans-serif" font-size="12">trace</text>
+          <path d="M278 110 H310"/>
+          <path d="M304 106 l6 4 -6 4"/>
+          <rect x="310" y="94" width="78" height="32" rx="3" stroke="#F43F5E"/>
+          <text x="349" y="114" text-anchor="middle" fill="#F43F5E" stroke="none" font-family="Inter, sans-serif" font-size="12" font-weight="500">verdict</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div id="social" class="frame" style="margin-top: 24px; position: relative;">
+    <div class="grid"></div>
+    <div class="glow"></div>
+    <div class="wordmark"><span class="eval">Eval</span><span class="verse">Verse</span></div>
+    <p class="tagline">Evaluation and observability for AI agents that see, hear, read and act.</p>
+    <div class="flow-wrap" aria-hidden="true">
+      <svg viewBox="0 0 420 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="rgba(230,241,255,0.55)" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+          <g transform="translate(8,8)">
+            <rect x="0" y="0" width="28" height="36" rx="2"/>
+            <path d="M6 10h16M6 16h16M6 22h10"/>
+          </g>
+          <g transform="translate(4,62)">
+            <rect x="0" y="0" width="36" height="28" rx="2"/>
+            <path d="M8 0v28M28 0v28M12 8h12v12H12z"/>
+          </g>
+          <g transform="translate(6,118)">
+            <path d="M2 4h32a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H14l-6 8v-8H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+          </g>
+          <g transform="translate(8,178)">
+            <path d="M2 14v0M8 8v12M14 4v20M20 10v8M26 6v16M32 12v4"/>
+          </g>
+          <path d="M48 26 C88 26, 88 110, 130 110"/>
+          <path d="M48 76 C88 76, 88 110, 130 110"/>
+          <path d="M48 134 C88 134, 88 110, 130 110"/>
+          <path d="M48 192 C88 192, 88 110, 130 110"/>
+          <rect x="130" y="94" width="58" height="32" rx="3"/>
+          <text x="159" y="114" text-anchor="middle" fill="rgba(230,241,255,0.8)" stroke="none" font-family="Inter, sans-serif" font-size="12">agent</text>
+          <path d="M188 110 H220"/>
+          <path d="M214 106 l6 4 -6 4"/>
+          <rect x="220" y="94" width="58" height="32" rx="3"/>
+          <text x="249" y="114" text-anchor="middle" fill="rgba(230,241,255,0.8)" stroke="none" font-family="Inter, sans-serif" font-size="12">trace</text>
+          <path d="M278 110 H310"/>
+          <path d="M304 106 l6 4 -6 4"/>
+          <rect x="310" y="94" width="78" height="32" rx="3" stroke="#F43F5E"/>
+          <text x="349" y="114" text-anchor="middle" fill="#F43F5E" stroke="none" font-family="Inter, sans-serif" font-size="12" font-weight="500">verdict</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

@@ -9,17 +9,20 @@ import { GitHubMark } from "@/components/marketing/github-mark";
 import { GlossaryTerm } from "@/components/marketing/glossary-term";
 import { HeroFlow } from "@/components/marketing/hero-flow";
 import {
-  CORD_UMS_CLEAN,
   EVIDENCE_CASE,
   FINDINGS,
   FRAMEWORK_DIMS,
   GITHUB,
   RELEASE,
 } from "@/components/marketing/landing-constants";
+import {
+  computeDimensionMarks,
+  cordUmsFromSuite,
+  type CordUmsView,
+  type DimMark,
+} from "@/components/marketing/landing-metrics";
 import { loadIndex, loadSuite } from "@/lib/data";
 import type { SuiteData } from "@/lib/types";
-
-type DimMark = "measured in this release" | "defined, no data yet";
 
 type CrossModalExample = {
   caseId: string;
@@ -34,7 +37,7 @@ type CrossModalExample = {
 };
 
 type LandingData = {
-  measuredDims: Set<string>;
+  dimMarks: Record<string, DimMark>;
   wonder: {
     falseAccept: string;
     falseReject: string;
@@ -53,18 +56,22 @@ type LandingData = {
   }>;
   exampleTraces: Array<{ id: string; agent: string; variant: string }>;
   crossModalExample: CrossModalExample | null;
-  ums: typeof CORD_UMS_CLEAN;
+  ums: CordUmsView;
   source: "data" | "snapshot";
 };
 
+const FALLBACK_MARKS: Record<string, DimMark> = {
+  Perception: "measured in this release",
+  Groundedness: "measured in this release",
+  "Temporal grounding": "measured in this release",
+  "Cross-modal consistency": "small sample (4 pairs)",
+  Hallucination: "measured in this release",
+  Completeness: "measured in this release",
+  Reasoning: "measured in this release",
+};
+
 const FALLBACK: LandingData = {
-  measuredDims: new Set([
-    "Perception",
-    "Groundedness",
-    "Temporal grounding",
-    "Cross-modal consistency",
-    "Reasoning",
-  ]),
+  dimMarks: FALLBACK_MARKS,
   wonder: {
     falseAccept: "0/30",
     falseReject: "0/30",
@@ -84,7 +91,7 @@ const FALLBACK: LandingData = {
     { id: "muse-spark-1.1|cord_total_02|blur", agent: "muse-spark-1.1", variant: "blur" },
   ],
   crossModalExample: null,
-  ums: CORD_UMS_CLEAN,
+  ums: cordUmsFromSuite(null),
   source: "snapshot",
 };
 
@@ -179,60 +186,6 @@ function degradedCompare(suite: SuiteData) {
   return out.length ? out : FALLBACK.compare;
 }
 
-function umsFromSuite(suite: SuiteData): typeof CORD_UMS_CLEAN | null {
-  const rows = suite.scores?.rows || [];
-  const row = rows.find((r) => r.agent === "muse-spark-1.3" && r.variant === "clean");
-  if (!row || typeof row.ums !== "number") return null;
-
-  const dimensions: Array<{ name: string; score: number }> = [];
-  const rawDims = row.dimensions || {};
-  for (const [name, raw] of Object.entries(rawDims)) {
-    const score =
-      typeof raw === "number"
-        ? raw
-        : raw && typeof raw === "object" && typeof raw.score === "number"
-          ? raw.score
-          : null;
-    const status =
-      raw && typeof raw === "object" && "status" in raw
-        ? String((raw as { status?: string }).status || "")
-        : score != null
-          ? "available"
-          : "unavailable";
-    if (status === "available" && score != null) {
-      dimensions.push({ name, score });
-    }
-  }
-  if (!dimensions.length) return null;
-
-  let ci: [number, number] = CORD_UMS_CLEAN.ci_95;
-  if (Array.isArray(row.ci_95) && row.ci_95.length === 2) {
-    ci = [Number(row.ci_95[0]), Number(row.ci_95[1])];
-  } else if (row.ci_95 && typeof row.ci_95 === "object" && "lo" in row.ci_95) {
-    const lo = Number(row.ci_95.lo);
-    const hi = Number(row.ci_95.hi);
-    if (Number.isFinite(lo) && Number.isFinite(hi)) ci = [lo, hi];
-  }
-
-  return {
-    agent: String(row.agent),
-    variant: String(row.variant),
-    profile: "balanced",
-    ums: row.ums,
-    ci_95: ci,
-    gate: {
-      pass: Boolean(row.gate?.pass),
-      reasons: (row.gate?.reasons || []).map(String),
-    },
-    weakest: {
-      dimension: String(row.weakest?.dimension || CORD_UMS_CLEAN.weakest.dimension),
-      score: Number(row.weakest?.score ?? CORD_UMS_CLEAN.weakest.score),
-    },
-    dimensions,
-    sourceNote: "cord suite · muse-spark-1.3 · clean · balanced",
-  };
-}
-
 function useLandingData(): LandingData {
   const [data, setData] = useState<LandingData>(FALLBACK);
 
@@ -241,33 +194,23 @@ function useLandingData(): LandingData {
     (async () => {
       try {
         const index = await loadIndex();
-        const measured = new Set<string>();
-        for (const entry of index) {
-          try {
-            const suite = await loadSuite(entry.suite);
-            for (const row of suite.dimension_summary || []) {
-              if (
-                row.dimension &&
-                typeof row.mean_score === "number" &&
-                (row.n || 0) > 0
-              ) {
-                measured.add(String(row.dimension));
-              }
+        const suitesById: Record<string, SuiteData> = {};
+        await Promise.all(
+          index.map(async (entry) => {
+            try {
+              suitesById[entry.suite] = await loadSuite(entry.suite);
+            } catch {
+              /* skip suite */
             }
-          } catch {
-            /* skip suite */
-          }
-        }
+          }),
+        );
 
-        const cord = await loadSuite("cord");
-        const wonderSuite = await loadSuite("wonder");
-        let crossModalExample: CrossModalExample | null = null;
-        try {
-          crossModalExample = pickCrossModalExample(await loadSuite("crossmodal"));
-        } catch {
-          crossModalExample = null;
-        }
-        const ums = umsFromSuite(cord) || CORD_UMS_CLEAN;
+        const cord = suitesById.cord || (await loadSuite("cord"));
+        const wonderSuite = suitesById.wonder || (await loadSuite("wonder"));
+        const crossSuite = suitesById.crossmodal;
+        const crossModalExample = crossSuite ? pickCrossModalExample(crossSuite) : null;
+        const dimMarks = computeDimensionMarks(index, suitesById);
+        const ums = cordUmsFromSuite(cord);
         const traces = (cord.traces || [])
           .filter((t) => t.variant === "clean" || t.variant === "blur")
           .slice(0, 3)
@@ -275,7 +218,7 @@ function useLandingData(): LandingData {
 
         if (!cancelled) {
           setData({
-            measuredDims: measured.size ? measured : FALLBACK.measuredDims,
+            dimMarks: Object.keys(dimMarks).length ? dimMarks : FALLBACK.dimMarks,
             wonder: parseWonderAudit(wonderSuite),
             compare: degradedCompare(cord),
             exampleTraces: traces.length ? traces : FALLBACK.exampleTraces,
@@ -296,8 +239,8 @@ function useLandingData(): LandingData {
   return data;
 }
 
-function markFor(name: string, measured: Set<string>): DimMark {
-  return measured.has(name) ? "measured in this release" : "defined, no data yet";
+function markFor(name: string, marks: Record<string, DimMark>): DimMark {
+  return marks[name] || "defined, no data yet";
 }
 
 function SectionHead({
@@ -680,8 +623,12 @@ function ScorePanel({ ums }: { ums: LandingData["ums"] }) {
     () => ums.dimensions.filter((d) => typeof d.score === "number"),
     [ums.dimensions],
   );
-  const pct = Math.round(ums.ums * 100);
-  const ci = `${ums.ci_95[0].toFixed(2)}–${ums.ci_95[1].toFixed(2)}`;
+  const pct = Math.round(ums.overallUms * 100);
+  const overallCi = `${ums.overallCi[0].toFixed(2)}–${ums.overallCi[1].toFixed(2)}`;
+  const missing =
+    ums.missingDimensions.length > 0
+      ? ums.missingDimensions.join(", ")
+      : "none";
 
   return (
     <BrowserFrame url="evalverse · scores">
@@ -701,10 +648,10 @@ function ScorePanel({ ums }: { ums: LandingData["ums"] }) {
               transform="rotate(-90 60 60)"
             />
             <text x="60" y="56" textAnchor="middle" fill="#E6F1FF" style={{ fontSize: 20, fontWeight: 300 }}>
-              {ums.ums.toFixed(2)}
+              {ums.overallUms.toFixed(2)}
             </text>
             <text x="60" y="72" textAnchor="middle" fill="#8CA0BC" style={{ fontSize: 9, fontFamily: "monospace" }}>
-              CI {ci}
+              CI {overallCi}
             </text>
           </svg>
           <span
@@ -718,6 +665,17 @@ function ScorePanel({ ums }: { ums: LandingData["ums"] }) {
           </span>
         </div>
         <div className="space-y-3">
+          <div className="space-y-1 text-sm text-[var(--mk-fg)]">
+            <p>
+              All image conditions:{" "}
+              <span className="font-medium tabular-nums">{ums.overallUms.toFixed(4)}</span>{" "}
+              <span className="mk-mono text-[11px] text-[var(--mk-muted)]">({overallCi})</span>
+            </p>
+            <p>
+              Clean images only:{" "}
+              <span className="font-medium tabular-nums">{ums.cleanUms.toFixed(4)}</span>
+            </p>
+          </div>
           {dims.map((d) => (
             <div key={d.name}>
               <div className="mb-1 flex justify-between mk-mono text-[11px] text-[var(--mk-muted)]">
@@ -734,7 +692,7 @@ function ScorePanel({ ums }: { ums: LandingData["ums"] }) {
           ))}
           <p className="text-xs text-[var(--mk-muted)]">
             Weakest: {ums.weakest.dimension} ({ums.weakest.score.toFixed(2)}). Dimensions with no
-            data are left out and the weights re-balance.
+            data ({missing}) are left out and the weights re-balance.
           </p>
           <p className="mk-mono text-[10px] text-[var(--mk-muted)]">{ums.sourceNote}</p>
         </div>
@@ -943,7 +901,7 @@ export function LandingSections() {
                 <div>
                   <div className="text-base font-medium tracking-tight">{dim.name}</div>
                   <div className="mk-mono mt-2 text-[10px] text-[var(--mk-accent)]">
-                    {markFor(dim.name, data.measuredDims)}
+                    {markFor(dim.name, data.dimMarks)}
                   </div>
                 </div>
                 <div>
@@ -1133,7 +1091,7 @@ export function LandingSections() {
               <ScorePanel ums={data.ums} />
             </div>
             <div className="mt-6">
-              <Link href="/system/" className="mk-link-arrow">
+              <Link href="/overview/" className="mk-link-arrow">
                 Score <span aria-hidden>→</span>
               </Link>
             </div>

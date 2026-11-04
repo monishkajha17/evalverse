@@ -262,13 +262,13 @@ export default function HumanReviewPage() {
                     </p>
                     <div className="flex flex-wrap gap-2 pt-2">
                       <Button type="button" onClick={() => submit("agree")}>
-                        Agree <span className="ml-1 text-[10px] opacity-60">A</span>
+                        Agree <span className="ml-1 text-[10px] text-ink-muted">A</span>
                       </Button>
                       <Button type="button" variant="outline" onClick={() => submit("disagree")}>
-                        Disagree <span className="ml-1 text-[10px] opacity-60">D</span>
+                        Disagree <span className="ml-1 text-[10px] text-ink-muted">D</span>
                       </Button>
                       <Button type="button" variant="ghost" onClick={() => submit("skip")}>
-                        Skip <span className="ml-1 text-[10px] opacity-60">S</span>
+                        Skip <span className="ml-1 text-[10px] text-ink-muted">S</span>
                       </Button>
                     </div>
                   </CardContent>

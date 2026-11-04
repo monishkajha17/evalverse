@@ -47,26 +47,31 @@ export const FINDINGS = {
 } as const;
 
 /**
- * UMS for muse-spark-1.3 / clean / balanced from the cord suite score export
- * (scores block is not always mirrored into public/data/cord.json).
- * Dimensions with status unavailable are omitted; weights already re-balanced.
+ * UMS for muse-spark-1.3 / balanced from the cord suite score export.
+ * Headline `ums` is scores.overall (all image conditions); cleanUms is by_variant.clean.
+ * Dimensions with status unavailable are omitted from the bars; listed in missingDimensions.
  */
 export const CORD_UMS_CLEAN = {
   agent: "muse-spark-1.3",
-  variant: "clean",
+  variant: "overall",
   profile: "balanced",
-  ums: 0.8611,
-  ci_95: [0.8056, 0.9075] as [number, number],
+  ums: 0.7273,
+  ci_95: [0.6481, 0.8065] as [number, number],
+  overallUms: 0.7273,
+  overallCi: [0.6481, 0.8065] as [number, number],
+  cleanUms: 0.8611,
+  cleanCi: [0.8056, 0.9075] as [number, number],
   gate: { pass: true, reasons: [] as string[] },
   weakest: { dimension: "Robustness", score: 0.5 },
   dimensions: [
-    { name: "Perception", score: 1.0 },
-    { name: "Groundedness", score: 0.8 },
-    { name: "Honesty", score: 1.0 },
+    { name: "Perception", score: 0.7 },
+    { name: "Groundedness", score: 0.6833 },
+    { name: "Honesty", score: 0.8917 },
     { name: "Media dependence", score: 1.0 },
     { name: "Robustness", score: 0.5 },
   ],
-  sourceNote: "cord suite · muse-spark-1.3 · clean · balanced",
+  missingDimensions: ["Reasoning", "Tool use", "Completeness", "Hallucination"],
+  sourceNote: "cord suite · muse-spark-1.3 · overall + clean · balanced",
 };
 
 /** Real cord case used in the evidence panel (right answer, wrong place). */

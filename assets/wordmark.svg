@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="160" viewBox="0 0 640 160" role="img" aria-label="EvalVerse">
+  <defs>
+    <linearGradient id="verse" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8EC5FF"/>
+      <stop offset="100%" stop-color="#2DD4BF"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="18%" cy="0%" r="55%">
+      <stop offset="0%" stop-color="#8EC5FF" stop-opacity="0.22"/>
+      <stop offset="55%" stop-color="#2DD4BF" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#050A14" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#E6F1FF" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="640" height="160" fill="#050A14"/>
+  <rect width="640" height="160" fill="url(#grid)"/>
+  <rect width="640" height="160" fill="url(#glow)"/>
+  <text x="40" y="98" font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="64" font-weight="300" letter-spacing="-1.6" fill="#E6F1FF">Eval</text>
+  <text x="168" y="98" font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="64" font-weight="300" letter-spacing="-1.6" fill="url(#verse)">Verse</text>
+</svg>
