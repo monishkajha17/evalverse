@@ -170,10 +170,73 @@ CREATE TABLE IF NOT EXISTS online_policies (
     config_json TEXT,
     enabled INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL,
+    updated_at TEXT,
     UNIQUE (project, name),
     FOREIGN KEY (project) REFERENCES projects(name)
 );
+
+CREATE TABLE IF NOT EXISTS evaluator_defs (
+    project TEXT NOT NULL,
+    evaluator_id TEXT NOT NULL,
+    version TEXT NOT NULL,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL,
+    category TEXT,
+    dimension TEXT,
+    description TEXT,
+    modalities_json TEXT,
+    needs_reference INTEGER NOT NULL DEFAULT 0,
+    config_json TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (project, evaluator_id, version)
+);
+
+CREATE TABLE IF NOT EXISTS eval_jobs (
+    id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    project TEXT NOT NULL,
+    trace_id TEXT NOT NULL,
+    evaluator_id TEXT NOT NULL,
+    evaluator_version TEXT NOT NULL,
+    dataset_item_id TEXT,
+    status TEXT NOT NULL,
+    attempts INTEGER NOT NULL DEFAULT 0,
+    error TEXT,
+    created_at TEXT NOT NULL,
+    started_at TEXT,
+    ended_at TEXT,
+    UNIQUE (run_id, trace_id, evaluator_id, evaluator_version),
+    FOREIGN KEY (run_id) REFERENCES eval_runs(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_eval_jobs_status ON eval_jobs(status);
+CREATE INDEX IF NOT EXISTS idx_eval_jobs_run ON eval_jobs(run_id);
+
+CREATE TABLE IF NOT EXISTS alerts (
+    id TEXT PRIMARY KEY,
+    project TEXT NOT NULL,
+    policy_id TEXT,
+    trace_id TEXT,
+    run_id TEXT,
+    result_id TEXT,
+    dimension TEXT,
+    evaluator_id TEXT,
+    score REAL,
+    threshold REAL,
+    webhook_url TEXT,
+    webhook_status TEXT,
+    created_at TEXT NOT NULL,
+    UNIQUE (policy_id, result_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_alerts_project ON alerts(project);
 """
+
+
+def _ensure_column(conn: sqlite3.Connection, table: str, column: str, decl: str) -> None:
+    cols = {r[1] for r in conn.execute(f"PRAGMA table_info({table})").fetchall()}
+    if column not in cols:
+        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl}")
 
 
 class Database:
@@ -200,6 +263,10 @@ class Database:
         with self._lock:
             conn = self.connect()
             conn.executescript(SCHEMA)
+            _ensure_column(conn, "dataset_versions", "locked", "INTEGER NOT NULL DEFAULT 0")
+            _ensure_column(conn, "online_policies", "updated_at", "TEXT")
+            _ensure_column(conn, "eval_runs", "progress_json", "TEXT")
+            _ensure_column(conn, "dataset_items", "expectation_json", "TEXT")
             conn.commit()
 
     def execute(self, sql: str, params: Iterable[Any] = ()) -> sqlite3.Cursor:

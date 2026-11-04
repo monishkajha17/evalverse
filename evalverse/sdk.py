@@ -580,8 +580,82 @@ class EvalVerse:
             log.warning("EvalVerse SDK get_trace failed: %s", exc)
             return None
 
-    def evaluate(self, *args: Any, **kwargs: Any) -> Any:
-        raise NotImplementedError("available in the next release of the server")
+    def evaluate(
+        self,
+        trace_id: str | None = None,
+        evaluators: list[str] | None = None,
+        *,
+        wait: bool = True,
+        timeout: float = 60.0,
+        poll: float = 0.2,
+        filter: dict[str, Any] | None = None,
+        dataset_item_id: str | None = None,
+        **kwargs: Any,
+    ) -> Any:
+        # Back-compat: evaluate(trace=..., evaluators=...)
+        if trace_id is None:
+            trace_id = kwargs.get("trace") or kwargs.get("trace_id")
+        eids = evaluators or kwargs.get("evaluators") or []
+        body: dict[str, Any] = {"evaluator_ids": list(eids)}
+        if trace_id:
+            body["trace_ids"] = [trace_id]
+        if filter:
+            body["filter"] = filter
+        if dataset_item_id:
+            body["dataset_item_id"] = dataset_item_id
+        try:
+            run = self._request("POST", "/api/v1/evaluations", json=body)
+        except Exception as exc:  # noqa: BLE001
+            log.warning("EvalVerse SDK evaluate failed: %s", exc)
+            return None
+        if not wait or not run:
+            return run
+        run_id = run.get("id")
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            try:
+                detail = self._request("GET", f"/api/v1/evaluations/{run_id}")
+            except Exception as exc:  # noqa: BLE001
+                log.warning("EvalVerse SDK evaluate poll failed: %s", exc)
+                return run
+            status = (detail or {}).get("status")
+            if status in ("completed", "partial", "failed"):
+                return detail
+            time.sleep(poll)
+        log.warning("EvalVerse SDK evaluate timed out waiting for %s", run_id)
+        return detail if "detail" in locals() else run
+
+    def create_evaluator(self, spec: dict[str, Any]) -> Any:
+        try:
+            return self._request("POST", "/api/v1/evaluators", json=spec)
+        except Exception as exc:  # noqa: BLE001
+            log.warning("EvalVerse SDK create_evaluator failed: %s", exc)
+            return None
+
+    def promote(
+        self,
+        trace_id: str,
+        dataset: str,
+        expectation: dict[str, Any] | None = None,
+        tags: list[str] | None = None,
+    ) -> Any:
+        try:
+            return self._request(
+                "POST",
+                f"/api/v1/traces/{trace_id}/promote",
+                json={"dataset_id": dataset, "expectation": expectation, "tags": tags},
+            )
+        except Exception as exc:  # noqa: BLE001
+            log.warning("EvalVerse SDK promote failed: %s", exc)
+            return None
+
+    def results(self, trace_id: str) -> Any:
+        try:
+            tr = self._request("GET", f"/api/v1/traces/{trace_id}")
+            return (tr or {}).get("results") or []
+        except Exception as exc:  # noqa: BLE001
+            log.warning("EvalVerse SDK results failed: %s", exc)
+            return []
 
     def close(self) -> None:
         try:

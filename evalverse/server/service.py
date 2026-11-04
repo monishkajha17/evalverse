@@ -13,6 +13,7 @@ from typing import Any, Optional
 from fastapi import HTTPException, UploadFile
 
 from evalverse.server.db import Database
+from evalverse.server.platform import PlatformMixin
 from evalverse.server.schemas import (
     EvalResultOut,
     MediaAttach,
@@ -156,11 +157,12 @@ def _validate_span_graph_with_existing(
     _validate_span_graph(list(by_id.values()), existing_ids=set(by_id.keys()))
 
 
-class Service:
+class Service(PlatformMixin):
     def __init__(self, db: Database, media_dir: Path):
         self.db = db
         self.media_dir = Path(media_dir)
         self.media_dir.mkdir(parents=True, exist_ok=True)
+        self.worker = None  # set by create_app
 
     # ------------------------------------------------------------------ projects
     def ensure_project(self, name: str) -> str:
@@ -364,10 +366,17 @@ class Service:
             self._insert_spans(conn, tid, spans)
             self._attach_media(conn, tid, body.media or [])
 
-        return self.get_trace(project, tid)
+        detail = self.get_trace(project, tid)
+        if status == "completed":
+            try:
+                self.on_trace_completed(project, tid)
+            except Exception:
+                pass
+        return detail
 
     def patch_trace(self, project: str, trace_id: str, body: TracePatch) -> TraceDetail:
         row = self._require_trace(project, trace_id)
+        prev_status = row["status"]
         fields: list[str] = []
         values: list[Any] = []
         mapping = {
@@ -376,6 +385,7 @@ class Service:
             "agent": body.agent,
             "ended_at": body.ended_at,
         }
+        new_status = None
         for col, val in mapping.items():
             if val is not None:
                 fields.append(f"{col} = ?")
@@ -386,6 +396,7 @@ class Service:
                 raise HTTPException(status_code=400, detail=f"Invalid status: {status}")
             fields.append("status = ?")
             values.append(status)
+            new_status = status
         if body.input is not None:
             fields.append("input_json = ?")
             values.append(_dumps(body.input))
@@ -409,7 +420,13 @@ class Service:
             if body.media is not None:
                 self._attach_media(conn, trace_id, body.media)
         _ = row
-        return self.get_trace(project, trace_id)
+        detail = self.get_trace(project, trace_id)
+        if new_status == "completed" and prev_status != "completed":
+            try:
+                self.on_trace_completed(project, trace_id)
+            except Exception:
+                pass
+        return detail
 
     def add_spans(self, project: str, trace_id: str, spans: list[SpanIn]) -> TraceDetail:
         self._require_trace(project, trace_id)

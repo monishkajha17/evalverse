@@ -256,3 +256,106 @@ class ErrorBody(BaseModel):
     code: str
     message: str
     details: list[Any] = Field(default_factory=list)
+
+
+class DatasetCreate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    name: str
+    description: Optional[str] = None
+    metadata: Optional[dict[str, Any]] = None
+
+
+class DatasetVersionCreate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    version: Optional[str] = None
+    metadata: Optional[dict[str, Any]] = None
+
+
+class EvidenceSpec(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    type: str  # image_region | time_span
+    locator: Any
+    role: Optional[str] = None
+
+
+class ExpectationSpec(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    answer: Optional[Any] = None
+    answer_type: Optional[str] = None
+    evidence: Optional[Any] = None
+    tolerance: Optional[float] = None
+    family: Optional[str] = None
+    menu: Optional[Any] = None
+
+
+class DatasetItemCreate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    input: Any
+    expectation: Optional[ExpectationSpec | dict[str, Any]] = None
+    tags: Optional[list[str]] = None
+    metadata: Optional[dict[str, Any]] = None
+    version_id: Optional[str] = None
+
+
+class PromoteRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    dataset_id: str
+    expectation: Optional[ExpectationSpec | dict[str, Any]] = None
+    tags: Optional[list[str]] = None
+
+
+class EvaluatorCreate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    type: str
+    name: str
+    id: Optional[str] = None
+    version: Optional[str] = None
+    dimension: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    modalities: Optional[list[str]] = None
+    # rubric
+    prompt: Optional[str] = None
+    attach_media: Optional[bool] = False
+    judge_model: Optional[str] = None
+    scale: Optional[str] = "pass_fail"
+    labels: Optional[list[str]] = None
+    pass_threshold: Optional[float] = None
+    # rule
+    checks: Optional[list[dict[str, Any]]] = None
+    rules: Optional[list[dict[str, Any]]] = None
+
+
+class EvaluatorTestRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    trace_id: str
+
+
+class EvaluationCreate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    trace_ids: Optional[list[str]] = None
+    filter: Optional[dict[str, Any]] = None
+    evaluator_ids: list[str]
+    dataset_item_id: Optional[str] = None
+    dataset_version_id: Optional[str] = None
+
+
+class PolicyCreate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    name: str
+    id: Optional[str] = None
+    filter: Optional[dict[str, Any]] = None
+    sample_rate: float = 1.0
+    evaluator_ids: list[str] = Field(default_factory=list)
+    enabled: bool = True
+    alert: Optional[dict[str, Any]] = None
+
+
+class PolicyUpdate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    name: Optional[str] = None
+    filter: Optional[dict[str, Any]] = None
+    sample_rate: Optional[float] = None
+    evaluator_ids: Optional[list[str]] = None
+    enabled: Optional[bool] = None
+    alert: Optional[dict[str, Any]] = None

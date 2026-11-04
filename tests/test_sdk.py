@@ -90,9 +90,36 @@ def test_sdk_observe_decorator(ev: EvalVerse, app_and_dir):
     assert any(r["tool_call_count"] >= 1 or r["span_count"] >= 1 for r in rows)
 
 
-def test_sdk_evaluate_not_implemented(ev: EvalVerse):
-    with pytest.raises(NotImplementedError, match="next release"):
-        ev.evaluate(trace="x")
+def test_sdk_evaluate_and_results(ev: EvalVerse, app_and_dir):
+    app, _ = app_and_dir
+    # Create a rule evaluator and a completed trace, then evaluate via SDK.
+    svc = app.state.service
+    svc.create_evaluator(
+        "default",
+        {
+            "type": "rule",
+            "name": "has_output",
+            "checks": [{"op": "field_present", "path": "output"}],
+        },
+    )
+    with ev.trace(name="eval-demo", agent="a") as tr:
+        tr.set_output(total="1")
+        tid = tr.id
+    ev.flush(timeout=5)
+    # Ensure completed so evaluate can find spans/output.
+    detail = ev.evaluate(tid, evaluators=["has_output"], wait=True, timeout=10)
+    assert detail is not None
+    assert detail.get("status") in ("completed", "partial", "failed", "running")
+    # Drain: wait a bit more if still running
+    import time
+
+    for _ in range(50):
+        if detail.get("status") in ("completed", "partial", "failed"):
+            break
+        time.sleep(0.05)
+        detail = ev._request("GET", f"/api/v1/evaluations/{detail['id']}")
+    results = ev.results(tid)
+    assert isinstance(results, list)
 
 
 def test_importer_idempotency(app_and_dir, tmp_path: Path):
