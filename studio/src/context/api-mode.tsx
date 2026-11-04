@@ -79,7 +79,13 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const onExpired = () => {
       clearSession();
-      clearStoredConnection();
+      const existing = apiConfig();
+      writeStoredConnection({
+        url: existing.url,
+        apiKey: existing.key,
+        project: existing.project || "default",
+        preferLive: false,
+      });
       setSignedIn(false);
       setSessionExpired(true);
       setLiveAvailable(false);
@@ -121,7 +127,12 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
           setError(msg);
           if (e instanceof ApiError && e.status === 401) {
             clearSession();
-            clearStoredConnection();
+            writeStoredConnection({
+              url: cfg.url,
+              apiKey: cfg.key,
+              project: cfg.project || "default",
+              preferLive: false,
+            });
             setSignedIn(false);
             setSessionExpired(true);
           } else {
@@ -150,13 +161,24 @@ export function ApiModeProvider({ children }: { children: React.ReactNode }) {
     signedIn && cfg.preferLive && liveAvailable && cfg.modeEnv !== "snapshot" ? "live" : "snapshot";
 
   const banner: ConnectionBanner = useMemo(() => {
+    // Live + healthy API → no banner (never "Can't reach your server").
+    if (effectiveMode === "live" && liveAvailable) return null;
     if (sessionExpired) return { kind: "session-expired" };
+    // Preferring live but API down → unreachable (mode is snapshot / Demo badge only).
     if (signedIn && cfg.preferLive && !liveAvailable && !checking) {
       return { kind: "unreachable", detail: error || undefined };
     }
     if (!signedIn || !cfg.preferLive) return { kind: "demo" };
     return null;
-  }, [sessionExpired, signedIn, cfg.preferLive, liveAvailable, checking, error]);
+  }, [
+    effectiveMode,
+    sessionExpired,
+    signedIn,
+    cfg.preferLive,
+    liveAvailable,
+    checking,
+    error,
+  ]);
 
   const connect = useCallback(
     async (conn: Omit<StoredConnection, "preferLive"> & { preferLive?: boolean }) => {

@@ -90,15 +90,13 @@ function NavLink({
       className={cn(
         "relative flex items-center rounded-md text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
         collapsed ? "justify-center px-2 py-2" : "gap-2.5 px-2.5 py-1.5",
-        active
-          ? "bg-muted font-medium text-ink"
-          : "text-ink-muted hover:bg-muted/70 hover:text-ink",
+        active ? "font-medium" : "",
       )}
     >
       {active ? (
         <span className="absolute inset-y-1 left-0 w-0.5 rounded-full bg-accent" aria-hidden />
       ) : null}
-      <Icon className="h-4 w-4 shrink-0" />
+      <Icon className="h-4 w-4 shrink-0" aria-hidden />
       {!collapsed ? <span className="truncate">{item.label}</span> : null}
     </Link>
   );
@@ -130,7 +128,7 @@ export function Sidebar({
         )}
         onClick={onCloseMobile}
       >
-        <span className="text-sm font-semibold tracking-tight text-ink">
+        <span data-studio-brand className="text-sm font-semibold tracking-tight">
           {isCollapsed ? "EV" : "EvalVerse"}
         </span>
       </Link>
@@ -138,7 +136,7 @@ export function Sidebar({
         {GROUPS.map((group, gi) => (
           <div key={group.label || `g-${gi}`}>
             {group.label && !isCollapsed ? (
-              <div className="label-mono mb-1 px-2">{group.label}</div>
+              <div className="label-mono studio-nav-group mb-1 px-2">{group.label}</div>
             ) : null}
             <div className="flex flex-col gap-0.5">
               {group.items.map((item) => (
@@ -177,7 +175,7 @@ export function Sidebar({
           />
           <aside className="absolute inset-y-0 left-0 flex w-64 flex-col bg-surface shadow-panel">
             <div className="flex h-12 items-center justify-between border-b border-hairline px-3">
-              <span className="text-sm font-semibold text-ink">EvalVerse</span>
+              <span data-studio-brand className="text-sm font-semibold">EvalVerse</span>
               <button
                 type="button"
                 className="rounded p-1 text-ink-muted hover:bg-muted hover:text-ink"

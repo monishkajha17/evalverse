@@ -99,8 +99,8 @@ function TracesInner() {
         const suite = suiteCtx.suite;
         setRows((data.traces || []).map((t) => listRowFromSuite(t, data, suite)));
       }
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load traces");
+    } catch {
+      setError("Couldn’t load traces. Try again.");
       setRows([]);
     } finally {
       setLoading(false);
@@ -460,7 +460,7 @@ function TracesInner() {
           />
           {/* Hover thumb + keyboard focus highlight via overlay rows isn't in DataTable —
               wrap interaction with a secondary absolute preview. */}
-          <div className="mt-[-1px] border-t border-border bg-white px-2 py-1 text-[11px] text-ink/45">
+          <div className="mt-[-1px] border-t border-hairline bg-surface px-2 py-1 text-[11px] text-ink-muted">
             Focus row with ↑↓, Enter to open
             {pageRows[focusIdx] ? (
               <>
@@ -471,7 +471,7 @@ function TracesInner() {
                       ? `&suite=${encodeURIComponent(pageRows[focusIdx].suite)}`
                       : ""
                   }`}
-                  className="text-teal hover:underline"
+                  className="font-medium text-accent hover:underline"
                   onMouseEnter={(e) => {
                     const url = pageRows[focusIdx].thumbUrl;
                     if (!url) return;

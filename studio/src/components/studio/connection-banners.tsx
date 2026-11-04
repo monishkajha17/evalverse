@@ -17,7 +17,7 @@ export function ConnectionBanners() {
     return (
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-crimson/30 bg-crimson/10 px-4 py-2 text-xs text-ink">
         <span>
-          <span className="font-medium">Your session expired.</span> Sign in again to see your project.
+          <span className="font-medium">Your session expired.</span> Sign in again
         </span>
         <div className="flex items-center gap-2">
           <Button asChild size="sm">

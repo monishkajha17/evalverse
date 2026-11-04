@@ -53,21 +53,29 @@ def sniff_upload(data: bytes) -> AllowedKind | None:
     # MP3: ID3 tag or frame sync
     if data.startswith(b"ID3") or (len(data) >= 2 and data[0] == 0xFF and (data[1] & 0xE0) == 0xE0):
         return ("audio", "audio/mpeg", ".mp3")
+    # Ogg (Vorbis / Opus) — browser / MediaRecorder audio/ogg
+    if data.startswith(b"OggS"):
+        return ("audio", "audio/ogg", ".ogg")
     # MP4 / M4A (ISO BMFF ftyp)
     if len(data) >= 12 and data[4:8] == b"ftyp":
         brand = data[8:12]
         # Common audio brands
-        if brand in (b"M4A ", b"M4B ", b"mp4a", b"isom") or b"M4A" in data[8:24]:
-            # Prefer audio for M4A; mp4/isom often video — inspect further
-            if brand in (b"M4A ", b"M4B ", b"mp4a"):
-                return ("audio", "audio/mp4", ".m4a")
+        if brand in (b"M4A ", b"M4B ", b"mp4a") or b"M4A" in data[8:24]:
+            return ("audio", "audio/mp4", ".m4a")
         # Video brands
         if brand in (b"isom", b"iso2", b"mp41", b"mp42", b"avc1", b"MSNV", b"dash") or data[8:12] == b"mp42":
             return ("video", "video/mp4", ".mp4")
         # Default ftyp → mp4 video (tests use simple mp4)
         return ("video", "video/mp4", ".mp4")
-    # WebM / Matroska
+    # WebM / Matroska — distinguish audio-only (Opus) from video
     if data.startswith(b"\x1a\x45\xdf\xa3"):
+        has_video = any(c in data for c in (b"V_VP8", b"V_VP9", b"V_AV1", b"V_AV01"))
+        has_audio = any(c in data for c in (b"A_OPUS", b"A_VORBIS", b"A_AAC", b"A_MPEG"))
+        if has_video:
+            return ("video", "video/webm", ".webm")
+        if has_audio:
+            return ("audio", "audio/webm", ".webm")
+        # Ambiguous EBML — treat as video/webm (container allowed either way)
         return ("video", "video/webm", ".webm")
     return None
 
@@ -80,15 +88,21 @@ def media_duration_s(data: bytes, modality: str) -> float | None:
 
             import soundfile as sf
 
-            info = sf.info(io.BytesIO(data))
-            return float(info.duration)
+            try:
+                info = sf.info(io.BytesIO(data))
+                return float(info.duration)
+            except Exception:
+                from evalverse.server.media_convert import probe_duration_s
+
+                return probe_duration_s(data, "audio")
         if modality == "video":
             import tempfile
             from pathlib import Path
 
             import imageio.v2 as imageio
 
-            with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as tmp:
+            suffix = ".webm" if data.startswith(b"\x1a\x45\xdf\xa3") else ".mp4"
+            with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
                 tmp.write(data)
                 path = Path(tmp.name)
             try:
@@ -101,7 +115,8 @@ def media_duration_s(data: bytes, modality: str) -> float | None:
                         n = int(reader.count_frames())
                     except Exception:
                         n = sum(1 for _ in reader)
-                    return float(n) / fps if n else None
+                    if n:
+                        return float(n) / fps
                 finally:
                     reader.close()
             finally:
@@ -109,6 +124,14 @@ def media_duration_s(data: bytes, modality: str) -> float | None:
                     path.unlink(missing_ok=True)
                 except Exception:
                     pass
+            from evalverse.server.media_convert import probe_duration_s
+
+            return probe_duration_s(data, "video")
     except Exception:
-        return None
+        try:
+            from evalverse.server.media_convert import probe_duration_s
+
+            return probe_duration_s(data, modality)
+        except Exception:
+            return None
     return None

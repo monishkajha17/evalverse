@@ -7,7 +7,9 @@ import { ChevronLeft, ChevronRight, Copy } from "lucide-react";
 import { Topbar } from "@/components/layout/topbar";
 import { EmptyBlock, ErrorBlock, LoadingBlock } from "@/components/state-block";
 import { OutcomeChip } from "@/components/outcome-chip";
+import { SampleChip } from "@/components/studio/sample-chip";
 import { Badge } from "@/components/ui/badge";
+import { isSampleTagged } from "@/lib/sample-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -165,11 +167,14 @@ function TraceViewInner() {
                   <span className="text-xs tabular-nums text-ink/55">
                     {vm.tokens != null ? `${vm.tokens} tok` : "—"}
                   </span>
-                  {vm.tags.map((t) => (
-                    <Badge key={t} className="border-border bg-muted text-[10px] text-ink/60">
-                      {t}
-                    </Badge>
-                  ))}
+                  {isSampleTagged(vm.tags) ? <SampleChip /> : null}
+                  {vm.tags
+                    .filter((t) => t.toLowerCase() !== "sample")
+                    .map((t) => (
+                      <Badge key={t} className="border-border bg-muted text-[10px] text-ink/60">
+                        {t}
+                      </Badge>
+                    ))}
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-1.5">

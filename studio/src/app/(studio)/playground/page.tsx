@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Check, Loader2, Upload, X } from "lucide-react";
 import { Topbar } from "@/components/layout/topbar";
+import { CameraCapture, VoiceRecorder } from "@/components/playground/live-capture";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,7 +29,13 @@ const EXAMPLE_CHIPS = [
   "What is said, and by whom?",
 ] as const;
 
-const ACCEPT = "image/png,image/jpeg,image/webp,audio/wav,audio/mpeg,audio/mp4,video/mp4,video/webm,.png,.jpg,.jpeg,.webp,.wav,.mp3,.m4a,.mp4,.webm";
+const CLAIM_CHIPS = [
+  "List the objects you can see and where they are",
+  "What is on the receipt?",
+] as const;
+
+const ACCEPT =
+  "image/png,image/jpeg,image/webp,audio/wav,audio/mpeg,audio/mp4,audio/webm,audio/ogg,video/mp4,video/webm,.png,.jpg,.jpeg,.webp,.wav,.mp3,.m4a,.webm,.ogg,.mp4";
 
 type LocalFile = {
   id: string;
@@ -71,7 +78,14 @@ type StageId = "media" | "sense" | "model" | "eval" | "done";
 
 function fileKind(file: File): LocalFile["kind"] {
   if (file.type.startsWith("image/") || /\.(png|jpe?g|webp)$/i.test(file.name)) return "image";
-  if (file.type.startsWith("audio/") || /\.(wav|mp3|m4a)$/i.test(file.name)) return "audio";
+  // Prefer audio for webm/ogg from MediaRecorder; video/webm stays video when typed as such.
+  if (
+    file.type.startsWith("audio/") ||
+    /\.(wav|mp3|m4a|ogg)$/i.test(file.name) ||
+    (/\.webm$/i.test(file.name) && !file.type.startsWith("video/"))
+  ) {
+    return "audio";
+  }
   if (file.type.startsWith("video/") || /\.(mp4|webm)$/i.test(file.name)) return "video";
   return "other";
 }
@@ -131,42 +145,49 @@ function ClaimImageOverlay({
   boxes,
 }: {
   src: string;
-  boxes: Array<{ box: number[]; label: string; n: number }>;
+  boxes: Array<{ box: number[]; label: string; n: number; verdict?: string }>;
 }) {
   return (
     <div className="relative inline-block max-w-full overflow-hidden rounded border border-border bg-muted">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="Upload" className="max-h-[360px] max-w-full object-contain" />
+      <img src={src} alt="Captured media" className="max-h-[360px] max-w-full object-contain" />
       <svg
         className="pointer-events-none absolute inset-0 h-full w-full"
         viewBox="0 0 1000 1000"
         preserveAspectRatio="none"
       >
-        {boxes.map(({ box, n }) => (
-          <g key={n}>
-            <rect
-              x={box[0]}
-              y={box[1]}
-              width={Math.max(1, box[2] - box[0])}
-              height={Math.max(1, box[3] - box[1])}
-              fill="rgba(212,40,92,0.12)"
-              stroke="#D4285C"
-              strokeWidth={6}
-            />
-            <text
-              x={box[0] + 8}
-              y={Math.max(24, box[1] - 8)}
-              fill="#D4285C"
-              fontSize={28}
-              fontWeight={700}
-            >
-              {n}
-            </text>
-          </g>
-        ))}
+        {boxes.map(({ box, n, verdict }) => {
+          const contradicted = (verdict || "").toLowerCase() === "contradicted";
+          const stroke = contradicted ? "#D4285C" : "#0D9488";
+          const fill = contradicted ? "rgba(212,40,92,0.12)" : "rgba(13,148,136,0.12)";
+          return (
+            <g key={n}>
+              <rect
+                x={box[0]}
+                y={box[1]}
+                width={Math.max(1, box[2] - box[0])}
+                height={Math.max(1, box[3] - box[1])}
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={6}
+              />
+              <circle cx={box[0] + 18} cy={Math.max(22, box[1] - 4)} r={16} fill={stroke} />
+              <text
+                x={box[0] + 18}
+                y={Math.max(28, box[1] + 2)}
+                fill="#fff"
+                fontSize={22}
+                fontWeight={700}
+                textAnchor="middle"
+              >
+                {n}
+              </text>
+            </g>
+          );
+        })}
       </svg>
       <p className="absolute bottom-1 left-1 rounded bg-white/90 px-1.5 py-0.5 text-[10px] text-ink/70">
-        judge-claimed evidence
+        Numbered evidence on the photo
       </p>
     </div>
   );
@@ -330,6 +351,24 @@ export default function TryPage() {
         return file;
       });
       if (file) setClaimText("");
+    }
+  };
+
+  const onCameraCapture = (file: File) => {
+    setError(null);
+    if (tryMode === "cross_check") {
+      setSingleSlot("visual", [file]);
+    } else {
+      addFiles([file]);
+    }
+  };
+
+  const onVoiceCapture = (file: File) => {
+    setError(null);
+    if (tryMode === "cross_check") {
+      setSingleSlot("claim", [file]);
+    } else {
+      addFiles([file]);
     }
   };
 
@@ -583,10 +622,12 @@ export default function TryPage() {
           <Card>
             <CardHeader>
               <CardTitle>Mode</CardTitle>
-              <CardDescription>Answer a question, or check a spoken claim against an image</CardDescription>
+              <CardDescription>
+                Answer a question, or speak a claim while showing a receipt or object
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="inline-flex rounded-lg border border-border bg-muted/40 p-0.5 text-xs">
+              <div className="inline-flex flex-wrap rounded-lg border border-border bg-muted/40 p-0.5 text-xs">
                 <button
                   type="button"
                   className={cn(
@@ -605,7 +646,7 @@ export default function TryPage() {
                   )}
                   onClick={() => setTryMode("cross_check")}
                 >
-                  Check voice against image
+                  Speak a claim, show a receipt or object
                 </button>
               </div>
             </CardContent>
@@ -613,19 +654,23 @@ export default function TryPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>{tryMode === "cross_check" ? "Receipt + claim" : "Upload"}</CardTitle>
+              <CardTitle>{tryMode === "cross_check" ? "Photo + voice claim" : "Inputs"}</CardTitle>
               <CardDescription>
                 {tryMode === "cross_check"
-                  ? "Image or video on the left · audio or typed claim on the right"
-                  : "Up to 4 files · images, audio, or video"}
+                  ? "Capture or upload one photo and one recording — sent as cross_check"
+                  : "Up to 4 files · capture with camera/mic or upload"}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
+              <div className="flex flex-wrap gap-3">
+                <CameraCapture onCapture={onCameraCapture} disabled={busy} />
+                <VoiceRecorder onCapture={onVoiceCapture} disabled={busy} />
+              </div>
               {tryMode === "cross_check" ? (
                 <div className="grid gap-3 sm:grid-cols-2">
                   <DropSlot
-                    label="Image or video"
-                    hint="png · jpg · webp · mp4 · webm"
+                    label="Photo or video"
+                    hint="camera · png · jpg · webp · mp4 · webm"
                     file={visualFile}
                     inputRef={visualRef}
                     accept="image/png,image/jpeg,image/webp,video/mp4,video/webm,.png,.jpg,.jpeg,.webp,.mp4,.webm"
@@ -634,11 +679,11 @@ export default function TryPage() {
                   />
                   <div className="space-y-2">
                     <DropSlot
-                      label="Audio claim"
-                      hint="wav · mp3 · m4a — or type below"
+                      label="Voice claim"
+                      hint="record · wav · webm · ogg · mp3 · m4a"
                       file={claimFile}
                       inputRef={claimRef}
-                      accept="audio/wav,audio/mpeg,audio/mp4,.wav,.mp3,.m4a"
+                      accept="audio/wav,audio/mpeg,audio/mp4,audio/webm,audio/ogg,.wav,.mp3,.m4a,.webm,.ogg"
                       onPick={(list) => setSingleSlot("claim", list)}
                       onClear={() => setSingleSlot("claim", null)}
                     />
@@ -674,7 +719,9 @@ export default function TryPage() {
                   >
                     <Upload className="h-5 w-5 text-ink/45" />
                     <p className="text-sm text-ink/70">Drop files here or click to browse</p>
-                    <p className="text-[11px] text-ink/45">png · jpg · webp · wav · mp3 · m4a · mp4 · webm</p>
+                    <p className="text-[11px] text-ink/45">
+                      png · jpg · webp · wav · webm · ogg · mp3 · m4a · mp4
+                    </p>
                     <input
                       ref={inputRef}
                       type="file"
@@ -747,10 +794,32 @@ export default function TryPage() {
                   </div>
                 </>
               ) : (
-                <p className="text-xs text-ink/55">
-                  Uses <code className="rounded bg-muted px-1">cross_modal_judge</code> — claims from the
-                  voice or text are checked against the receipt image.
-                </p>
+                <>
+                  <textarea
+                    value={question}
+                    onChange={(e) => setQuestion(e.target.value.slice(0, 2000))}
+                    rows={2}
+                    placeholder="Optional prompt for the cross-check…"
+                    className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-teal/30"
+                  />
+                  <div className="flex flex-wrap gap-1.5">
+                    {CLAIM_CHIPS.map((chip) => (
+                      <button
+                        key={chip}
+                        type="button"
+                        className="rounded-full border border-border bg-white px-2.5 py-1 text-[11px] text-ink/70 hover:border-teal/40 hover:text-teal"
+                        onClick={() => setQuestion(chip)}
+                      >
+                        {chip}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-xs text-ink/55">
+                    Sends one photo plus one recording as{" "}
+                    <code className="rounded bg-muted px-1">cross_check</code> — claims are marked
+                    supported or contradicted on the photo.
+                  </p>
+                </>
               )}
               <div className="grid gap-3 sm:grid-cols-2">
                 {tryMode === "answer" ? (
@@ -1172,7 +1241,7 @@ function ResultPanel({
   audioSrc?: string | null;
   claimText?: string;
   crossCheck?: boolean;
-  evidenceBoxes?: Array<{ box: number[]; label: string; n: number }>;
+  evidenceBoxes?: Array<{ box: number[]; label: string; n: number; verdict?: string }>;
   traceId?: string | null;
   compare?: Array<{ condition: string; answer: string; grounded: number | null }> | null;
   examplePicker?: ReactNode;
@@ -1186,9 +1255,11 @@ function ResultPanel({
           c.evidence_box &&
           c.evidence_box.length === 4 &&
           (crossCheck ? v === "contradicted" || v === "supported" : v === "supported");
-        return showBox ? { box: c.evidence_box!, label: c.claim, n: i + 1 } : null;
+        return showBox
+          ? { box: c.evidence_box!, label: c.claim, n: i + 1, verdict: c.verdict }
+          : null;
       })
-      .filter(Boolean) as Array<{ box: number[]; label: string; n: number }>;
+      .filter(Boolean) as Array<{ box: number[]; label: string; n: number; verdict?: string }>;
 
   return (
     <Card>
@@ -1198,9 +1269,7 @@ function ResultPanel({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-ink/40">
-            {crossCheck ? "Summary" : "Answer"}
-          </p>
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-ink/40">Answer</p>
           <p className="text-sm text-ink">{answer || "—"}</p>
         </div>
 

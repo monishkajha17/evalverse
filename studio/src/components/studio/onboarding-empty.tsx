@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useApiMode } from "@/context/api-mode";
@@ -18,8 +18,11 @@ export function OnboardingEmpty({
   const { switchToDemo, refresh } = useApiMode();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const session = typeof window !== "undefined" ? readSession() : null;
-  const apiKey = session?.apiKey;
+  const [apiKey, setApiKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    setApiKey(readSession()?.apiKey || null);
+  }, []);
 
   async function onLoadSample() {
     setLoading(true);

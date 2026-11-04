@@ -16,7 +16,6 @@ from typing import Any
 
 from fastapi import HTTPException, UploadFile
 
-from evalverse import audio as audio_mod
 from evalverse import core
 from evalverse import video as video_mod
 from evalverse.providers.registry import get_provider, resolve_model_ref
@@ -89,23 +88,17 @@ def _safe_filename(name: str | None) -> str:
 
 
 def _to_mono16k_wav(data: bytes) -> tuple[bytes, float]:
-    """Decode any supported audio to 16 kHz mono WAV; return (wav_bytes, duration_s)."""
-    import numpy as np
-    import soundfile as sf
+    """Decode any supported audio to 16 kHz mono 16-bit WAV; return (wav_bytes, duration_s).
 
-    samples, sr = sf.read(io.BytesIO(data), dtype="float32", always_2d=False)
-    x = np.asarray(samples, dtype=np.float64)
-    if x.ndim > 1:
-        x = x.mean(axis=1)
-    target_sr = 16000
-    if int(sr) != target_sr and len(x) > 0:
-        n_out = max(1, int(round(len(x) * target_sr / float(sr))))
-        t_in = np.linspace(0.0, 1.0, num=len(x), endpoint=False)
-        t_out = np.linspace(0.0, 1.0, num=n_out, endpoint=False)
-        x = np.interp(t_out, t_in, x)
-    x = x.astype(np.float32)
-    dur = float(len(x)) / float(target_sr) if len(x) else 0.0
-    return audio_mod.wav_bytes(x, target_sr), dur
+    Uses soundfile when possible; otherwise the bundled ffmpeg (imageio-ffmpeg)
+    for browser containers (webm/ogg/mp4).
+    """
+    from evalverse.server.media_convert import MediaConvertError, transcode_to_wav16k_mono
+
+    try:
+        return transcode_to_wav16k_mono(data)
+    except MediaConvertError as exc:
+        raise ValueError(str(exc) or "corrupt audio") from exc
 
 
 def _parse_answer_text(raw: str) -> str:
@@ -272,23 +265,33 @@ class PlaygroundMixin:
                 )
             modality, mime, ext = kind
             dur = None
-            if modality in ("audio", "video"):
+            if modality == "audio":
+                # Validate + normalize early so corrupt browser containers return 4xx.
+                try:
+                    _wav, dur = _to_mono16k_wav(data)
+                except ValueError:
+                    raise _err(
+                        400,
+                        "CORRUPT_MEDIA",
+                        "Could not decode audio. Upload a valid recording (WAV, WebM, Ogg, or MP4).",
+                        [{"field": "files", "filename": _safe_filename(uf.filename)}],
+                    ) from None
+                if dur is not None and dur > MAX_AUDIO_S:
+                    raise _err(
+                        400,
+                        "VALIDATION_ERROR",
+                        f"Audio longer than {MAX_AUDIO_S:.0f}s is not allowed.",
+                        [{"field": "files", "reason": "audio too long"}],
+                    )
+            elif modality == "video":
                 dur = media_duration_s(data, modality)
-                if dur is not None:
-                    if modality == "video" and dur > MAX_VIDEO_S:
-                        raise _err(
-                            400,
-                            "VALIDATION_ERROR",
-                            f"Video longer than {MAX_VIDEO_S:.0f}s is not allowed.",
-                            [{"field": "files", "reason": "video too long"}],
-                        )
-                    if modality == "audio" and dur > MAX_AUDIO_S:
-                        raise _err(
-                            400,
-                            "VALIDATION_ERROR",
-                            f"Audio longer than {MAX_AUDIO_S:.0f}s is not allowed.",
-                            [{"field": "files", "reason": "audio too long"}],
-                        )
+                if dur is not None and dur > MAX_VIDEO_S:
+                    raise _err(
+                        400,
+                        "VALIDATION_ERROR",
+                        f"Video longer than {MAX_VIDEO_S:.0f}s is not allowed.",
+                        [{"field": "files", "reason": "video too long"}],
+                    )
             # Register immediately under content hash (no client path stored).
             media = self.register_media_bytes(
                 project,

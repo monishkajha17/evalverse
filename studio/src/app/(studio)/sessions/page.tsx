@@ -101,8 +101,8 @@ export default function SessionsPage() {
           sample: isSampleSession(s.session_id),
         })),
       );
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not load sessions");
+    } catch {
+      setError("Couldn’t load sessions. Try again.");
       setRows([]);
     } finally {
       setLoading(false);

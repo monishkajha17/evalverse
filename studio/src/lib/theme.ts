@@ -13,13 +13,9 @@ export function readStoredTheme(): StudioTheme | null {
   return null;
 }
 
+/** Light is the default; prefers-color-scheme is ignored for now. */
 export function resolveInitialTheme(): StudioTheme {
-  const stored = readStoredTheme();
-  if (stored) return stored;
-  if (typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: light)").matches) {
-    return "light";
-  }
-  return "dark";
+  return readStoredTheme() || "light";
 }
 
 export function applyTheme(theme: StudioTheme) {
@@ -35,5 +31,5 @@ export function applyTheme(theme: StudioTheme) {
   }
 }
 
-/** Inline script for root layout — prevents theme flash before hydration. */
-export const THEME_BOOT_SCRIPT = `(function(){try{var k=${JSON.stringify(THEME_STORAGE_KEY)};var t=localStorage.getItem(k);if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}var r=document.documentElement;r.classList.remove("dark","light");r.classList.add(t);r.style.colorScheme=t;}catch(e){var r2=document.documentElement;r2.classList.add("dark");r2.style.colorScheme="dark";}})();`;
+/** Inline script for root layout — light default, no flash. */
+export const THEME_BOOT_SCRIPT = `(function(){try{var k=${JSON.stringify(THEME_STORAGE_KEY)};var t=localStorage.getItem(k);if(t!=="light"&&t!=="dark"){t="light";}var r=document.documentElement;r.classList.remove("dark","light");r.classList.add(t);r.style.colorScheme=t;}catch(e){var r2=document.documentElement;r2.classList.add("light");r2.style.colorScheme="light";}})();`;

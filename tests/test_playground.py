@@ -290,3 +290,139 @@ def test_mock_requires_env(tmp_path, monkeypatch):
         )
         assert r.status_code == 400
         assert "EVALVERSE_ALLOW_MOCK" in r.json()["error"]["message"]
+
+
+def _ffmpeg_audio(path: Path, *, fmt: str, duration: float = 0.4) -> bytes:
+    import imageio_ffmpeg
+    import subprocess
+
+    ff = imageio_ffmpeg.get_ffmpeg_exe()
+    args = [
+        ff,
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-y",
+        "-f",
+        "lavfi",
+        "-i",
+        f"sine=frequency=440:duration={duration}",
+    ]
+    if fmt == "webm":
+        args += ["-c:a", "libopus", "-b:a", "32k", str(path)]
+    elif fmt == "ogg":
+        args += ["-c:a", "libopus", str(path)]
+    else:
+        raise ValueError(fmt)
+    subprocess.check_call(args)
+    return path.read_bytes()
+
+
+def test_sniff_webm_ogg_audio_and_video(tmp_path):
+    webm = _ffmpeg_audio(tmp_path / "a.webm", fmt="webm")
+    ogg = _ffmpeg_audio(tmp_path / "a.ogg", fmt="ogg")
+    assert sniff_upload(webm) == ("audio", "audio/webm", ".webm")
+    assert sniff_upload(ogg) == ("audio", "audio/ogg", ".ogg")
+
+    import imageio_ffmpeg
+    import subprocess
+
+    ff = imageio_ffmpeg.get_ffmpeg_exe()
+    vpath = tmp_path / "v.webm"
+    subprocess.check_call(
+        [
+            ff,
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-y",
+            "-f",
+            "lavfi",
+            "-i",
+            "color=c=blue:s=64x48:d=0.4",
+            "-c:v",
+            "libvpx",
+            "-f",
+            "webm",
+            str(vpath),
+        ]
+    )
+    kind = sniff_upload(vpath.read_bytes())
+    assert kind is not None
+    assert kind[0] == "video"
+    assert kind[1] == "video/webm"
+
+
+def test_webm_transcode_to_wav16k(tmp_path):
+    from evalverse.server.media_convert import transcode_to_wav16k_mono
+
+    webm = _ffmpeg_audio(tmp_path / "voice.webm", fmt="webm", duration=0.5)
+    wav, dur = transcode_to_wav16k_mono(webm)
+    assert wav[:4] == b"RIFF"
+    assert wav[8:12] == b"WAVE"
+    assert 0.3 < dur < 0.8
+    # 16-bit mono 16 kHz
+    import wave
+
+    with wave.open(io.BytesIO(wav), "rb") as w:
+        assert w.getnchannels() == 1
+        assert w.getsampwidth() == 2
+        assert w.getframerate() == 16000
+
+
+def test_playground_accepts_webm_audio(client, tmp_path):
+    png = _png_bytes()
+    webm = _ffmpeg_audio(tmp_path / "claim.webm", fmt="webm")
+    r = client.post(
+        "/api/v1/playground/runs",
+        headers=H(),
+        data={
+            "mode": "cross_check",
+            "mock": "true",
+            "judge_model": "mock:muse-wonder-1.0",
+            "evaluator_ids": "cross_modal_judge",
+        },
+        files=[
+            ("files", ("receipt.png", png, "image/png")),
+            ("files", ("claim.webm", webm, "audio/webm")),
+        ],
+    )
+    assert r.status_code == 202, r.text
+    detail = _poll(client, r.json()["run_id"], timeout=45.0)
+    assert detail["status"] == "completed", detail.get("error")
+
+
+def test_playground_corrupt_audio_4xx(client):
+    # EBML header only — looks like webm/audio-ish but cannot decode
+    corrupt = b"\x1a\x45\xdf\xa3" + b"A_OPUS" + b"\x00" * 64
+    assert sniff_upload(corrupt) is not None
+    r = client.post(
+        "/api/v1/playground/runs",
+        headers=H(),
+        data={"question": "hi", "mock": "true"},
+        files=[
+            ("files", ("a.png", _png_bytes(), "image/png")),
+            ("files", ("bad.webm", corrupt, "audio/webm")),
+        ],
+    )
+    assert r.status_code == 400, r.text
+    err = r.json()["error"]
+    assert err["code"] == "CORRUPT_MEDIA"
+    assert "message" in err
+
+
+def test_playground_total_size_limit(client):
+    # Each under per-file 10 MiB; three × ~9 MiB exceeds 25 MiB total
+    chunk = b"\x89PNG\r\n\x1a\n" + b"\x00" * (9 * 1024 * 1024)
+    r = client.post(
+        "/api/v1/playground/runs",
+        headers=H(),
+        data={"question": "x", "mock": "true"},
+        files=[
+            ("files", ("a.png", chunk, "image/png")),
+            ("files", ("b.png", chunk, "image/png")),
+            ("files", ("c.png", chunk, "image/png")),
+        ],
+    )
+    assert r.status_code == 400
+    assert r.json()["error"]["code"] == "VALIDATION_ERROR"

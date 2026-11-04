@@ -18,10 +18,11 @@ with ev.trace("my_agent") as t:
 
 export function WelcomePanel({ onDismiss }: { onDismiss?: () => void }) {
   const [traceId, setTraceId] = useState<string | null>(null);
-  const session = typeof window !== "undefined" ? readSession() : null;
-  const apiKey = session?.apiKey || "evk_…";
+  const [apiKey, setApiKey] = useState("evk_…");
 
   useEffect(() => {
+    const session = readSession();
+    if (session?.apiKey) setApiKey(session.apiKey);
     let cancelled = false;
     void findSampleTraceId().then((id) => {
       if (!cancelled) setTraceId(id);

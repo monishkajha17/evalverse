@@ -12,7 +12,7 @@ type ThemeCtx = {
 const Ctx = createContext<ThemeCtx | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<StudioTheme>("dark");
+  const [theme, setThemeState] = useState<StudioTheme>("light");
 
   useEffect(() => {
     const initial = resolveInitialTheme();

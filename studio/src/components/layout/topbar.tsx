@@ -77,7 +77,7 @@ export function Topbar({
           <div className="flex min-w-0 items-center gap-1 text-[11px] text-ink-muted">
             {crumbs.map((c, i, arr) => (
               <span key={`${c}-${i}`} className="inline-flex min-w-0 items-center gap-1">
-                {i > 0 ? <ChevronRight className="h-3 w-3 shrink-0 opacity-60" /> : null}
+                {i > 0 ? <ChevronRight className="h-3 w-3 shrink-0 text-ink-muted" aria-hidden /> : null}
                 <span className={i === arr.length - 1 ? "truncate font-medium text-ink" : "truncate"}>
                   {c}
                 </span>
@@ -144,7 +144,7 @@ export function Topbar({
               className="flex items-center gap-2"
             >
               {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-              {theme === "dark" ? "Light" : "Dark"} theme
+              {theme === "dark" ? "Light" : "Dark (beta)"}
             </DropdownMenuItem>
             {signedIn ? (
               preferLive && mode === "live" ? (

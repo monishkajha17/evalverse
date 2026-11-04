@@ -62,6 +62,7 @@ export default function OnlineEvaluationPage() {
   const [evaluatorId, setEvaluatorId] = useState("");
   const [filterText, setFilterText] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
+  const [hasTraces, setHasTraces] = useState(false);
 
   const reload = async () => {
     setLoading(true);
@@ -72,17 +73,25 @@ export default function OnlineEvaluationPage() {
         setAlerts([]);
         setEvals(["evidence_grounding", "answer_correctness", "fabrication_check"]);
         setEvaluatorId("evidence_grounding");
+        setHasTraces(true);
         return;
       }
-      const [p, a, ev] = await Promise.all([listPolicies(), listAlerts(), listEvaluators()]);
+      const [p, a, ev, traces] = await Promise.all([
+        listPolicies(),
+        listAlerts(),
+        listEvaluators(),
+        listTraces({ limit: 1 }),
+      ]);
       setPolicies(p);
       setAlerts(a);
       setEvals(ev.map((e) => e.id));
+      setHasTraces(traces.length > 0);
       if (!evaluatorId && ev[0]) setEvaluatorId(ev[0].id);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not load policies");
+      setError("Couldn’t load online evaluation. Try again.");
       setPolicies([]);
       setAlerts([]);
+      setHasTraces(false);
     } finally {
       setLoading(false);
     }
@@ -151,7 +160,8 @@ export default function OnlineEvaluationPage() {
     return Date.now() - new Date(a.created_at).getTime() < 24 * 3600 * 1000;
   });
 
-  const liveEmpty = mode === "live" && !loading && !error && policies.length === 0 && alerts.length === 0;
+  const liveEmpty =
+    mode === "live" && !loading && !error && !hasTraces && policies.length === 0 && alerts.length === 0;
 
   return (
     <>

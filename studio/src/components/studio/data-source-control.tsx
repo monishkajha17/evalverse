@@ -21,19 +21,22 @@ export function DataSourceControl() {
   const demos = orderedDemoSuites(index);
   const current = entry ? describeSuite(entry) : demos.find((d) => d.suite === suite);
 
+  // Never show Live while falling back to demo (mode is snapshot whenever API is down).
   const live = mode === "live";
-  const statusLabel = checking && signedIn
-    ? "Checking…"
-    : live
-      ? `Live · ${projectLabel || "default"}`
-      : "Demo data";
+  const statusLabel =
+    checking && signedIn && !live
+      ? "Checking…"
+      : live
+        ? `Live · ${projectLabel || "default"}`
+        : "Demo data";
 
   return (
     <div className="flex min-w-0 items-center gap-2">
       <Badge
+        data-studio-chip
         className={cn(
-          "max-w-[160px] truncate border",
-          live ? "chip-pass border" : "border-border bg-muted text-ink-muted",
+          "studio-chip max-w-[160px] truncate border",
+          live ? "chip-pass" : "",
         )}
         title={live ? `Project ${projectLabel}` : "Browsing recorded demo suites"}
       >
@@ -49,11 +52,12 @@ export function DataSourceControl() {
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="inline-flex max-w-[220px] items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 py-1.5 text-xs text-ink hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+              data-studio-select
+              className="studio-select inline-flex max-w-[220px] items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
               aria-label="Choose demo data"
             >
-              <span className="truncate font-medium">{current?.title || "Demo data"}</span>
-              <ChevronDown className="h-3.5 w-3.5 shrink-0 text-ink-subtle" />
+              <span className="truncate">{current?.title || "Demo data"}</span>
+              <ChevronDown className="h-3.5 w-3.5 shrink-0" aria-hidden />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">

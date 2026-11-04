@@ -14,7 +14,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "var(--st-ink)",
+        /* RGB channel form so text-ink/70 etc. resolve in both themes */
+        ink: "rgb(var(--text-rgb) / <alpha-value>)",
         paper: "var(--st-bg)",
         surface: "var(--st-surface)",
         raised: "var(--st-raised)",
@@ -22,15 +23,16 @@ const config: Config = {
         amber: "var(--st-amber)",
         slateish: "var(--st-slate)",
         crimson: "var(--st-crimson)",
-        grey: "var(--st-subtle)",
+        grey: "rgb(var(--text-subtle-rgb) / <alpha-value>)",
         border: "var(--st-border)",
         muted: "var(--st-muted-bg)",
         accent: {
           DEFAULT: "var(--st-accent)",
           hover: "var(--st-accent-hover)",
         },
-        "ink-muted": "var(--st-muted)",
-        "ink-subtle": "var(--st-subtle)",
+        "ink-muted": "rgb(var(--text-muted-rgb) / <alpha-value>)",
+        "ink-subtle": "rgb(var(--text-subtle-rgb) / <alpha-value>)",
+        "on-accent": "rgb(var(--on-accent-rgb) / <alpha-value>)",
         hairline: "var(--st-hairline)",
       },
       fontFamily: {

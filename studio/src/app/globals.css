@@ -2,25 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* Fallback light tokens (marketing pages / pre-hydration) */
+:root,
+html.light {
+  /* Semantic text (RGB channels so Tailwind opacity modifiers work).
+   * Muted/subtle chosen for ≥4.5:1 on --st-bg / --st-surface / --st-raised. */
+  --text-rgb: 16 27 45;
+  --text-muted-rgb: 70 84 104;
+  --text-subtle-rgb: 84 98 118;
+  --text-nav-group-rgb: 70 84 104;
+  --on-accent-rgb: 255 255 255;
+  --text: rgb(var(--text-rgb));
+  --text-muted: rgb(var(--text-muted-rgb));
+  --text-subtle: rgb(var(--text-subtle-rgb));
+  --text-nav-group: rgb(var(--text-nav-group-rgb));
+  --on-accent: rgb(var(--on-accent-rgb));
+
   --st-bg: #f4f6f9;
   --st-surface: #ffffff;
   --st-raised: #ffffff;
   --st-hairline: #e5eaf2;
   --st-border: #d7dde7;
-  --st-ink: #101b2d;
-  --st-muted: #6a7b93;
-  --st-subtle: #a9b3c1;
-  --st-accent: #0b8f7a;
-  --st-accent-hover: #087a68;
-  --st-teal: #0b8f7a;
-  --st-crimson: #d4285c;
-  --st-amber: #c98512;
-  --st-slate: #6a7b93;
+  --st-ink: var(--text);
+  --st-muted: var(--text-muted);
+  --st-subtle: var(--text-subtle);
+  --st-accent: #0a7a68;
+  --st-accent-hover: #086557;
+  /* Dark enough that white / on-accent text clears 4.5:1 */
+  --st-teal: #066557;
+  --st-crimson: #b01e4a;
+  --st-amber: #8a5a08;
+  --st-slate: #4a5a70;
   --st-muted-bg: #eef1f5;
+  --st-code-bg: #eef1f5;
+  --st-code-fg: var(--text);
   --st-chart-grid: #e4e9f0;
-  --st-chart-label: #6a7b93;
+  --st-chart-label: var(--text-muted);
   --st-tooltip-bg: #ffffff;
   --st-row-hover: rgba(16, 27, 45, 0.04);
   --st-selected: rgba(11, 143, 122, 0.12);
@@ -29,30 +45,40 @@
 
 html.dark {
   color-scheme: dark;
+  /* Full-opacity tokens; muted ≥4.5:1 on surface #0A1220 and raised #0F1A2E */
+  --text-rgb: 230 241 255;
+  --text-muted-rgb: 182 200 222; /* #B6C8DE ≈ 11:1 on #0A1220 */
+  --text-subtle-rgb: 170 190 214;
+  --text-nav-group-rgb: 182 200 222;
+  --on-accent-rgb: 5 10 20;
+  --text: rgb(var(--text-rgb));
+  --text-muted: rgb(var(--text-muted-rgb));
+  --text-subtle: rgb(var(--text-subtle-rgb));
+  --text-nav-group: rgb(var(--text-nav-group-rgb));
+  --on-accent: rgb(var(--on-accent-rgb));
+
   --st-bg: #050a14;
   --st-surface: #0a1220;
   --st-raised: #0f1a2e;
   --st-hairline: #1b2a41;
   --st-border: #26395a;
-  --st-ink: #e6f1ff;
-  --st-muted: #8ca0bc;
-  --st-subtle: #5f7391;
+  --st-ink: var(--text);
+  --st-muted: var(--text-muted);
+  --st-subtle: var(--text-subtle);
   --st-accent: #8ec5ff;
   --st-accent-hover: #b6dbff;
   --st-teal: #2dd4bf;
   --st-crimson: #f43f5e;
   --st-amber: #f59e0b;
   --st-slate: #94a3b8;
-  --st-muted-bg: rgba(142, 197, 255, 0.08);
+  --st-muted-bg: #0f1a2e; /* solid raised, not translucent — avoids washed-out chips */
+  --st-code-bg: #0f1a2e;
+  --st-code-fg: var(--text);
   --st-chart-grid: #1b2a41;
-  --st-chart-label: #8ca0bc;
+  --st-chart-label: var(--text-muted);
   --st-tooltip-bg: #0f1a2e;
   --st-row-hover: rgba(142, 197, 255, 0.06);
   --st-selected: rgba(142, 197, 255, 0.14);
-}
-
-html.light {
-  color-scheme: light;
 }
 
 html,
@@ -63,7 +89,7 @@ body {
 body {
   margin: 0;
   background: var(--st-bg);
-  color: var(--st-ink);
+  color: var(--text);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
 }
@@ -89,11 +115,34 @@ body {
 
 .studio {
   background: var(--st-bg);
-  color: var(--st-ink);
+  color: var(--text);
   font-family: var(--font-inter), Inter, system-ui, sans-serif;
   font-size: 14px;
   line-height: 22px;
   min-height: 100vh;
+}
+
+/*
+ * Default text colour for structural UI. Utility classes (text-teal, text-accent, …)
+ * still win when present; opacity modifiers like text-ink/70 now work via RGB channels.
+ */
+.studio h1,
+.studio h2,
+.studio h3,
+.studio h4,
+.studio h5,
+.studio h6,
+.studio label,
+.studio th,
+.studio td,
+.studio .page-title,
+.studio .section-title,
+.studio [data-kpi-value] {
+  color: var(--text);
+}
+
+.studio button:not([class*="text-"]) {
+  color: var(--text);
 }
 
 .studio .page-title {
@@ -115,7 +164,172 @@ body {
   line-height: 16px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--st-muted);
+  color: var(--text-nav-group);
+  opacity: 1;
+}
+
+/*
+ * Kill opacity-based text dimming. Use semantic tokens at full opacity instead.
+ * (Decorative icons may still use opacity — text nodes must not.)
+ */
+.studio :is(a, button, span, p, label, th, td, h1, h2, h3, h4, li, [data-studio-brand], [data-studio-chip], [data-studio-select]) {
+  opacity: 1;
+}
+.studio .opacity-30,
+.studio .opacity-40,
+.studio .opacity-45,
+.studio .opacity-50,
+.studio .opacity-55,
+.studio .opacity-60,
+.studio .opacity-70,
+.studio .opacity-75,
+.studio .opacity-80 {
+  opacity: 1 !important;
+}
+
+/* text-ink/NN → full-opacity muted token (never translucent ink) */
+.studio [class*="text-ink/"] {
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+}
+.studio [class*="text-ink-muted"],
+.studio [class*="text-ink-subtle"] {
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+}
+
+/* —— Sidebar / brand / data-source (explicit, full opacity) —— */
+.studio [data-studio-brand] {
+  color: var(--text) !important;
+  opacity: 1 !important;
+}
+
+.studio nav[aria-label="Primary"] a:not([aria-current="page"]) {
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+}
+.studio nav[aria-label="Primary"] a:not([aria-current="page"]) svg {
+  color: inherit;
+  opacity: 1 !important;
+}
+
+.studio nav[aria-label="Primary"] a[aria-current="page"] {
+  color: var(--text) !important;
+  opacity: 1 !important;
+  background: var(--st-raised);
+}
+.studio nav[aria-label="Primary"] a[aria-current="page"] svg {
+  color: var(--text);
+  opacity: 1 !important;
+}
+
+.studio nav[aria-label="Primary"] .label-mono,
+.studio .studio-nav-group {
+  color: var(--text-nav-group) !important;
+  opacity: 1 !important;
+}
+
+.studio [data-studio-chip],
+.studio .studio-chip {
+  color: var(--text) !important;
+  background: var(--st-raised) !important;
+  border-color: var(--st-border) !important;
+  opacity: 1 !important;
+}
+.studio [data-studio-chip].chip-pass,
+.studio .studio-chip.chip-pass {
+  color: var(--st-teal) !important;
+  background: color-mix(in srgb, var(--st-teal) 16%, var(--st-raised)) !important;
+}
+
+.studio [data-studio-select],
+.studio .studio-select {
+  color: var(--text) !important;
+  background: var(--st-surface) !important;
+  border-color: var(--st-border) !important;
+  opacity: 1 !important;
+}
+.studio [data-studio-select] svg,
+.studio .studio-select svg {
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+}
+
+/* Accent / status colours: full-strength text on tinted chip backgrounds */
+html.light .studio .text-accent,
+html.light .studio a.text-accent {
+  color: #066557 !important;
+}
+html.light .studio .text-teal,
+html.light .studio [class*="text-teal"] {
+  color: #066557 !important;
+}
+html.light .studio .text-amber,
+html.light .studio [class*="text-amber"] {
+  color: #8a5a08 !important;
+}
+html.light .studio .text-crimson,
+html.light .studio [class*="text-crimson"] {
+  color: #b01e4a !important;
+}
+html.light .studio .text-slateish,
+html.light .studio [class*="text-slateish"] {
+  color: #4a5a70 !important;
+}
+
+html.dark .studio .text-accent,
+html.dark .studio a.text-accent,
+html.dark .studio .text-teal,
+html.dark .studio [class*="text-teal"] {
+  color: #5eead4 !important;
+}
+html.dark .studio .text-amber,
+html.dark .studio [class*="text-amber"] {
+  color: #fbbf24 !important;
+}
+
+/* Filled teal / accent controls: always use on-accent foreground */
+.studio .bg-teal:not([class*="bg-teal/"]),
+.studio .bg-accent:not([class*="bg-accent/"]) {
+  color: var(--on-accent) !important;
+}
+.studio .bg-teal.text-white,
+.studio .bg-accent.text-white,
+.studio .bg-teal .text-white {
+  color: var(--on-accent) !important;
+}
+
+.studio .chip-pass {
+  color: var(--st-teal) !important;
+}
+html.light .studio .chip-pass {
+  color: #066557 !important;
+}
+html.light .studio .chip-amber {
+  color: #8a5a08 !important;
+}
+html.light .studio .chip-fail {
+  color: #b01e4a !important;
+}
+html.light .studio .chip-slate {
+  color: #4a5a70 !important;
+}
+
+.studio pre,
+.studio code,
+.studio .mono-block {
+  background: var(--st-code-bg);
+  color: var(--st-code-fg);
+}
+
+.studio pre {
+  border: 1px solid var(--st-hairline);
+  border-radius: 8px;
+}
+
+.studio pre code {
+  background: transparent;
+  border: 0;
 }
 
 .studio .tabular {

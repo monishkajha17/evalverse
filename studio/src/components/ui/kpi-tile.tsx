@@ -25,7 +25,9 @@ export function KpiTile({
       )}
     >
       <div className="label-mono text-[11px] !normal-case tracking-wide text-ink-muted">{label}</div>
-      <div className="mt-1 text-lg font-semibold tabular-nums text-ink">{value}</div>
+      <div data-kpi-value className="mt-1 text-lg font-semibold tabular-nums text-ink">
+        {value}
+      </div>
       {hint ? <div className="mt-0.5 text-[11px] text-ink-subtle">{hint}</div> : null}
     </div>
   );
