@@ -178,13 +178,41 @@ def _recompute(case: dict, run: dict, margin: float = 0) -> tuple[bool, bool, bo
     if case.get("modality") == "audio":
         ev_ok = span_match(case.get("truth_span"), run.get("span_ms")) if valid else False
     else:
-        ev_ok = core.evidence_ok(case["truth_box"], run.get("box"), margin=margin) if valid else False
+        truth = case.get("truth_box")
+        ev_ok = (
+            core.evidence_ok(truth, run.get("box"), margin=margin)
+            if valid and truth
+            else False
+        )
     return correct, ev_ok, valid
+
+
+def _list_family_label(case: dict, run: dict) -> str:
+    """Stage labels for menu_list / unanswerable families."""
+    if not _is_valid(run):
+        return "invalid_output"
+    answer = run.get("answer")
+    if case.get("family") == "unanswerable":
+        tok = core._txt(answer)
+        if tok in ("notshown", "unknown", "none"):
+            return "abstained_correctly"
+        return "fabricated"
+    pred_items = core.parse_menu_answer(answer)
+    if pred_items is None:
+        return "invalid_output"
+    _matched, missing, fabricated = core.match_menu_items(pred_items, case.get("menu") or [])
+    if fabricated:
+        return "fabricated"
+    if missing:
+        return "incomplete"
+    return "complete_correct"
 
 
 def _stage_label(case: dict, run: dict, margin: float = 0) -> str:
     if case.get("modality") == "audio":
         return audio_label(case, run)
+    if case.get("family") in ("menu_list", "unanswerable"):
+        return _list_family_label(case, run)
     correct, ev_ok, valid = _recompute(case, run, margin=margin)
     return core.attribute(correct, ev_ok, valid, answer=run.get("answer"), box=run.get("box"))
 
@@ -288,8 +316,12 @@ def answer_correctness(*, agent, case_id, variant, meta, case, run, evidence_mar
     scope="run",
 )
 def evidence_grounding(*, agent, case_id, variant, meta, case, run, evidence_margin=DEFAULT_EVIDENCE_MARGIN, **_):
+    if case.get("family") == "unanswerable" or case.get("answer_type") == "unanswerable":
+        return _skipped(agent, case_id, variant, meta, "no region expected")
     box = run.get("box")
-    truth = case["truth_box"]
+    truth = case.get("truth_box")
+    if truth is None:
+        return _skipped(agent, case_id, variant, meta, "no region expected")
     margin = float(evidence_margin)
     evidence = [{"type": "image_region", "role": "expected", "locator": list(truth)}]
     if box is None:
@@ -337,13 +369,18 @@ def evidence_grounding(*, agent, case_id, variant, meta, case, run, evidence_mar
     dimension="Failure analysis",
     modalities=["image"],
     needs_reference=True,
-    depends_on=("answer_correctness", "evidence_grounding"),
+    depends_on=("answer_correctness",),
     scope="run",
 )
 def stage_attribution(*, agent, case_id, variant, meta, case, run, evidence_margin=DEFAULT_EVIDENCE_MARGIN, **_):
-    correct, ev_ok, valid = _recompute(case, run, margin=evidence_margin)
-    label = core.attribute(correct, ev_ok, valid, answer=run.get("answer"), box=run.get("box"))
-    score = 1.0 if label == "grounded_correct" else 0.0
+    label = _stage_label(case, run, margin=evidence_margin)
+    pass_labels = {"grounded_correct", "complete_correct", "abstained_correctly"}
+    score = 1.0 if label in pass_labels else 0.0
+    evidence = []
+    if case.get("truth_box"):
+        evidence.append({"type": "image_region", "role": "expected", "locator": list(case["truth_box"])})
+    if run.get("box"):
+        evidence.append({"type": "image_region", "role": "claimed", "locator": list(run["box"])})
     return _result(
         agent=agent,
         case_id=case_id,
@@ -351,17 +388,133 @@ def stage_attribution(*, agent, case_id, variant, meta, case, run, evidence_marg
         meta=meta,
         status="completed",
         score=score,
-        verdict="pass" if label == "grounded_correct" else "fail",
+        verdict="pass" if label in pass_labels else "fail",
         label=label,
         explanation=f"Stage label: {label}.",
-        evidence=[
-            {"type": "image_region", "role": "expected", "locator": list(case["truth_box"])},
-            *(
-                [{"type": "image_region", "role": "claimed", "locator": list(run["box"])}]
-                if run.get("box")
-                else []
-            ),
-        ],
+        evidence=evidence,
+    )
+
+
+@evaluator(
+    id="item_recall",
+    version="1.0.0",
+    category="deterministic",
+    dimension="Completeness",
+    modalities=["image"],
+    needs_reference=True,
+    scope="run",
+)
+def item_recall(*, agent, case_id, variant, meta, case, run, **_):
+    if case.get("family") != "menu_list":
+        return _skipped(agent, case_id, variant, meta, "item_recall only applies to menu_list")
+    true_items = case.get("menu") or []
+    if not true_items:
+        return _skipped(agent, case_id, variant, meta, "no menu ground truth")
+    pred_items = core.parse_menu_answer(run.get("answer"))
+    if pred_items is None:
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="completed",
+            score=0.0,
+            verdict="fail",
+            label="missing_items",
+            explanation=f"Unparseable menu answer; missing all {len(true_items)} items.",
+        )
+    matched, missing, _fab = core.match_menu_items(pred_items, true_items)
+    score = len(matched) / len(true_items)
+    label = "complete" if not missing else "missing_items"
+    missing_names = [m.get("name", "?") for m in missing]
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=score,
+        verdict="pass" if not missing else "fail",
+        label=label,
+        explanation=(
+            "All true items matched."
+            if not missing
+            else f"Missing items: {missing_names}."
+        ),
+    )
+
+
+@evaluator(
+    id="fabrication_check",
+    version="1.0.0",
+    category="deterministic",
+    dimension="Hallucination",
+    modalities=["image"],
+    needs_reference=True,
+    scope="run",
+)
+def fabrication_check(*, agent, case_id, variant, meta, case, run, **_):
+    family = case.get("family")
+    if family == "unanswerable":
+        tok = core._txt(run.get("answer"))
+        if tok in ("notshown", "unknown", "none"):
+            return _result(
+                agent=agent,
+                case_id=case_id,
+                variant=variant,
+                meta=meta,
+                status="completed",
+                score=1.0,
+                verdict="pass",
+                label="correctly_abstained",
+                explanation="Agent correctly reported the field is not shown.",
+            )
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="completed",
+            score=0.0,
+            verdict="fail",
+            label="fabricated_answer",
+            explanation=f"Agent invented a value ({run.get('answer')!r}) for an absent field.",
+        )
+    if family != "menu_list":
+        return _skipped(agent, case_id, variant, meta, "fabrication_check only applies to menu_list/unanswerable")
+    true_items = case.get("menu") or []
+    pred_items = core.parse_menu_answer(run.get("answer"))
+    if pred_items is None:
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="completed",
+            score=1.0,
+            verdict="pass",
+            label="no_fabrication",
+            explanation="No predicted items to fabricate.",
+        )
+    _matched, _missing, fabricated = core.match_menu_items(pred_items, true_items)
+    n_pred = len(pred_items)
+    score = 1.0 if n_pred == 0 else 1.0 - (len(fabricated) / n_pred)
+    if fabricated:
+        label = f"fabricated_items:{len(fabricated)}"
+        explanation = f"Fabricated items: {[f.get('name') for f in fabricated]}."
+    else:
+        label = "no_fabrication"
+        explanation = "No fabricated items."
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=score,
+        verdict="pass" if not fabricated else "fail",
+        label=label,
+        explanation=explanation,
     )
 
 
@@ -486,6 +639,45 @@ def media_dependence(*, agent, case_id, variant, meta, clean_run, blind_run, cas
 
 
 @evaluator(
+    id="media_dependence_guess",
+    version="1.0.0",
+    category="paired",
+    dimension="Media dependence",
+    modalities=["audio"],
+    needs_reference=False,
+    needs_replay=True,
+    scope="pair",
+)
+def media_dependence_guess(*, agent, case_id, variant, meta, clean_run, case, blind_guess_run=None, evidence_margin=0, **_):
+    """Forced-guess control. Chance of naming the right turn with no transcript is 1/5."""
+    chance = "Chance level is 1/5."
+    if clean_run is None or blind_guess_run is None:
+        missing = "clean" if clean_run is None else "blind_guess"
+        return _skipped(agent, case_id, "all", meta, f"missing sibling variant: {missing}")
+    clean_ok, _, clean_valid = _recompute(case, clean_run, margin=evidence_margin)
+    guess_ok, _, guess_valid = _recompute(case, blind_guess_run, margin=evidence_margin)
+    clean_right = bool(clean_valid and clean_ok)
+    guess_right = bool(guess_valid and guess_ok)
+    if not clean_right:
+        return _result(
+            agent=agent, case_id=case_id, variant="all", meta=meta, status="inconclusive",
+            score=None, verdict="not_applicable", label="inconclusive",
+            explanation=f"Clean variant answer is wrong; media dependence is inconclusive. {chance}",
+        )
+    if guess_right:
+        return _result(
+            agent=agent, case_id=case_id, variant="all", meta=meta, status="completed",
+            score=0.0, verdict="fail", label="media_not_required",
+            explanation=f"Correct on clean and on a forced guess with no transcript. {chance}",
+        )
+    return _result(
+        agent=agent, case_id=case_id, variant="all", meta=meta, status="completed",
+        score=1.0, verdict="pass", label="media_required",
+        explanation=f"Correct on clean, wrong when forced to guess with no transcript. {chance}",
+    )
+
+
+@evaluator(
     id="robustness_sweep",
     version="1.0.0",
     category="paired",
@@ -525,6 +717,59 @@ def robustness_sweep(*, agent, case_id, variant, meta, case, sibling_runs, evide
         verdict="pass" if first_failure is None else "fail",
         label=label,
         explanation=explanation,
+    )
+
+
+@evaluator(
+    id="perception_judge",
+    version="1.0.0",
+    category="judge",
+    dimension="Perception",
+    modalities=["image"],
+    needs_reference=False,
+    scope="run",
+)
+def perception_judge(*, agent, case_id, variant, meta, case, run, judged=None, judge_model=None, **_):
+    """Score from the stored clean-variant agent_answer judge record — never calls a model."""
+    records = [
+        j
+        for j in (judged or [])
+        if j.get("kind") == "agent_answer"
+        and j.get("agent") == agent
+        and j.get("case_id") == case_id
+    ]
+    if not records:
+        return _skipped(agent, case_id, variant, meta, "no stored agent_answer judge record")
+    j = records[0]
+    evidence = []
+    if run.get("box"):
+        evidence.append({"type": "image_region", "role": "claimed", "locator": list(run["box"])})
+    model_name = judge_model or "judge"
+    if j.get("judge_accepts") is None:
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="inconclusive",
+            score=None,
+            verdict="not_applicable",
+            label="judge_error",
+            explanation=f"Judge {model_name} returned no verdict.",
+            evidence=evidence,
+        )
+    accepted = bool(j["judge_accepts"])
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=1.0 if accepted else 0.0,
+        verdict="pass" if accepted else "fail",
+        label="judge_accepts" if accepted else "judge_rejects",
+        explanation=f"Judge model {model_name} {'accepted' if accepted else 'rejected'} the answer.",
+        evidence=evidence,
     )
 
 
@@ -570,10 +815,89 @@ def judge_audit(*, agent, case_id, variant, meta, judged, **_):
     )
 
 
+def _planted_accuracy(judged, kinds: tuple[str, ...]):
+    items = [j for j in judged if j.get("kind") in kinds and j.get("judge_accepts") is not None]
+    if not items:
+        return None, 0, 0
+    agrees = 0
+    for j in items:
+        if j.get("agrees") is not None:
+            agrees += int(bool(j["agrees"]))
+        else:
+            agrees += int(j["judge_accepts"] == j.get("truth_correct"))
+    false_accept = sum(
+        1 for j in items if "wrong" in j.get("kind", "") and j.get("judge_accepts") is True
+    )
+    return agrees / len(items), false_accept, len(items)
+
+
+@evaluator(
+    id="judge_media_dependence",
+    version="1.0.0",
+    category="paired",
+    dimension="Judge trust",
+    modalities=["image"],
+    needs_reference=True,
+    needs_replay=True,
+    scope="suite",
+)
+def judge_media_dependence(*, agent, case_id, variant, meta, judged, **_):
+    judged = judged or []
+    acc_img, fa_img, n_img = _planted_accuracy(judged, ("planted_right", "planted_wrong"))
+    acc_no, fa_no, n_no = _planted_accuracy(judged, ("planted_right_noimg", "planted_wrong_noimg"))
+    if acc_img is None or acc_no is None:
+        return _skipped("*", "*", "all", meta, "missing planted judge or judge-control records")
+    score = max(0.0, min(1.0, acc_img - acc_no))
+    return _result(
+        agent="*",
+        case_id="*",
+        variant="all",
+        meta=meta,
+        status="completed",
+        score=score,
+        verdict="pass" if score > 0 else "fail",
+        label="judge_media_dependence",
+        explanation=(
+            f"accuracy_with_image={acc_img:.3f} (n={n_img}, false-accept={fa_img}), "
+            f"accuracy_without_image={acc_no:.3f} (n={n_no}, false-accept={fa_no})"
+        ),
+    )
+
+
 # --------------------------------------------------------------------------- orchestration
 
 
-def evaluate_all(cases, runs, judged, agents, evidence_margin: float = DEFAULT_EVIDENCE_MARGIN):
+def case_has_reference(case: dict) -> bool:
+    return bool(
+        case.get("truth_box")
+        or case.get("truth_span")
+        or case.get("answer") is not None
+    )
+
+
+def select_evaluators_for_case(case: dict) -> tuple[list[dict], list[tuple[dict, str]]]:
+    """Pick evaluators whose modalities match and whose reference needs are met."""
+    modality = case.get("modality", "image")
+    has_ref = case_has_reference(case)
+    selected, skipped = [], []
+    for meta in REGISTRY.values():
+        if modality not in meta["modalities"]:
+            skipped.append((meta, f"modality '{modality}' not in {meta['modalities']}"))
+        elif meta["needs_reference"] and not has_ref:
+            skipped.append((meta, "needs_reference but case has no expectation"))
+        else:
+            selected.append(meta)
+    return selected, skipped
+
+
+def evaluate_all(
+    cases,
+    runs,
+    judged,
+    agents,
+    evidence_margin: float = DEFAULT_EVIDENCE_MARGIN,
+    judge_model: str | None = None,
+):
     """Run all registered evaluators over stored runs. Never calls a model."""
     by_id = {c["id"]: c for c in cases}
     indexed = _run_index(runs)
@@ -587,16 +911,28 @@ def evaluate_all(cases, runs, judged, agents, evidence_margin: float = DEFAULT_E
 
     for run in runs:
         variant = _variant(run)
-        if variant == "blind":
+        if variant in ("blind", "blind_guess"):
             continue
         case = by_id.get(run["case_id"])
         if case is None:
             continue
         agent, case_id = run["agent"], run["case_id"]
+        selected, skipped_sel = select_evaluators_for_case(case)
+        selected_ids = {m["id"] for m in selected}
+        skip_reasons = {m["id"]: reason for m, reason in skipped_sel}
         produced = {}
         for meta in run_metas:
-            modality = case.get("modality", "image")
-            if modality not in meta["modalities"]:
+            if meta["id"] not in selected_ids:
+                res = _skipped(
+                    agent,
+                    case_id,
+                    variant,
+                    meta,
+                    skip_reasons.get(meta["id"], "evaluator not selected for case"),
+                )
+                results.append(res)
+                produced[meta["id"]] = res
+                by_target_eval[(agent, case_id, variant, meta["id"])] = res
                 continue
             dep_fail = None
             for dep in meta["depends_on"]:
@@ -622,6 +958,7 @@ def evaluate_all(cases, runs, judged, agents, evidence_margin: float = DEFAULT_E
                     run=run,
                     judged=judged,
                     evidence_margin=margin,
+                    judge_model=judge_model,
                 )
             results.append(res)
             produced[meta["id"]] = res
@@ -634,38 +971,114 @@ def evaluate_all(cases, runs, judged, agents, evidence_margin: float = DEFAULT_E
             case = by_id.get(case_id)
             if case is None:
                 continue
+            selected, skipped_sel = select_evaluators_for_case(case)
+            selected_ids = {m["id"] for m in selected}
+            skip_reasons = {m["id"]: reason for m, reason in skipped_sel}
             siblings = {
                 v: indexed.get((agent, case_id, v))
-                for v in ("clean", "blur", "noise", "lowres", "bandlimit", "blind")
+                for v in ("clean", "blur", "noise", "lowres", "bandlimit", "blind", "blind_guess")
             }
             for meta in pair_metas:
-                if case.get("modality", "image") not in meta["modalities"]:
-                    continue
-                res = _call(
-                    meta,
-                    agent,
-                    case_id,
-                    "all",
-                    case=case,
-                    clean_run=siblings.get("clean"),
-                    blind_run=siblings.get("blind"),
-                    sibling_runs=siblings,
-                    judged=judged,
-                    evidence_margin=margin,
-                )
+                if meta["id"] not in selected_ids:
+                    res = _skipped(
+                        agent,
+                        case_id,
+                        "all",
+                        meta,
+                        skip_reasons.get(meta["id"], "evaluator not selected for case"),
+                    )
+                else:
+                    res = _call(
+                        meta,
+                        agent,
+                        case_id,
+                        "all",
+                        case=case,
+                        clean_run=siblings.get("clean"),
+                        blind_run=siblings.get("blind"),
+                        blind_guess_run=siblings.get("blind_guess"),
+                        sibling_runs=siblings,
+                        judged=judged,
+                        evidence_margin=margin,
+                        judge_model=judge_model,
+                    )
                 results.append(res)
                 by_target_eval[(agent, case_id, "all", meta["id"])] = res
 
+    # Suite evaluators: selected if any case in the suite can use them.
+    suite_modalities = {c.get("modality", "image") for c in cases}
     for meta in (REGISTRY[k] for k in REGISTRY if REGISTRY[k]["scope"] == "suite"):
-        res = _call(
-            meta, "*", "*", "all", case=None, run=None, judged=judged or [], evidence_margin=margin
-        )
+        if not (suite_modalities & set(meta["modalities"])):
+            res = _skipped(
+                "*",
+                "*",
+                "all",
+                meta,
+                f"suite modalities {sorted(suite_modalities)} not in {meta['modalities']}",
+            )
+        else:
+            res = _call(
+                meta,
+                "*",
+                "*",
+                "all",
+                case=None,
+                run=None,
+                judged=judged or [],
+                evidence_margin=margin,
+                judge_model=judge_model,
+            )
         results.append(res)
 
     dimension_summary = _dimension_summary(results)
     dimension_summary.extend(_confident_error_rows(cases, runs, agents, margin=margin))
     disagreements = _disagreements(judged or [], by_target_eval)
-    return results, dimension_summary, disagreements
+    conflicts = detect_conflicts(results, disagreements)
+    return results, dimension_summary, disagreements, conflicts
+
+
+def detect_conflicts(results: list[dict], disagreements: list[dict] | None = None) -> list[dict]:
+    """Flag judge/deterministic disagreements and pass/fail clashes on the same target."""
+    conflicts = list(disagreements or [])
+    by_target: dict[tuple, dict[str, dict]] = defaultdict(dict)
+    for r in results:
+        if r.get("status") != "completed":
+            continue
+        t = r["target"]
+        by_target[(t["agent"], t["case_id"], t["variant"])][r["evaluator_id"]] = r
+    for key, by_eid in by_target.items():
+        eg = by_eid.get("evidence_grounding")
+        pj = by_eid.get("perception_judge")
+        if (
+            eg
+            and pj
+            and eg.get("verdict") == "fail"
+            and pj.get("verdict") == "pass"
+        ):
+            conflicts.append(
+                {
+                    "kind": "perception_judge_vs_grounding",
+                    "agent": key[0],
+                    "case_id": key[1],
+                    "variant": key[2],
+                    "perception_judge_id": pj["id"],
+                    "evidence_grounding_id": eg["id"],
+                }
+            )
+        ac = by_eid.get("answer_correctness")
+        sa = by_eid.get("stage_attribution")
+        if ac and sa and ac.get("verdict") == "pass" and sa.get("label") == "correct_ungrounded":
+            conflicts.append(
+                {
+                    "kind": "correct_but_ungrounded",
+                    "agent": key[0],
+                    "case_id": key[1],
+                    "variant": key[2],
+                    "answer_correctness_id": ac["id"],
+                    "stage_attribution_id": sa["id"],
+                }
+            )
+    return conflicts
 
 
 def _confident_error_rows(cases, runs, agents, margin: float = 0) -> list[dict]:
@@ -718,13 +1131,10 @@ def relabel_runs(cases, runs, margin: float = DEFAULT_EVIDENCE_MARGIN) -> None:
         correct, ev_ok, valid = _recompute(case, run, margin=margin)
         run["correct"] = correct
         run["evidence_ok"] = ev_ok
-        run["label"] = (
-            audio_label(case, run)
-            if case.get("modality") == "audio"
-            else core.attribute(correct, ev_ok, valid, answer=run.get("answer"), box=run.get("box"))
-        )
-        if run.get("box"):
-            run["iou"] = round(core.iou(case["truth_box"], run["box"]), 3)
+        run["label"] = _stage_label(case, run, margin=margin)
+        truth = case.get("truth_box")
+        if run.get("box") and truth:
+            run["iou"] = round(core.iou(truth, run["box"]), 3)
 
 
 def _dimension_summary(results: list[dict]) -> list[dict]:
@@ -931,16 +1341,28 @@ def write_traces(traces: list[dict], traces_dir: Path | None = None) -> None:
 def enrich_results_payload(data: dict, evidence_margin: float = DEFAULT_EVIDENCE_MARGIN) -> dict:
     """Recompute results / summary / disagreements / registry / traces from stored runs."""
     margin = float(evidence_margin)
+    preserved_manifest = (data.get("meta") or {}).get("manifest")
     data.setdefault("meta", {})["evidence_margin"] = margin
     agents = list(data.get("meta", {}).get("agents") or sorted({r["agent"] for r in data["runs"]}))
+    judge_model = data.get("meta", {}).get("judge")
     relabel_runs(data["cases"], data["runs"], margin=margin)
-    results, dimension_summary, disagreements = evaluate_all(
-        data["cases"], data["runs"], data.get("judged") or [], agents, evidence_margin=margin
+    results, dimension_summary, disagreements, conflicts = evaluate_all(
+        data["cases"],
+        data["runs"],
+        data.get("judged") or [],
+        agents,
+        evidence_margin=margin,
+        judge_model=judge_model,
     )
     traces = build_traces(data["cases"], data["runs"], results)
     data["results"] = results
     data["dimension_summary"] = dimension_summary
     data["disagreements"] = disagreements
+    data["conflicts"] = conflicts
     data["registry"] = registry_list()
     data["traces"] = traces
+    if preserved_manifest is not None:
+        data["meta"]["manifest"] = preserved_manifest
+    # Keep any existing plan statuses; do not invent jobs during rescore.
+    data.setdefault("plan", data.get("plan") or [])
     return data

@@ -1,0 +1,470 @@
+[
+  {
+    "id": "cord_menu_01",
+    "family": "menu_list",
+    "question": "List every purchased item on this receipt with its price. Reply with answer = a JSON string {\"items\":[{\"name\":\"...\",\"price\":\"...\"}]}",
+    "answer": "{\"items\": [{\"name\": \"GRILLED BABY POTATO (R\", \"price\": \"50,500\"}, {\"name\": \"HOT TUNA\", \"price\": \"67,000\"}, {\"name\": \"HOT TUNA\", \"price\": \"67,000\"}]}",
+    "answer_type": "menu_list",
+    "distractor": "{\"items\": [{\"name\": \"GRILLED BABY POTATO (R\", \"price\": \"50,500\"}]}",
+    "truth_box": [
+      94,
+      715,
+      816,
+      843
+    ],
+    "menu": [
+      {
+        "name": "GRILLED BABY POTATO (R",
+        "price": "50,500"
+      },
+      {
+        "name": "HOT TUNA",
+        "price": "67,000"
+      },
+      {
+        "name": "HOT TUNA",
+        "price": "67,000"
+      }
+    ],
+    "size": [
+      576,
+      864
+    ],
+    "image": "data/images_cord/cord_menu_01.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_unans_01",
+    "family": "unanswerable",
+    "question": "What is the service price on this receipt? Answer with the number only, or \"not shown\" if the receipt does not print it.",
+    "answer": "not shown",
+    "answer_type": "unanswerable",
+    "distractor": "40,000",
+    "truth_box": null,
+    "unanswerable_field": "service_price",
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_unans_01.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_menu_02",
+    "family": "menu_list",
+    "question": "List every purchased item on this receipt with its price. Reply with answer = a JSON string {\"items\":[{\"name\":\"...\",\"price\":\"...\"}]}",
+    "answer": "{\"items\": [{\"name\": \"TWIST STRAWBERRY DONUT\", \"price\": \"10,000\"}, {\"name\": \"TLJ CROQUETTE\", \"price\": \"17,000\"}, {\"name\": \"POTATO PEPPER BAGEL\", \"price\": \"16,000\"}]}",
+    "answer_type": "menu_list",
+    "distractor": "{\"items\": [{\"name\": \"TWIST STRAWBERRY DONUT\", \"price\": \"10,000\"}]}",
+    "truth_box": [
+      102,
+      377,
+      912,
+      483
+    ],
+    "menu": [
+      {
+        "name": "TWIST STRAWBERRY DONUT",
+        "price": "10,000"
+      },
+      {
+        "name": "TLJ CROQUETTE",
+        "price": "17,000"
+      },
+      {
+        "name": "POTATO PEPPER BAGEL",
+        "price": "16,000"
+      }
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_menu_02.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_unans_02",
+    "family": "unanswerable",
+    "question": "What is the change on this receipt? Answer with the number only, or \"not shown\" if the receipt does not print it.",
+    "answer": "not shown",
+    "answer_type": "unanswerable",
+    "distractor": "60.000",
+    "truth_box": null,
+    "unanswerable_field": "changeprice",
+    "size": [
+      432,
+      648
+    ],
+    "image": "data/images_cord/cord_unans_02.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_menu_03",
+    "family": "menu_list",
+    "question": "List every purchased item on this receipt with its price. Reply with answer = a JSON string {\"items\":[{\"name\":\"...\",\"price\":\"...\"}]}",
+    "answer": "{\"items\": [{\"name\": \"FL-Xmas 30 Off\", \"price\": \"68,180\"}]}",
+    "answer_type": "menu_list",
+    "distractor": "{\"items\": [{\"name\": \"FL-Xmas 30 Off\", \"price\": \"68,180\"}]}",
+    "truth_box": [
+      257,
+      384,
+      590,
+      582
+    ],
+    "menu": [
+      {
+        "name": "FL-Xmas 30 Off",
+        "price": "68,180"
+      }
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_menu_03.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_unans_03",
+    "family": "unanswerable",
+    "question": "What is the service price on this receipt? Answer with the number only, or \"not shown\" if the receipt does not print it.",
+    "answer": "not shown",
+    "answer_type": "unanswerable",
+    "distractor": "24,500",
+    "truth_box": null,
+    "unanswerable_field": "service_price",
+    "size": [
+      576,
+      864
+    ],
+    "image": "data/images_cord/cord_unans_03.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_menu_04",
+    "family": "menu_list",
+    "question": "List every purchased item on this receipt with its price. Reply with answer = a JSON string {\"items\":[{\"name\":\"...\",\"price\":\"...\"}]}",
+    "answer": "{\"items\": [{\"name\": \"Kroket\", \"price\": \"12.000\"}, {\"name\": \"Arem Arem\", \"price\": \"24.000\"}]}",
+    "answer_type": "menu_list",
+    "distractor": "{\"items\": [{\"name\": \"Kroket\", \"price\": \"12.000\"}]}",
+    "truth_box": [
+      286,
+      436,
+      808,
+      520
+    ],
+    "menu": [
+      {
+        "name": "Kroket",
+        "price": "12.000"
+      },
+      {
+        "name": "Arem Arem",
+        "price": "24.000"
+      }
+    ],
+    "size": [
+      605,
+      1280
+    ],
+    "image": "data/images_cord/cord_menu_04.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_unans_04",
+    "family": "unanswerable",
+    "question": "What is the e-money amount on this receipt? Answer with the number only, or \"not shown\" if the receipt does not print it.",
+    "answer": "not shown",
+    "answer_type": "unanswerable",
+    "distractor": "0",
+    "truth_box": null,
+    "unanswerable_field": "emoneyprice",
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_unans_04.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_menu_05",
+    "family": "menu_list",
+    "question": "List every purchased item on this receipt with its price. Reply with answer = a JSON string {\"items\":[{\"name\":\"...\",\"price\":\"...\"}]}",
+    "answer": "{\"items\": [{\"name\": \"Lemon Tea (L)\", \"price\": \"25.000\"}]}",
+    "answer_type": "menu_list",
+    "distractor": "{\"items\": [{\"name\": \"Lemon Tea (L)\", \"price\": \"25.000\"}]}",
+    "truth_box": [
+      274,
+      456,
+      747,
+      494
+    ],
+    "menu": [
+      {
+        "name": "Lemon Tea (L)",
+        "price": "25.000"
+      }
+    ],
+    "size": [
+      720,
+      1280
+    ],
+    "image": "data/images_cord/cord_menu_05.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_unans_05",
+    "family": "unanswerable",
+    "question": "What is the change on this receipt? Answer with the number only, or \"not shown\" if the receipt does not print it.",
+    "answer": "not shown",
+    "answer_type": "unanswerable",
+    "distractor": "Rp.0",
+    "truth_box": null,
+    "unanswerable_field": "changeprice",
+    "size": [
+      576,
+      864
+    ],
+    "image": "data/images_cord/cord_unans_05.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_menu_06",
+    "family": "menu_list",
+    "question": "List every purchased item on this receipt with its price. Reply with answer = a JSON string {\"items\":[{\"name\":\"...\",\"price\":\"...\"}]}",
+    "answer": "{\"items\": [{\"name\": \"3002-Kyoto Choco Mochi\", \"price\": \"28.000\"}, {\"name\": \"1001-Choco Bun\", \"price\": \"22.000\"}, {\"name\": \"6001-Plastic Bag Small\", \"price\": \"0\"}]}",
+    "answer_type": "menu_list",
+    "distractor": "{\"items\": [{\"name\": \"3002-Kyoto Choco Mochi\", \"price\": \"28.000\"}]}",
+    "truth_box": [
+      154,
+      500,
+      828,
+      653
+    ],
+    "menu": [
+      {
+        "name": "3002-Kyoto Choco Mochi",
+        "price": "28.000"
+      },
+      {
+        "name": "1001-Choco Bun",
+        "price": "22.000"
+      },
+      {
+        "name": "6001-Plastic Bag Small",
+        "price": "0"
+      }
+    ],
+    "size": [
+      720,
+      1280
+    ],
+    "image": "data/images_cord/cord_menu_06.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_unans_06",
+    "family": "unanswerable",
+    "question": "What is the e-money amount on this receipt? Answer with the number only, or \"not shown\" if the receipt does not print it.",
+    "answer": "not shown",
+    "answer_type": "unanswerable",
+    "distractor": "11,000",
+    "truth_box": null,
+    "unanswerable_field": "emoneyprice",
+    "size": [
+      576,
+      864
+    ],
+    "image": "data/images_cord/cord_unans_06.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_menu_07",
+    "family": "menu_list",
+    "question": "List every purchased item on this receipt with its price. Reply with answer = a JSON string {\"items\":[{\"name\":\"...\",\"price\":\"...\"}]}",
+    "answer": "{\"items\": [{\"name\": \"NASI GOR SFD TLR\", \"price\": \"Rp 35.000\"}, {\"name\": \"ES TEH TAWAR\", \"price\": \"Rp 3.000\"}]}",
+    "answer_type": "menu_list",
+    "distractor": "{\"items\": [{\"name\": \"NASI GOR SFD TLR\", \"price\": \"Rp 35.000\"}]}",
+    "truth_box": [
+      236,
+      423,
+      694,
+      544
+    ],
+    "menu": [
+      {
+        "name": "NASI GOR SFD TLR",
+        "price": "Rp 35.000"
+      },
+      {
+        "name": "ES TEH TAWAR",
+        "price": "Rp 3.000"
+      }
+    ],
+    "size": [
+      960,
+      1280
+    ],
+    "image": "data/images_cord/cord_menu_07.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_unans_07",
+    "family": "unanswerable",
+    "question": "What is the discount on this receipt? Answer with the number only, or \"not shown\" if the receipt does not print it.",
+    "answer": "not shown",
+    "answer_type": "unanswerable",
+    "distractor": "65.000",
+    "truth_box": null,
+    "unanswerable_field": "discount_price",
+    "size": [
+      720,
+      1280
+    ],
+    "image": "data/images_cord/cord_unans_07.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_menu_08",
+    "family": "menu_list",
+    "question": "List every purchased item on this receipt with its price. Reply with answer = a JSON string {\"items\":[{\"name\":\"...\",\"price\":\"...\"}]}",
+    "answer": "{\"items\": [{\"name\": \"THAI ICED TEA (L)\", \"price\": \"16,363\"}]}",
+    "answer_type": "menu_list",
+    "distractor": "{\"items\": [{\"name\": \"THAI ICED TEA (L)\", \"price\": \"16,363\"}]}",
+    "truth_box": [
+      164,
+      531,
+      806,
+      586
+    ],
+    "menu": [
+      {
+        "name": "THAI ICED TEA (L)",
+        "price": "16,363"
+      }
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_menu_08.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_unans_08",
+    "family": "unanswerable",
+    "question": "What is the discount on this receipt? Answer with the number only, or \"not shown\" if the receipt does not print it.",
+    "answer": "not shown",
+    "answer_type": "unanswerable",
+    "distractor": "20.000",
+    "truth_box": null,
+    "unanswerable_field": "discount_price",
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_unans_08.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_menu_09",
+    "family": "menu_list",
+    "question": "List every purchased item on this receipt with its price. Reply with answer = a JSON string {\"items\":[{\"name\":\"...\",\"price\":\"...\"}]}",
+    "answer": "{\"items\": [{\"name\": \"Chocolate Log Cake\", \"price\": \"115,000\"}, {\"name\": \"Snowman Cake Chocolate\", \"price\": \"60,000\"}, {\"name\": \"Strawberry Log Cake\", \"price\": \"210,000\"}]}",
+    "answer_type": "menu_list",
+    "distractor": "{\"items\": [{\"name\": \"Chocolate Log Cake\", \"price\": \"115,000\"}]}",
+    "truth_box": [
+      68,
+      292,
+      837,
+      375
+    ],
+    "menu": [
+      {
+        "name": "Chocolate Log Cake",
+        "price": "115,000"
+      },
+      {
+        "name": "Snowman Cake Chocolate",
+        "price": "60,000"
+      },
+      {
+        "name": "Strawberry Log Cake",
+        "price": "210,000"
+      }
+    ],
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_menu_09.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_unans_09",
+    "family": "unanswerable",
+    "question": "What is the service price on this receipt? Answer with the number only, or \"not shown\" if the receipt does not print it.",
+    "answer": "not shown",
+    "answer_type": "unanswerable",
+    "distractor": "*6000",
+    "truth_box": null,
+    "unanswerable_field": "service_price",
+    "size": [
+      853,
+      1280
+    ],
+    "image": "data/images_cord/cord_unans_09.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_menu_10",
+    "family": "menu_list",
+    "question": "List every purchased item on this receipt with its price. Reply with answer = a JSON string {\"items\":[{\"name\":\"...\",\"price\":\"...\"}]}",
+    "answer": "{\"items\": [{\"name\": \"J.STB PROMO\", \"price\": \"17500\"}, {\"name\": \"Y.B.BAT\", \"price\": \"46000\"}, {\"name\": \"Y.BASO PROM\", \"price\": \"27500\"}]}",
+    "answer_type": "menu_list",
+    "distractor": "{\"items\": [{\"name\": \"J.STB PROMO\", \"price\": \"17500\"}]}",
+    "truth_box": [
+      130,
+      525,
+      858,
+      639
+    ],
+    "menu": [
+      {
+        "name": "J.STB PROMO",
+        "price": "17500"
+      },
+      {
+        "name": "Y.B.BAT",
+        "price": "46000"
+      },
+      {
+        "name": "Y.BASO PROM",
+        "price": "27500"
+      }
+    ],
+    "size": [
+      960,
+      1280
+    ],
+    "image": "data/images_cord/cord_menu_10.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  },
+  {
+    "id": "cord_unans_10",
+    "family": "unanswerable",
+    "question": "What is the change on this receipt? Answer with the number only, or \"not shown\" if the receipt does not print it.",
+    "answer": "not shown",
+    "answer_type": "unanswerable",
+    "distractor": "22.000",
+    "truth_box": null,
+    "unanswerable_field": "changeprice",
+    "size": [
+      576,
+      864
+    ],
+    "image": "data/images_cord/cord_unans_10.jpg",
+    "source": "CORD v2 (CC BY 4.0)"
+  }
+]

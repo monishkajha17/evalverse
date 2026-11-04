@@ -42,14 +42,35 @@ JUDGE_PROMPT = (
     '{{"verdict": "correct" or "incorrect", "reason": "<one sentence>"}}'
 )
 
+# Same audit task without media; deliberately does not say the image is missing.
+JUDGE_PROMPT_NO_MEDIA = (
+    "You are auditing an answer.\n"
+    "Question: {question}\n"
+    "Proposed answer: {proposed}\n\n"
+    "Is the proposed answer correct? Reply with JSON only:\n"
+    '{{"verdict": "correct" or "incorrect", "reason": "<one sentence>"}}'
+)
+
 AUDIO_AGENT_PROMPT = (
     "You are an audio-transcript reading agent. Answer only from the supplied transcript.\n"
     "Question: {question}\n\nTranscript:\n{transcript}\n\n"
     "Reply with JSON only, no other text:\n"
-    '{{"answer":"<turn number>", "span_ms":[start,end], "evidence":"<quoted transcript evidence>"}}\n'
-    "span_ms must cite the time range of the turn that proves the answer. If the transcript is absent "
-    'or insufficient, use answer "unknown" and span_ms null.'
+    '{{"answer":"<turn number>", "span_ms":[start_ms, end_ms], "evidence":"<quoted transcript evidence>"}}\n'
+    "span_ms is [start_ms, end_ms] in MILLISECONDS, copied exactly from the header of the turn you rely on. "
+    "Headers look like [turn 3 | 12400-18900 ms]. "
+    "If the transcript is absent or insufficient, use answer \"unknown\" and span_ms null."
 )
+
+BLIND_GUESS_LINE = (
+    "Even if you cannot hear the audio, give your single best guess of the turn number."
+)
+
+
+def audio_agent_prompt(question: str, transcript: str, condition: str) -> str:
+    prompt = AUDIO_AGENT_PROMPT.format(question=question, transcript=transcript)
+    if condition == "blind_guess":
+        prompt += "\n" + BLIND_GUESS_LINE
+    return prompt
 
 AUDIO_JUDGE_PROMPT = (
     "You are auditing an answer against this transcript.\n"
@@ -186,10 +207,94 @@ def _txt(s: str) -> str:
     return re.sub(r"[^a-z0-9]", "", str(s).lower())
 
 
+def _canon_name(s: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", str(s).lower())
+
+
+def parse_menu_answer(pred) -> list[dict] | None:
+    """Extract [{name, price}, ...] from a model answer (JSON string or object)."""
+    if pred is None:
+        return None
+    obj = pred
+    if isinstance(pred, str):
+        text = pred.strip()
+        if not text:
+            return None
+        obj = parse_json(text)
+        if obj is None:
+            # Sometimes the answer field itself is a JSON string of {"items":...}
+            try:
+                obj = json.loads(text)
+            except json.JSONDecodeError:
+                return None
+    if isinstance(obj, dict) and "items" in obj:
+        items = obj["items"]
+    elif isinstance(obj, list):
+        items = obj
+    else:
+        return None
+    if not isinstance(items, list):
+        return None
+    out = []
+    for it in items:
+        if not isinstance(it, dict):
+            continue
+        name = it.get("name") if it.get("name") is not None else it.get("nm")
+        price = it.get("price")
+        if name is None or price is None:
+            continue
+        out.append({"name": str(name), "price": str(price)})
+    return out
+
+
+def match_menu_items(pred_items: list[dict], true_items: list[dict], name_thresh: float = 0.6):
+    """Greedy one-to-one match on canonical price and name similarity.
+
+    Returns (matched_pairs, missing_true, fabricated_pred).
+    """
+    import difflib
+
+    true_left = list(enumerate(true_items))
+    matched = []
+    fabricated = []
+    for pi, pred in enumerate(pred_items):
+        p_amt = _amount(pred.get("price"))
+        best = None
+        best_sim = -1.0
+        for ti, true in true_left:
+            if p_amt is None or _amount(true.get("price")) is None:
+                continue
+            if abs(p_amt - _amount(true["price"])) >= 0.0051:
+                continue
+            sim = difflib.SequenceMatcher(
+                None, _canon_name(pred.get("name", "")), _canon_name(true.get("name", ""))
+            ).ratio()
+            if sim >= name_thresh and sim > best_sim:
+                best, best_sim = (ti, true), sim
+        if best is None:
+            fabricated.append(pred)
+        else:
+            matched.append((pred, best[1]))
+            true_left = [(ti, t) for ti, t in true_left if ti != best[0]]
+    missing = [t for _, t in true_left]
+    return matched, missing, fabricated
+
+
 def answer_correct(case: dict, pred: str) -> bool:
+    family = case.get("family") or ""
+    atype = case.get("answer_type")
+    if family == "unanswerable" or atype == "unanswerable":
+        return _txt(pred) == "notshown"
+    if family == "menu_list" or atype == "menu_list":
+        pred_items = parse_menu_answer(pred)
+        if pred_items is None:
+            return False
+        true_items = case.get("menu") or []
+        matched, missing, fabricated = match_menu_items(pred_items, true_items)
+        return not missing and not fabricated
     if pred is None or _txt(pred) in ("", "unknown"):
         return False
-    if case["answer_type"] == "number":
+    if atype == "number":
         p, t = _amount(pred), _amount(case["answer"])
         return p is not None and t is not None and abs(p - t) < 0.0051
     return _txt(pred) == _txt(case["answer"])
@@ -275,13 +380,16 @@ class LiveBackend:
         return raw, time.time() - t, usage
 
     def judge(self, model, case, proposed, image_png):
-        raw, _usage = self._chat(model, JUDGE_PROMPT.format(question=case["question"], proposed=proposed), image_png)
+        prompt_t = JUDGE_PROMPT if image_png is not None else JUDGE_PROMPT_NO_MEDIA
+        raw, _usage = self._chat(
+            model, prompt_t.format(question=case["question"], proposed=proposed), image_png
+        )
         return raw
 
     def audio_agent(self, model, case, transcript, condition):
         t = time.time()
         raw, usage = self._chat(
-            model, AUDIO_AGENT_PROMPT.format(question=case["question"], transcript=transcript), None
+            model, audio_agent_prompt(case["question"], transcript, condition), None
         )
         return raw, time.time() - t, usage
 
@@ -304,30 +412,60 @@ class MockBackend:
     def agent(self, model, case, image_png, condition):
         r = self.rng
         usage = {"input_tokens": 900, "output_tokens": 160}
+        family = case.get("family") or ""
         if image_png is None:  # blind
-            ans = "unknown" if r.random() < 0.7 else case["distractor"]
+            if family == "unanswerable":
+                ans = "not shown" if r.random() < 0.5 else case.get("distractor", "0")
+            elif family == "menu_list":
+                ans = "unknown"
+            else:
+                ans = "unknown" if r.random() < 0.7 else case["distractor"]
             return json.dumps({"answer": ans, "box": None, "evidence": "no image"}), 0.01, usage
-        p_ok = {"clean": 0.95, "blur": 0.7, "noise": 0.6, "lowres": 0.4}[condition]
+        p_ok = {"clean": 0.95, "blur": 0.7, "noise": 0.6, "lowres": 0.4}.get(condition, 0.5)
         if "1.1" in model:
             p_ok -= 0.15
         ok = r.random() < p_ok
-        t = case["truth_box"]
-        if r.random() < p_ok:
+        t = case.get("truth_box")
+        if t and r.random() < p_ok:
             box = [t[0] + r.randint(-15, 15), t[1] + r.randint(-15, 15), t[2] + r.randint(-15, 15), t[3] + r.randint(-15, 15)]
-        else:
+        elif t:
             box = [r.randint(0, 300), r.randint(0, 300), r.randint(400, 700), r.randint(400, 700)]
-        ans = case["answer"] if ok else case["distractor"]
+        else:
+            box = None
+        if family == "unanswerable":
+            ans = "not shown" if ok else case.get("distractor", "12.00")
+            box = None
+        elif family == "menu_list":
+            items = list(case.get("menu") or [])
+            if ok:
+                ans = {"items": items}
+            elif items and r.random() < 0.5:
+                ans = {"items": items[:-1]}  # incomplete
+            else:
+                ans = {"items": items + [{"name": "FABRICATED ITEM", "price": "9.99"}]}
+            if isinstance(ans, dict):
+                ans = json.dumps(ans)
+        else:
+            ans = case["answer"] if ok else case["distractor"]
         return json.dumps({"answer": ans, "box": box, "evidence": "mock"}), 0.01, usage
 
     def judge(self, model, case, proposed, image_png):
         r = self.rng
         truth = answer_correct(case, proposed)
-        flip = r.random() < 0.1
+        # Without media the mock judge is much less reliable.
+        flip = r.random() < (0.45 if image_png is None else 0.1)
         verdict = "correct" if (truth != flip) else "incorrect"
         return json.dumps({"verdict": verdict, "reason": "mock"})
 
     def audio_agent(self, model, case, transcript, condition):
         usage = {"input_tokens": 900, "output_tokens": 160}
+        if condition == "blind_guess":
+            turn = self.rng.choice(case["turns"])
+            return json.dumps({
+                "answer": str(turn["index"]),
+                "span_ms": [turn["start_ms"], turn["end_ms"]],
+                "evidence": "guess",
+            }), 0.01, usage
         if not transcript:
             return json.dumps({"answer": "unknown", "span_ms": None, "evidence": "no transcript"}), 0.01, usage
         turn = next((t for t in case["turns"] if t["index"] == int(case["answer"])), case["turns"][0])

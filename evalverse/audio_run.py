@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import shutil
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -62,7 +63,19 @@ def _turn_audio(turn: dict, condition: str, seed: int) -> bytes:
     return audio.wav_bytes(audio.perturb_audio(samples, sr, condition, seed), sr)
 
 
-def hear(case: dict, condition: str, mock: bool) -> tuple[str, dict, dict, list[dict]]:
+def format_turn(turn: dict, heard: str) -> str:
+    """Timestamp header in milliseconds, matching the span the agent must copy."""
+    return f"[turn {int(turn['index'])} | {int(turn['start_ms'])}-{int(turn['end_ms'])} ms] {heard}"
+
+
+def _cached_transcript(wav: bytes):
+    path = audio.ASR_CACHE / f"{hashlib.sha1(wav).hexdigest()}.json"
+    if not path.exists():
+        return None
+    return json.loads(path.read_text())
+
+
+def hear(case: dict, condition: str, mock: bool, reuse_asr: bool = False) -> tuple[str, dict, dict, list[dict]]:
     """ASR every individual turn, then give the language model a timestamped transcript."""
     parts, asr_turns, turn_wers, details = [], {}, {}, []
     for turn in case["turns"]:
@@ -70,15 +83,58 @@ def hear(case: dict, condition: str, mock: bool) -> tuple[str, dict, dict, list[
         if mock:
             heard = turn["text"]
         else:
-            response = audio.transcribe(_turn_audio(turn, condition, seed=turn["index"]))
+            wav = _turn_audio(turn, condition, seed=turn["index"])
+            cached = _cached_transcript(wav) if reuse_asr else None
+            response = cached if cached is not None else audio.transcribe(wav)
             heard = str(response.get("transcript", ""))
         latency = time.time() - t0
         index = str(turn["index"])
         asr_turns[index] = heard
         turn_wers[index] = audio.wer(turn["text"], heard)
-        parts.append(f"[turn {turn['index']} | {turn['start_ms'] / 1000:.1f}-{turn['end_ms'] / 1000:.1f} s] {heard}")
+        parts.append(format_turn(turn, heard))
         details.append({"index": turn["index"], "latency": round(latency, 3), "wer": turn_wers[index]})
     return "\n".join(parts), asr_turns, turn_wers, details
+
+
+def span_looks_like_seconds(span, duration_ms) -> bool:
+    """True when a citation is implausibly small for a long clip. Units are not converted."""
+    if not isinstance(span, (list, tuple)) or len(span) != 2:
+        return False
+    try:
+        start, end = float(span[0]), float(span[1])
+    except (TypeError, ValueError):
+        return False
+    return float(duration_ms or 0) > 5000 and start < 1000 and end < 1000
+
+
+def count_span_unit_warnings(cases, runs) -> int:
+    duration = {c["id"]: c.get("duration_ms") or 0 for c in cases}
+    return sum(
+        1 for run in runs
+        if span_looks_like_seconds(run.get("span_ms"), duration.get(run.get("case_id"), 0))
+    )
+
+
+def hearing_from_results(payload: dict, cases: list[dict], conditions: list[str]) -> dict:
+    """Rebuild millisecond transcripts from stored ASR text. Does not call the ASR endpoint."""
+    by_id = {c["id"]: c for c in cases}
+    details = {}
+    for trace in payload.get("traces") or []:
+        for span in trace.get("spans") or []:
+            if span.get("name") == "transcribe":
+                details[(trace.get("case_id"), trace.get("variant"))] = span.get("turns") or []
+    hearing = {}
+    for run in payload.get("runs") or []:
+        condition = run.get("condition")
+        key = (run.get("case_id"), condition)
+        if condition not in conditions or key in hearing or key[0] not in by_id:
+            continue
+        case = by_id[key[0]]
+        asr_turns = {str(k): v for k, v in (run.get("asr_turns") or {}).items()}
+        turn_wers = {str(k): v for k, v in (run.get("turn_wers") or {}).items()}
+        transcript = "\n".join(format_turn(turn, asr_turns.get(str(turn["index"]), "")) for turn in case["turns"])
+        hearing[key] = (transcript, asr_turns, turn_wers, details.get(key, []))
+    return hearing
 
 
 def clean_span(value):
@@ -107,11 +163,11 @@ def score(case: dict, raw: str, asr_turns: dict) -> dict:
 def _trace(case, run, heard_details, result_ids):
     variant = run["condition"]
     assets = []
-    if variant != "blind" and case.get("audio"):
+    if variant not in ("blind", "blind_guess") and case.get("audio"):
         path = ROOT / case["audio"]
         digest = hashlib.sha256(path.read_bytes()).hexdigest()[:12] if path.exists() else hashlib.sha256(case["audio"].encode()).hexdigest()[:12]
         assets = [{"id": digest, "path": case["audio"], "modality": "audio", "transformation": variant}]
-    s1 = {"id": "s1", "name": "attach_audio" if variant != "blind" else "remove_media", "type": "media",
+    s1 = {"id": "s1", "name": "attach_audio" if variant not in ("blind", "blind_guess") else "remove_media", "type": "media",
           "status": "completed", "parent_span_ids": [], "metadata": {"asset_id": assets[0]["id"] if assets else None}}
     s2 = {"id": "s2", "name": "transcribe", "type": "model", "status": "completed", "parent_span_ids": ["s1"],
           "model": "muse-voice-transcribe-1.0", "turns": heard_details}
@@ -132,23 +188,32 @@ def main():
     ap.add_argument("--tag", default="audio")
     ap.add_argument("--limit", type=int)
     ap.add_argument("--mock", action="store_true")
+    ap.add_argument("--reuse-asr", action="store_true", help="use out/asr cache entries and do not transcribe those clips again")
+    ap.add_argument("--only-agents", action="store_true", help="rerun only the agent and judge steps, reusing stored transcripts")
     args = ap.parse_args()
     cases = load_cases(args.limit, args.mock)
     agents = [a.strip() for a in args.agents.split(",") if a.strip()]
     conditions = [c.strip() for c in args.conditions.split(",") if c.strip()]
     backend = core.MockBackend() if args.mock else core.LiveBackend()
     started = time.time()
+    name = f"results_{args.tag}.json" if args.tag else "results_audio.json"
+    out_path = OUT / name
     hearing = {}
+    if args.only_agents and out_path.exists():
+        hearing = hearing_from_results(json.loads(out_path.read_text()), cases, conditions)
+    elif args.only_agents and not args.mock:
+        raise SystemExit(f"--only-agents needs an existing {out_path} to reuse.")
     for case in cases:
         for condition in conditions:
-            hearing[(case["id"], condition)] = hear(case, condition, args.mock)
+            if (case["id"], condition) not in hearing:
+                hearing[(case["id"], condition)] = hear(case, condition, args.mock, reuse_asr=args.reuse_asr)
 
     runs, heard_by_run = [], {}
     for agent in agents:
         for case in cases:
-            for condition in conditions + ["blind"]:
+            for condition in conditions + ["blind", "blind_guess"]:
                 transcript, asr_turns, turn_wers, details = hearing.get((case["id"], condition), ("", {}, {}, []))
-                prompt = core.AUDIO_AGENT_PROMPT.format(question=case["question"], transcript=transcript)
+                prompt = core.audio_agent_prompt(case["question"], transcript, condition)
                 try:
                     raw, latency, usage = backend.audio_agent(agent, case, transcript, condition)
                     rec = score(case, raw, asr_turns)
@@ -176,24 +241,58 @@ def main():
                            "agrees": accepted == core.answer_correct(case, proposed)})
 
     ev.relabel_runs(cases, runs)
-    results, summary, disagreements = ev.evaluate_all(cases, runs, judged, agents)
+    results, summary, disagreements, conflicts = ev.evaluate_all(
+        cases, runs, judged, agents, judge_model=args.judge
+    )
     result_ids = {}
     for result in results:
         target = result["target"]
         result_ids.setdefault((target["agent"], target["case_id"], target["variant"]), []).append(result["id"])
     traces = [_trace(by_id[r["case_id"]], r, heard_by_run[(r["agent"], r["case_id"], r["condition"])],
                      result_ids.get((r["agent"], r["case_id"], r["condition"]), [])) for r in runs]
-    OUT.mkdir(exist_ok=True)
     payload = {
         "meta": {"agents": agents, "judge": args.judge, "conditions": conditions, "mock": args.mock,
-                 "modality": "audio", "created": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                 "modality": "audio", "span_unit_warnings": count_span_unit_warnings(cases, runs),
+                 "created": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                  "seconds": round(time.time() - started, 1)},
         "cases": cases, "runs": runs, "judged": judged, "results": results,
-        "dimension_summary": summary, "disagreements": disagreements, "registry": ev.registry_list(), "traces": traces,
+        "dimension_summary": summary, "disagreements": disagreements, "conflicts": conflicts,
+        "registry": ev.registry_list(), "traces": traces, "plan": [],
     }
-    name = f"results_{args.tag}.json" if args.tag else "results_audio.json"
-    (OUT / name).write_text(json.dumps(payload, indent=1))
-    print(f"wrote {OUT / name} in {payload['meta']['seconds']}s")
+    OUT.mkdir(exist_ok=True)
+    if out_path.name == "results_audio.json" and out_path.exists():
+        backup = out_path.with_name("results_audio.before_units_fix.json")
+        if not backup.exists():
+            shutil.copy2(out_path, backup)
+    out_path.write_text(json.dumps(payload, indent=1))
+    print(f"wrote {out_path} in {payload['meta']['seconds']}s")
+    print_summary(runs)
+
+
+def print_summary(runs: list[dict]) -> None:
+    agents, conditions = [], []
+    for run in runs:
+        if run["agent"] not in agents:
+            agents.append(run["agent"])
+        if run["condition"] not in conditions:
+            conditions.append(run["condition"])
+    guess_correct = {
+        agent: sum(1 for run in runs if run["agent"] == agent and run["condition"] == "blind_guess" and run.get("correct"))
+        for agent in agents
+    }
+    print(f"{'agent':<22} {'condition':<14} {'n':>4} {'correct':>8} {'grounded_correct':>18} {'correct_ungrounded':>20} {'blind_guess_correct':>20}")
+    for agent in agents:
+        for condition in conditions:
+            rows = [run for run in runs if run["agent"] == agent and run["condition"] == condition]
+            if not rows:
+                continue
+            print(
+                f"{agent:<22} {condition:<14} {len(rows):>4} "
+                f"{sum(bool(run.get('correct')) for run in rows):>8} "
+                f"{sum(run.get('label') == 'grounded_correct' for run in rows):>18} "
+                f"{sum(run.get('label') == 'correct_ungrounded' for run in rows):>20} "
+                f"{guess_correct[agent]:>20}"
+            )
 
 
 if __name__ == "__main__":

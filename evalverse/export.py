@@ -53,14 +53,19 @@ def _human_size(n: int) -> str:
     return f"{size:.1f} GB"
 
 
-def _rewrite(obj, mapping: dict[str, str]):
+def rewrite_media_paths(obj, mapping: dict[str, str]):
+    """Recursively replace exact path strings using *mapping* (old -> new)."""
     if isinstance(obj, dict):
-        return {k: _rewrite(v, mapping) for k, v in obj.items()}
+        return {k: rewrite_media_paths(v, mapping) for k, v in obj.items()}
     if isinstance(obj, list):
-        return [_rewrite(v, mapping) for v in obj]
+        return [rewrite_media_paths(v, mapping) for v in obj]
     if isinstance(obj, str) and obj in mapping:
         return mapping[obj]
     return obj
+
+
+# Back-compat alias used internally.
+_rewrite = rewrite_media_paths
 
 
 def _export_jpeg(src: Path, dest: Path) -> bool:
@@ -165,9 +170,8 @@ def export_suite(results_path: Path, data_dir: Path, media_root: Path) -> dict:
     out_json.write_text(json.dumps(payload, indent=1))
 
     meta = payload["meta"]
-    modality = meta.get("modality")
-    if not modality:
-        modality = "audio" if any(c.get("modality") == "audio" for c in cases) else "image"
+    # Default to image unless meta.modality says otherwise.
+    modality = meta.get("modality") or "image"
 
     return {
         "suite": suite,
