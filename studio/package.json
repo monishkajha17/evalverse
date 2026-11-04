@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "NEXT_DIST_DIR=.next-dev next dev",
+    "dev:fresh": "rm -rf .next-dev && NEXT_DIST_DIR=.next-dev next dev",
     "docs:gen": "node scripts/gen-api-docs.mjs",
     "docs:check-links": "node scripts/check-docs-links.mjs",
     "prebuild": "npm run docs:gen",

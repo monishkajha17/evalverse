@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Print verified figures for README.md from out/results_*.json and out/evalverse.db.
-
-Skip result files with meta.mock true. Tool-use numbers dedupe by
-(session_prefix, receipt/case_id, condition), keeping the latest started_at.
-"""
+"""Verified figures for README.md from non-mock out/results_*.json and out/evalverse.db."""
 
 from __future__ import annotations
 
@@ -18,38 +14,45 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "out"
 DB = OUT / "evalverse.db"
 
+LABELS = [
+    "grounded_correct",
+    "correct_ungrounded",
+    "misread",
+    "mislocated",
+    "misunderstood",
+    "heard_wrong",
+    "mistimed",
+    "abstained",
+    "invalid_output",
+]
+
 
 def _load_suites() -> dict[str, dict]:
     suites: dict[str, dict] = {}
     for path in sorted(OUT.glob("results_*.json")):
         data = json.loads(path.read_text())
         if not isinstance(data, dict):
-            print(f"SKIP {path.name}: not an object")
             continue
-        meta = data.get("meta") or {}
-        if meta.get("mock") is True:
-            print(f"SKIP {path.name}: meta.mock=true")
+        if (data.get("meta") or {}).get("mock") is True:
+            print(f"SKIP {path.name}: mock")
             continue
-        tag = path.stem.replace("results_", "", 1)
-        suites[tag] = data
+        suites[path.stem.replace("results_", "", 1)] = data
     return suites
 
 
-def _file_dates(path: Path, meta: dict) -> str:
+def _dates(path: Path, meta: dict) -> str:
     created = meta.get("created") or "unknown"
     mtime = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc).isoformat()
-    return f"meta.created={created}  file_mtime_utc={mtime}"
+    return f"created={created} mtime={mtime}"
+
+
+def _pct(n: int, d: int) -> str:
+    return "n/a" if d <= 0 else f"{100.0 * n / d:.1f}%"
 
 
 def _qkind(case_id: str) -> str | None:
     part = (case_id or "").rsplit("_", 1)[-1]
     return part if part in {"time", "order", "third"} else None
-
-
-def _pct(n: int, d: int) -> str:
-    if d <= 0:
-        return "n/a"
-    return f"{100.0 * n / d:.1f}%"
 
 
 def section(title: str) -> None:
@@ -59,28 +62,116 @@ def section(title: str) -> None:
     print("=" * 72)
 
 
-def suite_inventory(suites: dict[str, dict]) -> None:
-    section("SUITE INVENTORY (non-mock results_*.json)")
+def inventory(suites: dict[str, dict]) -> None:
+    section("SUITE INVENTORY")
     for tag, data in suites.items():
         path = OUT / f"results_{tag}.json"
         meta = data.get("meta") or {}
-        print(f"\n[{tag}] {path}")
-        print(f"  {_file_dates(path, meta)}")
         print(
-            f"  agents={meta.get('agents')}  judge={meta.get('judge')}  "
-            f"conditions={meta.get('conditions')}"
+            f"[{tag}] {_dates(path, meta)} cases={len(data.get('cases') or [])} "
+            f"runs={len(data.get('runs') or [])} judged={len(data.get('judged') or [])} "
+            f"agents={meta.get('agents')} judge={meta.get('judge')}"
         )
-        print(
-            f"  n_cases={len(data.get('cases') or [])}  "
-            f"n_runs={len(data.get('runs') or [])}  "
-            f"n_traces={len(data.get('traces') or [])}  "
-            f"n_results={len(data.get('results') or [])}  "
-            f"n_judged={len(data.get('judged') or [])}"
-        )
+
+
+def evaluator_catalogue() -> None:
+    section("EVALUATOR CATALOGUE (from evalverse.evaluators.REGISTRY)")
+    sys.path.insert(0, str(ROOT))
+    from evalverse.evaluators import REGISTRY  # noqa: WPS433
+
+    # Display groups requested by README
+    group_of = {
+        "answer_correctness": "deterministic",
+        "evidence_grounding": "deterministic",
+        "item_recall": "deterministic",
+        "fabrication_check": "deterministic",
+        "transcript_fidelity": "deterministic",
+        "event_order": "deterministic",
+        "temporal_alignment": "temporal",
+        "temporal_alignment_video": "temporal",
+        "cross_modal_consistency": "cross-modal",
+        "cross_modal_perception": "cross-modal",
+        "cross_modal_stage_attribution": "cross-modal",
+        "perception_judge": "perception",
+        "claim_grounding": "model judge",
+        "cross_modal_judge": "model judge",
+        "tool_schema_valid": "tool use",
+        "tool_args_correct": "tool use",
+        "tool_args_grounded": "tool use",
+        "tool_order_policy": "tool use",
+        "action_despite_abstention": "tool use",
+        "media_dependence": "paired",
+        "media_dependence_guess": "paired",
+        "cross_modal_media_dependence": "paired",
+        "robustness_sweep": "paired",
+        "judge_audit": "paired",
+        "judge_media_dependence": "paired",
+        "stage_attribution": "composite",
+        "audio_stage_attribution": "composite",
+    }
+    by: dict[str, list] = defaultdict(list)
+    for eid, meta in REGISTRY.items():
+        g = group_of.get(eid, meta.get("category") or "other")
+        by[g].append(meta)
+    order = [
+        "deterministic",
+        "perception",
+        "temporal",
+        "cross-modal",
+        "model judge",
+        "tool use",
+        "paired",
+        "composite",
+        "other",
+    ]
+    for g in order:
+        items = by.get(g) or []
+        if not items:
+            continue
+        print(f"\n[{g}] n={len(items)}")
+        for m in sorted(items, key=lambda x: x["id"]):
+            mods = ",".join(m.get("modalities") or [])
+            print(
+                f"  {m['id']}\t{m.get('category')}\t{m.get('dimension')}\t"
+                f"{mods}\tneeds_reference={m.get('needs_reference')}\tscope={m.get('scope')}"
+            )
+
+
+def failure_labels(suites: dict[str, dict]) -> None:
+    section("FAILURE LABEL EXAMPLES (one real case each)")
+    found: dict[str, dict] = {}
+    for tag, data in suites.items():
+        cases = {c["id"]: c for c in data.get("cases") or []}
+        for r in data.get("runs") or []:
+            lab = r.get("label")
+            if lab not in LABELS or lab in found:
+                continue
+            case = cases.get(r.get("case_id"), {})
+            found[lab] = {
+                "suite": f"results_{tag}.json",
+                "case_id": r.get("case_id"),
+                "agent": r.get("agent") or r.get("model"),
+                "condition": r.get("condition"),
+                "expected": case.get("answer") or case.get("expected_verdict"),
+                "got": r.get("answer") if r.get("answer") is not None else r.get("verdict"),
+                "wer": r.get("wer"),
+                "correct": r.get("correct"),
+                "iou": r.get("iou"),
+            }
+    for lab in LABELS:
+        if lab not in found:
+            print(f"  {lab}: not observed in these runs")
+        else:
+            e = found[lab]
+            print(
+                f"  {lab}: suite={e['suite']} case={e['case_id']} agent={e['agent']} "
+                f"condition={e['condition']} expected={e['expected']!r} got={e['got']!r} "
+                f"correct={e['correct']} iou={e['iou']} wer={e['wer']}"
+            )
 
 
 def measured_dimensions(suites: dict[str, dict]) -> None:
-    section("DIMENSIONS MEASURED IN THIS RELEASE")
+    section("DIMENSIONS MEASURED")
     dims = [
         "Perception",
         "Groundedness",
@@ -94,74 +185,56 @@ def measured_dimensions(suites: dict[str, dict]) -> None:
         "Honesty",
         "Tool use",
         "Judge trust",
-        "Failure analysis",
     ]
-    counts: dict[str, dict] = {
-        d: {"measured": 0, "skipped": 0, "suites": set()} for d in dims
-    }
+    counts = {d: {"measured": 0, "suites": set()} for d in dims}
     for tag, data in suites.items():
-        # From result rows
         for r in data.get("results") or []:
             dim = r.get("dimension") or ""
             if dim == "Honesty / confident errors":
                 dim = "Honesty"
             if dim not in counts:
                 continue
-            lab = r.get("label")
-            st = r.get("status")
-            if st == "completed" and lab not in (None, "skipped"):
+            if r.get("status") == "completed" and r.get("label") not in (None, "skipped"):
                 counts[dim]["measured"] += 1
                 counts[dim]["suites"].add(tag)
-            elif st == "skipped" or lab == "skipped":
-                counts[dim]["skipped"] += 1
-        # Honesty also appears as a scored dimension in scores.rows
-        scores = data.get("scores") or {}
-        for row in scores.get("rows") or []:
-            dims_block = row.get("dimensions") or {}
-            hon = dims_block.get("Honesty") or {}
+        for row in (data.get("scores") or {}).get("rows") or []:
+            hon = (row.get("dimensions") or {}).get("Honesty") or {}
             if hon.get("status") == "available" and (hon.get("n") or 0) > 0:
-                counts["Honesty"]["measured"] += int(hon.get("n") or 0)
+                counts["Honesty"]["measured"] += int(hon["n"])
                 counts["Honesty"]["suites"].add(tag)
-
     if DB.exists():
         con = sqlite3.connect(DB)
         n = con.execute(
             """
             SELECT COUNT(*) FROM eval_results
-            WHERE dimension = 'Tool use' AND status = 'completed'
-              AND label IS NOT NULL AND label != 'skipped'
+            WHERE dimension='Tool use' AND status='completed'
+              AND label IS NOT NULL AND label!='skipped'
             """
         ).fetchone()[0]
         if n:
             counts["Tool use"]["measured"] += n
             counts["Tool use"]["suites"].add("evalverse.db")
         con.close()
-
-    print(f"{'dimension':<28} {'measured':>8} {'skipped':>8}  suites")
     for d in dims:
         c = counts[d]
-        suites_s = ",".join(sorted(c["suites"])) if c["suites"] else "—"
-        measured = "yes" if c["measured"] else "no"
         print(
-            f"{d:<28} {c['measured']:>8} {c['skipped']:>8}  "
-            f"measured_in_release={measured}  sources={suites_s}"
+            f"  {d}: measured_in_release={'yes' if c['measured'] else 'no'} "
+            f"n={c['measured']} sources={','.join(sorted(c['suites'])) or '—'}"
         )
 
 
 def failure_mix(suites: dict[str, dict]) -> None:
-    section("FAILURE MIX — receipts under blur / noise / lowres (cord)")
+    section("FAILURE MIX degraded cord (blur+noise+lowres)")
     data = suites.get("cord")
     if not data:
-        print("UNSUPPORTED: no cord suite")
+        print("UNSUPPORTED")
         return
-    path = OUT / "results_cord.json"
-    print(f"source={path}  {_file_dates(path, data.get('meta') or {})}")
-    conditions = ["blur", "noise", "lowres"]
-    for agent in sorted({r["agent"] for r in data["runs"] if r.get("condition") in conditions}):
+    print(f"source results_cord.json {_dates(OUT/'results_cord.json', data.get('meta') or {})}")
+    for agent in sorted({r["agent"] for r in data["runs"]}):
         runs = [
             r
             for r in data["runs"]
-            if r["agent"] == agent and r["condition"] in conditions
+            if r["agent"] == agent and r["condition"] in ("blur", "noise", "lowres")
         ]
         correct = sum(1 for r in runs if r.get("correct") is True)
         could = sum(1 for r in runs if r.get("label") == "abstained")
@@ -170,44 +243,57 @@ def failure_mix(suites: dict[str, dict]) -> None:
         )
         n = len(runs)
         print(
-            f"  {agent} degraded(blur+noise+lowres): n={n}  "
-            f"correct={correct} ({_pct(correct, n)})  "
-            f"confidently_wrong={wrong} ({_pct(wrong, n)})  "
-            f"could_not_read={could} ({_pct(could, n)})"
+            f"  {agent}: n={n} correct={correct} ({_pct(correct,n)}) "
+            f"confidently_wrong={wrong} ({_pct(wrong,n)}) "
+            f"could_not_read={could} ({_pct(could,n)})"
         )
-        for cond in conditions:
-            rs = [r for r in data["runs"] if r["agent"] == agent and r["condition"] == cond]
-            c = sum(1 for r in rs if r.get("correct") is True)
-            a = sum(1 for r in rs if r.get("label") == "abstained")
-            w = sum(
-                1 for r in rs if r.get("correct") is False and r.get("label") != "abstained"
-            )
-            print(
-                f"    {cond}: n={len(rs)} correct={c} confidently_wrong={w} could_not_read={a}"
-            )
+
+
+def judge_trust(suites: dict[str, dict]) -> None:
+    section("JUDGE TRUST (exclude agent_answer)")
+    data = suites.get("wonder")
+    if not data:
+        print("UNSUPPORTED")
+        return
+    judged = data.get("judged") or []
+    with_img = [j for j in judged if j.get("kind") in ("planted_right", "planted_wrong")]
+    no_img = [
+        j for j in judged if j.get("kind") in ("planted_right_noimg", "planted_wrong_noimg")
+    ]
+
+    def report(name: str, rows: list) -> None:
+        right = [j for j in rows if "right" in (j.get("kind") or "")]
+        wrong = [j for j in rows if "wrong" in (j.get("kind") or "")]
+        fa = sum(1 for j in wrong if j.get("judge_accepts"))
+        fr = sum(1 for j in right if not j.get("judge_accepts"))
+        agrees = sum(1 for j in rows if j.get("agrees") is True)
+        n = len(rows)
+        print(
+            f"  {name}: planted_right={len(right)} planted_wrong={len(wrong)} "
+            f"FA={fa}/{len(wrong)} FR={fr}/{len(right)} "
+            f"accuracy={agrees/n if n else 0:.3f} ({agrees}/{n})"
+        )
+
+    report("WITH_IMAGE", with_img)
+    report("IMAGE_HIDDEN", no_img)
+    print(f"  excluded_agent_answer={sum(1 for j in judged if j.get('kind')=='agent_answer')}")
 
 
 def audio_stage(suites: dict[str, dict]) -> None:
-    section("AUDIO STAGE — phone-band (bandlimit)")
+    section("AUDIO bandlimit")
     data = suites.get("audio")
     if not data:
-        print("UNSUPPORTED: no audio suite")
         return
-    path = OUT / "results_audio.json"
-    print(f"source={path}  {_file_dates(path, data.get('meta') or {})}")
     for agent in sorted({r["agent"] for r in data["runs"] if r.get("condition") == "bandlimit"}):
         runs = [r for r in data["runs"] if r["agent"] == agent and r["condition"] == "bandlimit"]
-        print(f"  {agent}: n={len(runs)}  labels={dict(Counter(r.get('label') for r in runs))}")
+        print(f"  {agent}: n={len(runs)} {dict(Counter(r.get('label') for r in runs))}")
 
 
 def video_chance(suites: dict[str, dict]) -> None:
-    section("VIDEO CHANCE — with frames (clean) vs no frames (blind_guess)")
+    section("VIDEO chance")
     data = suites.get("video")
     if not data:
-        print("UNSUPPORTED: no video suite")
         return
-    path = OUT / "results_video.json"
-    print(f"source={path}  {_file_dates(path, data.get('meta') or {})}")
     for kind in ["time", "order", "third"]:
         for cond in ["clean", "blind_guess"]:
             runs = [
@@ -217,100 +303,15 @@ def video_chance(suites: dict[str, dict]) -> None:
             ]
             if not runs:
                 continue
-            correct = sum(1 for r in runs if r.get("correct"))
-            print(
-                f"  {kind} · {cond}: correct={correct}/{len(runs)} ({_pct(correct, len(runs))})"
-                + ("  chance_line=50%" if kind == "order" else "")
-            )
+            c = sum(1 for r in runs if r.get("correct"))
+            print(f"  {kind}/{cond}: {c}/{len(runs)}")
 
 
-def why_examples(suites: dict[str, dict]) -> None:
-    section("WHY EXAMPLES (verified against results_cord.json)")
-    data = suites.get("cord")
-    if not data:
-        print("UNSUPPORTED")
-        return
-    cases = {c["id"]: c for c in data.get("cases") or []}
-
-    def find(label: str, condition: str | None = None, case_id: str | None = None):
-        for r in data["runs"]:
-            if r.get("label") != label:
-                continue
-            if condition and r.get("condition") != condition:
-                continue
-            if case_id and r.get("case_id") != case_id:
-                continue
-            return r
-        return None
-
-    specs = [
-        ("fluent_but_wrong", "misread", "blur", "cord_total_01"),
-        ("right_answer_wrong_place", "correct_ungrounded", "clean", "cord_subtotal_03"),
-    ]
-    for name, label, cond, cid in specs:
-        r = find(label, cond, cid) or find(label, cond)
-        if not r:
-            print(f"  UNSUPPORTED {name}")
-            continue
-        exp = cases.get(r["case_id"], {}).get("answer")
-        print(
-            f"  {name}: agent={r['agent']} case={r['case_id']} condition={r['condition']} "
-            f"expected={exp!r} answer={r.get('answer')!r} correct={r.get('correct')} "
-            f"iou={r.get('iou')} evidence_ok={r.get('evidence_ok')} label={r.get('label')}"
-        )
-
-
-def judge_trust(suites: dict[str, dict]) -> None:
-    section("JUDGE TRUST — planted with image vs image hidden (exclude agent_answer)")
-    data = suites.get("wonder")
-    if not data:
-        print("UNSUPPORTED: no wonder suite")
-        return
-    path = OUT / "results_wonder.json"
-    print(f"source={path}  {_file_dates(path, data.get('meta') or {})}")
-    print(f"  judge_model={data.get('meta', {}).get('judge')}")
-    judged = data.get("judged") or []
-    print(f"  kinds={dict(Counter(j.get('kind') for j in judged))}")
-
-    with_img = [j for j in judged if j.get("kind") in ("planted_right", "planted_wrong")]
-    no_img = [
-        j for j in judged if j.get("kind") in ("planted_right_noimg", "planted_wrong_noimg")
-    ]
-    agent_ans = [j for j in judged if j.get("kind") == "agent_answer"]
-    print(f"  excluded_agent_answer_n={len(agent_ans)}")
-
-    def report(name: str, rows: list[dict]) -> None:
-        right = [j for j in rows if j.get("kind") in ("planted_right", "planted_right_noimg")]
-        wrong = [j for j in rows if j.get("kind") in ("planted_wrong", "planted_wrong_noimg")]
-        # false accept: accept a planted wrong; false reject: reject a planted right
-        fa = sum(1 for j in wrong if j.get("judge_accepts"))
-        fr = sum(1 for j in right if not j.get("judge_accepts"))
-        agrees = sum(1 for j in rows if j.get("agrees") is True)
-        n = len(rows)
-        acc = agrees / n if n else 0.0
-        print(
-            f"  {name}: planted_right={len(right)} planted_wrong={len(wrong)}  "
-            f"false_accepts={fa}/{len(wrong)}  false_rejects={fr}/{len(right)}  "
-            f"accuracy={acc:.3f} (agrees={agrees}/{n})"
-        )
-
-    report("WITH_IMAGE", with_img)
-    report("IMAGE_HIDDEN", no_img)
-    print(
-        "  CONTROL: image-hidden rows ask the same planted answers with the receipt "
-        "removed so a chance-level score shows the judge needed the image."
-    )
-
-
-def _cm_verdict_bucket(r: dict) -> str:
+def _cm_bucket(r: dict) -> str:
     expected = (r.get("expected_verdict") or "").strip().lower()
-    verdict = (r.get("verdict") or "").strip().lower()
-    answer = (r.get("answer") or "").strip().lower()
-    if verdict not in ("consistent", "inconsistent", "cannot_tell", "none", ""):
-        verdict = answer
+    verdict = (r.get("verdict") or r.get("answer") or "").strip().lower()
     if (
         verdict in ("cannot_tell", "none", "", "unknown")
-        or answer in ("cannot_tell", "unknown", "none")
         or r.get("label") == "abstained"
         or r.get("error_type") == "abstained"
     ):
@@ -322,71 +323,69 @@ def _cm_verdict_bucket(r: dict) -> str:
     if verdict == expected:
         return "correct"
     if expected == "inconsistent" and verdict == "consistent":
-        return "missed_contradiction"  # said they agree when they did not
+        return "missed_contradiction"
     if expected == "consistent" and verdict == "inconsistent":
-        return "false_alarm"  # said they disagree when they agreed
+        return "false_alarm"
     return "other"
 
 
 def crossmodal(suites: dict[str, dict]) -> None:
-    section("CROSS-MODAL — verdict-level (not stage labels)")
+    section("CROSS-MODAL verdict-level")
     data = suites.get("crossmodal")
+    if not data:
+        return
+    print(f"  n_cases={len(data.get('cases') or [])}")
+    for cond in ["clean", "blur", "noisy_voice", "no_image"]:
+        rows = [r for r in data["runs"] if r.get("condition") == cond]
+        if rows:
+            print(f"  {cond}: n={len(rows)} {dict(Counter(_cm_bucket(r) for r in rows))}")
+    with_r = [r for r in data["runs"] if r.get("condition") != "no_image"]
+    no_r = [r for r in data["runs"] if r.get("condition") == "no_image"]
+    print(f"  WITH_RECEIPT: n={len(with_r)} {dict(Counter(_cm_bucket(r) for r in with_r))}")
+    print(f"  NO_RECEIPT: n={len(no_r)} {dict(Counter(_cm_bucket(r) for r in no_r))}")
+
+
+def lists_suite(suites: dict[str, dict]) -> None:
+    section("LISTS completeness + hallucination")
+    data = suites.get("lists")
     if not data:
         print("UNSUPPORTED")
         return
-    path = OUT / "results_crossmodal.json"
-    print(f"source={path}  {_file_dates(path, data.get('meta') or {})}")
-    print(f"  n_cases={len(data.get('cases') or [])}")
-    for cond in ["clean", "blur", "noisy_voice", "no_image"]:
-        rows = [r for r in data.get("runs") or [] if r.get("condition") == cond]
-        if not rows:
-            continue
-        c = Counter(_cm_verdict_bucket(r) for r in rows)
-        print(f"  {cond}: n={len(rows)}  {dict(c)}")
-    with_r = [r for r in data["runs"] if r.get("condition") != "no_image"]
-    no_r = [r for r in data["runs"] if r.get("condition") == "no_image"]
-    print(f"  WITH_RECEIPT: n={len(with_r)}  {dict(Counter(_cm_verdict_bucket(r) for r in with_r))}")
-    print(f"  NO_RECEIPT_FORCED_GUESS: n={len(no_r)}  {dict(Counter(_cm_verdict_bucket(r) for r in no_r))}")
-    print("  NOTE: cross-modal stage labels are not reported in this release")
+    print(f"source results_lists.json {_dates(OUT/'results_lists.json', data.get('meta') or {})}")
+    for eid in ("item_recall", "fabrication_check"):
+        rows = [
+            r
+            for r in data.get("results") or []
+            if r.get("evaluator_id") == eid
+            and r.get("status") == "completed"
+            and r.get("label") != "skipped"
+        ]
+        print(f"  {eid}: n={len(rows)} {dict(Counter(r.get('label') for r in rows))}")
 
 
-def tool_use_from_db() -> None:
-    section(
-        "TOOL USE (evalverse.db) — live=safety instruction, naive=no safety; "
-        "dedupe (prefix, receipt, condition)"
-    )
+def tool_use() -> None:
+    section("TOOL USE deduped live vs naive")
     if not DB.exists():
-        print("UNSUPPORTED: out/evalverse.db missing")
+        print("UNSUPPORTED")
         return
-    mtime = datetime.fromtimestamp(DB.stat().st_mtime, tz=timezone.utc).isoformat()
-    print(f"source={DB}  file_mtime_utc={mtime}")
-
     con = sqlite3.connect(DB)
     con.row_factory = sqlite3.Row
     rows = con.execute(
         """
-        SELECT t.id AS tid, t.session_id, t.started_at, t.metadata_json, t.input_json,
-               t.output_json, er.evaluator_id, er.label, er.status, er.explanation
+        SELECT t.id tid, t.session_id, t.started_at, t.metadata_json, t.input_json, t.output_json,
+               er.evaluator_id, er.label, er.status, er.explanation
         FROM traces t
-        JOIN eval_results er ON er.trace_id = t.id
-        WHERE EXISTS (SELECT 1 FROM spans s WHERE s.trace_id = t.id AND s.type = 'tool')
-          AND er.evaluator_id IN (
-            'tool_args_correct', 'action_despite_abstention', 'answer_correctness'
-          )
+        JOIN eval_results er ON er.trace_id=t.id
+        WHERE EXISTS (SELECT 1 FROM spans s WHERE s.trace_id=t.id AND s.type='tool')
+          AND er.evaluator_id IN ('tool_args_correct','action_despite_abstention','answer_correctness')
         """
     ).fetchall()
-
     by_trace: dict[str, dict] = defaultdict(dict)
     meta_by: dict[str, sqlite3.Row] = {}
     for r in rows:
-        by_trace[r["tid"]][r["evaluator_id"]] = {
-            "label": r["label"],
-            "status": r["status"],
-            "explanation": r["explanation"],
-        }
+        by_trace[r["tid"]][r["evaluator_id"]] = r
         meta_by[r["tid"]] = r
-
-    best: dict[tuple[str, str, str], dict] = {}
+    best: dict[tuple, dict] = {}
     for tid, evs in by_trace.items():
         r = meta_by[tid]
         meta = json.loads(r["metadata_json"] or "{}")
@@ -399,150 +398,118 @@ def tool_use_from_db() -> None:
         prefix = sess.split(":", 1)[0] if ":" in sess else sess
         if prefix not in ("live", "naive") or not case or not cond:
             continue
-        tac = evs.get("tool_args_correct") or {}
-        ada = (evs.get("action_despite_abstention") or {}).get("label")
-        ans = (evs.get("answer_correctness") or {}).get("label")
-        lab = tac.get("label")
+        tac = evs.get("tool_args_correct")
+        lab = tac["label"] if tac else None
         if lab == "correct_amount":
             bucket = "correct_amount"
         elif lab == "wrong_amount":
             bucket = "wrong_amount"
-        elif lab == "skipped" or tac.get("status") == "skipped":
+        elif lab == "skipped" or (tac and tac["status"] == "skipped"):
             bucket = "declined"
         else:
             bucket = lab or "other"
+        ans = (evs.get("answer_correctness") or {"label": None})["label"]
+        ada = (evs.get("action_despite_abstention") or {"label": None})["label"]
         acted = bucket in ("correct_amount", "wrong_amount")
-        # acted while unsure: tools fired while answer abstained, or unsafe action label
-        acted_while_unsure = bool(
-            acted
-            and (
-                ans == "abstained"
-                or (ada not in (None, "safe", "skipped"))
-            )
-        )
-        ts = r["started_at"] or ""
+        unsure = bool(acted and (ans == "abstained" or ada not in (None, "safe", "skipped")))
         key = (prefix, str(case), str(cond))
+        ts = r["started_at"] or ""
         if key not in best or ts > best[key]["ts"]:
             best[key] = {
                 "ts": ts,
                 "bucket": bucket,
                 "acted": acted,
-                "acted_while_unsure": acted_while_unsure,
+                "unsure": unsure,
                 "ans": ans,
-                "ada": ada,
-                "answer": out.get("answer"),
-                "explanation": (tac.get("explanation") or "")[:160],
-                "tid": tid,
                 "case": case,
                 "cond": cond,
+                "answer": out.get("answer"),
+                "explanation": (tac["explanation"] if tac else "")[:120],
             }
-
     unsure_total = 0
     for prefix in ("live", "naive"):
         items = [v for k, v in best.items() if k[0] == prefix]
-        n = len(items)
-        acted = sum(1 for v in items if v["acted"])
-        correct = sum(1 for v in items if v["bucket"] == "correct_amount")
-        wrong = sum(1 for v in items if v["bucket"] == "wrong_amount")
-        declined = sum(1 for v in items if v["bucket"] == "declined")
-        unsure = sum(1 for v in items if v["acted_while_unsure"])
+        unsure = sum(1 for v in items if v["unsure"])
         unsure_total += unsure
-        style = "safety_instruction" if prefix == "live" else "no_safety_instruction"
         print(
-            f"  prefix={prefix} ({style}): n={n}  acted={acted}  "
-            f"correct_amount={correct}  wrong_amount={wrong}  declined={declined}  "
+            f"  {prefix}: n={len(items)} acted={sum(1 for v in items if v['acted'])} "
+            f"correct_amount={sum(1 for v in items if v['bucket']=='correct_amount')} "
+            f"wrong_amount={sum(1 for v in items if v['bucket']=='wrong_amount')} "
+            f"declined={sum(1 for v in items if v['bucket']=='declined')} "
             f"acted_while_unsure={unsure}"
         )
-        # example wrong amount after confident misread
         ex = next(
-            (
-                v
-                for v in items
-                if v["bucket"] == "wrong_amount" and v["ans"] == "incorrect"
-            ),
+            (v for v in items if v["bucket"] == "wrong_amount" and v["ans"] == "incorrect"),
             None,
         )
         if ex:
             print(
-                f"    example_wrong_amount_after_confident_misread: "
-                f"case={ex['case']} condition={ex['cond']} answer={ex['answer']!r} "
-                f"explanation={ex['explanation']!r}"
+                f"    example: case={ex['case']} cond={ex['cond']} "
+                f"answer={ex['answer']!r} expl={ex['explanation']!r}"
             )
-
     print(f"  ACTED_WHILE_UNSURE_TOTAL={unsure_total}")
-    print(
-        "  SURVIVES_DEDUPE_CHECK="
-        + ("yes" if best else "no")
-    )
     con.close()
 
 
-def scores_ums(suites: dict[str, dict]) -> None:
-    section("UMS / SCORES — overall rows with ci_95 and coverage (skip crossmodal in README table)")
+def ums(suites: dict[str, dict]) -> None:
+    section("UMS overall (skip crossmodal in README table)")
     for tag, data in suites.items():
         scores = data.get("scores")
         if not scores:
             continue
-        path = OUT / f"results_{tag}.json"
-        print(f"[{tag}] {_file_dates(path, data.get('meta') or {})}  profile={scores.get('profile')}")
         for row in scores.get("rows") or []:
             if row.get("variant") != "overall":
                 continue
-            ci = row.get("ci_95")
             print(
-                f"  agent={row.get('agent')} ums={row.get('ums')} "
-                f"ci_95={ci} coverage={row.get('coverage')} gate={row.get('gate')}"
+                f"  [{tag}] {row.get('agent')} ums={row.get('ums')} "
+                f"ci_95={row.get('ci_95')} coverage={row.get('coverage')} gate={row.get('gate')}"
             )
 
 
 def model_calls(suites: dict[str, dict]) -> None:
-    section("MODEL CALLS behind non-mock result files")
-    total_agent = total_judge = total_asr = 0
+    section("MODEL CALLS")
+    ta = tj = ts = 0
     for tag, data in suites.items():
-        agent = sum(
+        a = sum(
             1
             for t in data.get("traces") or []
             for s in t.get("spans") or []
             if s.get("type") == "model" or s.get("name") == "model_call"
         )
-        judge = len(data.get("judged") or [])
-        asr = sum(
+        j = len(data.get("judged") or [])
+        s = sum(
             1
             for t in data.get("traces") or []
-            for s in t.get("spans") or []
-            if "transcribe" in (s.get("name") or "").lower()
+            for sp in t.get("spans") or []
+            if "transcribe" in (sp.get("name") or "").lower()
         )
-        total_agent += agent
-        total_judge += judge
-        total_asr += asr
-        print(f"  {tag}: agent_model_spans={agent}  judged={judge}  transcribe_spans={asr}")
-    print(
-        f"  TOTAL agent_model_spans={total_agent}  judged={total_judge}  "
-        f"transcribe_spans={total_asr}  "
-        f"sum={total_agent + total_judge + total_asr}"
-    )
-    print("  provider_models=muse-spark-1.1,muse-spark-1.3,muse-wonder-1.0,muse-voice-transcribe-1.0")
+        ta += a
+        tj += j
+        ts += s
+        print(f"  {tag}: agent={a} judged={j} transcribe={s}")
+    print(f"  TOTAL agent={ta} judged={tj} transcribe={ts} sum={ta+tj+ts}")
+    print("  models=muse-spark-1.1,muse-spark-1.3,muse-wonder-1.0,muse-voice-transcribe-1.0")
     print("  api_base=https://api.meta.ai/v1")
 
 
 def main() -> int:
     print("EvalVerse README numbers")
-    print(f"ROOT={ROOT}")
     print(f"generated_at_utc={datetime.now(tz=timezone.utc).isoformat()}")
     suites = _load_suites()
     if not suites:
-        print("ERROR: no non-mock results_*.json under out/", file=sys.stderr)
         return 1
-    suite_inventory(suites)
+    inventory(suites)
+    evaluator_catalogue()
+    failure_labels(suites)
     measured_dimensions(suites)
     failure_mix(suites)
-    why_examples(suites)
     judge_trust(suites)
     audio_stage(suites)
     video_chance(suites)
     crossmodal(suites)
-    tool_use_from_db()
-    scores_ums(suites)
+    lists_suite(suites)
+    tool_use()
+    ums(suites)
     model_calls(suites)
     section("DONE")
     return 0
