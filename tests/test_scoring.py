@@ -66,6 +66,45 @@ def test_honesty_maths():
     assert empty_score is None and empty_n == 0
 
 
+def test_stage_attribution_excluded_from_score_dimensions():
+    results = [
+        _r("a", "c1", "clean", "answer_correctness", 1.0, label="correct"),
+        _r(
+            "a",
+            "c1",
+            "clean",
+            "stage_attribution",
+            0.0,
+            label="mistimed",
+            dimension="Failure analysis",
+        ),
+        _r(
+            "a",
+            "c1",
+            "clean",
+            "cross_modal_stage_attribution",
+            0.0,
+            label="comparison_error",
+            dimension="Failure analysis",
+        ),
+        {
+            "id": "a|c1|clean|cross_modal_consistency",
+            "evaluator_id": "cross_modal_consistency",
+            "dimension": "Cross-modal consistency",
+            "status": "completed",
+            "score": 1.0,
+            "label": "correct_verdict",
+            "target": {"agent": "a", "case_id": "c1", "variant": "clean"},
+        },
+    ]
+    dims = scoring.dimension_scores_from_results(results, POLICY)
+    assert "Failure analysis" not in dims
+    assert "stage_attribution" not in scoring.SCORE_EXCLUDED_DIMENSIONS
+    # Cross-modal consistency must not be dragged down by stage_attribution scores.
+    assert dims["Cross-modal consistency"]["score"] == pytest.approx(1.0)
+    assert dims["Perception"]["score"] == pytest.approx(1.0)
+
+
 def test_gate_reasons():
     dims = {
         "Perception": {"score": 0.9, "n": 10, "status": "available"},

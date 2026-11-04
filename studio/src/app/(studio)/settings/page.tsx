@@ -1,41 +1,51 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Topbar } from "@/components/layout/topbar";
+import { PageHeader } from "@/components/studio/page-chrome";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useApiMode } from "@/context/api-mode";
 import { apiConfig, testHealth } from "@/lib/api";
 import { clearSession, readSession } from "@/lib/session";
 
+type LocalKey = { id: string; prefix: string; last4: string; created: string; raw?: string };
+
 export default function SettingsPage() {
   const router = useRouter();
-  const { connect, switchToDemo, mode, hostLabel, disconnect } = useApiMode();
+  const { connect, switchToDemo, mode, hostLabel, projectLabel, disconnect, liveAvailable } =
+    useApiMode();
   const [url, setUrl] = useState("http://127.0.0.1:8000");
-  const [apiKey, setApiKey] = useState("dev");
+  const [apiKey, setApiKey] = useState("");
   const [project, setProject] = useState("default");
   const [testing, setTesting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [ok, setOk] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
+  const [keys, setKeys] = useState<LocalKey[]>([]);
+  const [newKeyOnce, setNewKeyOnce] = useState<string | null>(null);
 
   useEffect(() => {
     const cfg = apiConfig();
     setUrl(cfg.url || "http://127.0.0.1:8000");
-    setApiKey(cfg.hasStoredConnection ? cfg.key : "dev");
-    setProject(cfg.project || "default");
+    setApiKey(cfg.hasStoredConnection ? cfg.key : "");
+    setProject(cfg.project || projectLabel || "default");
     setEmail(readSession()?.email || null);
-  }, []);
+  }, [projectLabel]);
 
   async function onTest() {
     setTesting(true);
     setMessage(null);
     setOk(false);
     try {
-      const health = await testHealth(url, apiKey);
-      await connect({ url, apiKey, project, preferLive: true });
+      const health = await testHealth(url, apiKey || "dev");
+      await connect({ url, apiKey: apiKey || "dev", project, preferLive: true });
       setOk(true);
-      setMessage(`Connected (${health.status || "ok"}). Studio is Live.`);
+      setMessage(`Connected (${health.status || "ok"}).`);
     } catch (e) {
       setOk(false);
       setMessage(e instanceof Error ? e.message : "Connection failed");
@@ -44,11 +54,28 @@ export default function SettingsPage() {
     }
   }
 
-  function onDemo() {
-    switchToDemo();
-    setMessage("Using demo snapshot data.");
-    setOk(true);
-    router.push("/overview/");
+  function createKey() {
+    const raw = `evk_${crypto.randomUUID().replace(/-/g, "")}`;
+    const row: LocalKey = {
+      id: crypto.randomUUID(),
+      prefix: raw.slice(0, 8),
+      last4: raw.slice(-4),
+      created: new Date().toISOString(),
+      raw,
+    };
+    setKeys((prev) => [row, ...prev]);
+    setNewKeyOnce(raw);
+  }
+
+  function copyKey() {
+    if (!newKeyOnce) return;
+    void navigator.clipboard.writeText(newKeyOnce);
+    setMessage("API key copied. It won’t be shown again.");
+  }
+
+  function revokeKey(id: string) {
+    setKeys((prev) => prev.filter((k) => k.id !== id));
+    if (newKeyOnce) setNewKeyOnce(null);
   }
 
   function onSignOut() {
@@ -58,118 +85,142 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <>
       <Topbar title="Settings" />
-      <div className="flex-1 overflow-auto p-4">
-        <div className="mx-auto max-w-lg space-y-8">
-          <section className="rounded-lg border border-border bg-white p-5 shadow-panel">
-            <h2 className="text-sm font-semibold text-ink">Account</h2>
-            <p className="mt-1 text-xs text-ink/55">
-              {email ? (
-                <>Signed in as <span className="font-medium text-ink">{email}</span></>
-              ) : (
-                <>No account session. Use Sign in or connect a key below.</>
-              )}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {email ? (
-                <button
-                  type="button"
-                  className="rounded-md border border-border bg-white px-3 py-1.5 text-xs text-ink hover:bg-muted"
-                  onClick={onSignOut}
-                >
-                  Sign out
-                </button>
-              ) : (
-                <Link
-                  href="/signin/"
-                  className="rounded-md border border-border bg-white px-3 py-1.5 text-xs text-ink hover:bg-muted"
-                >
-                  Sign in
-                </Link>
-              )}
-              <Link
-                href="/signup/"
-                className="rounded-md bg-ink px-3 py-1.5 text-xs text-white hover:bg-ink/90"
-              >
-                Create account
-              </Link>
-            </div>
-          </section>
+      <main className="min-w-0 space-y-4 overflow-x-hidden p-4">
+        <PageHeader
+          title="Settings"
+          description="Manage this project’s connection, API keys, and who can access Studio."
+        />
 
-          <section className="rounded-lg border border-border bg-white p-5 shadow-panel">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-ink/40">Advanced</p>
-            <h2 className="mt-1 text-sm font-semibold text-ink">Connect a self-hosted server</h2>
-            <p className="mt-1 text-xs leading-relaxed text-ink/55">
-              Paste an API URL and key without creating an account. Currently{" "}
-              {mode === "live" ? (
-                <span className="text-teal">live · {hostLabel}</span>
-              ) : (
-                <span>on demo snapshot data</span>
-              )}
-              .
-            </p>
+        <div className="mx-auto grid max-w-3xl gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Project</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-ink/55">Name</span>
+                <span className="font-medium">{projectLabel || project}</span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-ink/55">Account</span>
+                <span className="truncate text-xs">{email || "Not signed in"}</span>
+              </div>
+              <div className="flex flex-wrap gap-2 pt-2">
+                {email ? (
+                  <Button type="button" size="sm" variant="outline" onClick={onSignOut}>
+                    Sign out
+                  </Button>
+                ) : (
+                  <Button asChild size="sm">
+                    <Link href="/signin/">Sign in</Link>
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
-            <div className="mt-4 space-y-3">
-              <label className="block space-y-1">
-                <span className="text-[11px] text-ink/50">API URL</span>
-                <input
-                  className="h-9 w-full rounded-md border border-border bg-paper px-3 font-mono text-xs outline-none focus:ring-2 focus:ring-teal/30"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  autoComplete="off"
-                  spellCheck={false}
-                />
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-sm">API keys</CardTitle>
+              <Button type="button" size="sm" onClick={createKey}>
+                Create key
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-3 text-xs">
+              {newKeyOnce ? (
+                <div className="rounded-md border border-amber/30 bg-amber/10 px-3 py-2">
+                  <p className="font-medium text-ink">Copy this key now. It is shown only once.</p>
+                  <code className="mt-1 block break-all font-mono text-[11px]">{newKeyOnce}</code>
+                  <Button type="button" size="sm" className="mt-2" onClick={copyKey}>
+                    Copy key
+                  </Button>
+                </div>
+              ) : null}
+              {!keys.length ? (
+                <p className="text-ink/55">No keys created in this browser yet.</p>
+              ) : (
+                <ul className="divide-y divide-border rounded-md border border-border">
+                  {keys.map((k) => (
+                    <li key={k.id} className="flex items-center justify-between gap-2 px-3 py-2">
+                      <span className="font-mono">
+                        {k.prefix}…{k.last4}
+                      </span>
+                      <Button type="button" size="sm" variant="ghost" onClick={() => revokeKey(k.id)}>
+                        Revoke
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Connection</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-3">
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <span className="text-ink/55">Status</span>
+                <Badge
+                  className={
+                    mode === "live"
+                      ? "border-teal/30 bg-teal/10 text-teal"
+                      : "border-border bg-muted text-ink/70"
+                  }
+                >
+                  {mode === "live" ? `Live · ${hostLabel}` : "Demo data"}
+                </Badge>
+                {liveAvailable ? null : mode !== "live" ? (
+                  <span className="text-ink/45">Server not reachable</span>
+                ) : null}
+              </div>
+              <label className="grid gap-1 text-xs">
+                <span className="text-ink/55">API URL</span>
+                <Input value={url} onChange={(e) => setUrl(e.target.value)} />
               </label>
-              <label className="block space-y-1">
-                <span className="text-[11px] text-ink/50">API key</span>
-                <input
+              <label className="grid gap-1 text-xs">
+                <span className="text-ink/55">API key</span>
+                <Input
                   type="password"
-                  className="h-9 w-full rounded-md border border-border bg-paper px-3 font-mono text-xs outline-none focus:ring-2 focus:ring-teal/30"
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
-                  autoComplete="off"
-                  spellCheck={false}
+                  placeholder="Paste a project key"
                 />
               </label>
-              <label className="block space-y-1">
-                <span className="text-[11px] text-ink/50">Project</span>
-                <input
-                  className="h-9 w-full rounded-md border border-border bg-paper px-3 font-mono text-xs outline-none focus:ring-2 focus:ring-teal/30"
-                  value={project}
-                  onChange={(e) => setProject(e.target.value)}
-                  autoComplete="off"
-                  spellCheck={false}
-                />
+              <label className="grid gap-1 text-xs">
+                <span className="text-ink/55">Project</span>
+                <Input value={project} onChange={(e) => setProject(e.target.value)} />
               </label>
+              <div className="flex flex-wrap gap-2">
+                <Button type="button" size="sm" onClick={onTest} disabled={testing}>
+                  {testing ? "Testing…" : "Test connection"}
+                </Button>
+                <Button type="button" size="sm" variant="outline" onClick={switchToDemo}>
+                  Use demo data
+                </Button>
+              </div>
               {message ? (
                 <p className={`text-xs ${ok ? "text-teal" : "text-crimson"}`}>{message}</p>
               ) : null}
-              <div className="flex flex-wrap gap-2 pt-1">
-                <button
-                  type="button"
-                  className="rounded-md bg-ink px-3 py-1.5 text-xs text-white hover:bg-ink/90 disabled:opacity-50"
-                  disabled={testing || !url || !apiKey}
-                  onClick={onTest}
-                >
-                  {testing ? "Testing…" : "Test connection"}
-                </button>
-                <button
-                  type="button"
-                  className="rounded-md border border-border bg-white px-3 py-1.5 text-xs text-ink hover:bg-muted"
-                  onClick={onDemo}
-                >
-                  Use demo data
-                </button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Members</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between rounded-md border border-dashed border-border px-3 py-3 text-xs text-ink/50">
+                <span>Invite teammates to this project</span>
+                <Badge className="border-border bg-muted text-ink/55">Coming soon</Badge>
               </div>
-              <p className="text-[11px] leading-relaxed text-ink/45">
-                Credentials are stored in localStorage under{" "}
-                <code className="font-mono">evalverse.connection</code>. Keys are never logged.
-              </p>
-            </div>
-          </section>
+            </CardContent>
+          </Card>
         </div>
-      </div>
-    </div>
+      </main>
+    </>
   );
 }

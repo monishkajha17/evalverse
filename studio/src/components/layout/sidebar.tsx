@@ -7,40 +7,48 @@ import {
   ClipboardCheck,
   Database,
   FlaskConical,
-  Gavel,
   LayoutDashboard,
   ListTree,
-  Network,
+  Menu,
   Play,
-  Scale,
   Settings,
   Shield,
   Sparkles,
   Users,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const GROUPS: Array<{
+type NavItem = {
+  href: string;
   label: string;
-  items: Array<{ href: string; label: string; icon: React.ComponentType<{ className?: string }> }>;
-}> = [
+  icon: React.ComponentType<{ className?: string }>;
+  match?: (pathname: string) => boolean;
+};
+
+type NavGroup = { label?: string; items: NavItem[] };
+
+const GROUPS: NavGroup[] = [
+  {
+    items: [{ href: "/overview/", label: "Home", icon: LayoutDashboard }],
+  },
   {
     label: "Observe",
     items: [
-      { href: "/overview/", label: "Overview", icon: LayoutDashboard },
-      { href: "/sessions/", label: "Sessions", icon: Users },
       { href: "/traces/", label: "Traces", icon: ListTree },
-      { href: "/try/", label: "Try it", icon: Play },
-      { href: "/system/", label: "System", icon: Network },
+      { href: "/sessions/", label: "Sessions", icon: Users },
     ],
+  },
+  {
+    items: [{ href: "/playground/", label: "Playground", icon: Play }],
   },
   {
     label: "Evaluate",
     items: [
       { href: "/evaluators/", label: "Evaluators", icon: Beaker },
-      { href: "/evaluations/", label: "Evaluations", icon: Sparkles },
-      { href: "/policies/", label: "Policies", icon: Shield },
-      { href: "/review/", label: "Review", icon: ClipboardCheck },
+      { href: "/online-evaluation/", label: "Online evaluation", icon: Shield },
+      { href: "/human-review/", label: "Human review", icon: ClipboardCheck },
+      { href: "/runs/", label: "Runs", icon: Sparkles },
     ],
   },
   {
@@ -51,51 +59,67 @@ const GROUPS: Array<{
     ],
   },
   {
-    label: "Judge",
-    items: [{ href: "/judge/", label: "Judge", icon: Gavel }],
-  },
-  {
-    label: "Account",
     items: [{ href: "/settings/", label: "Settings", icon: Settings }],
   },
 ];
 
-export function Sidebar() {
+function isActive(pathname: string, item: NavItem) {
+  if (item.match) return item.match(pathname);
+  const base = item.href.replace(/\/$/, "");
+  return pathname === item.href || pathname === base || pathname.startsWith(`${base}/`);
+}
+
+export function Sidebar({
+  collapsed,
+  mobileOpen,
+  onCloseMobile,
+}: {
+  collapsed: boolean;
+  mobileOpen: boolean;
+  onCloseMobile: () => void;
+}) {
   const pathname = usePathname();
 
-  return (
-    <aside className="flex w-52 shrink-0 flex-col border-r border-border bg-white">
-      <Link href="/" className="flex h-12 items-center gap-2 border-b border-border px-3 hover:bg-muted/60">
-        <Scale className="h-4 w-4 text-teal" />
-        <div>
-          <div className="text-sm font-semibold leading-none text-ink">EvalVerse</div>
-          <div className="text-[10px] uppercase tracking-wide text-ink/45">Studio</div>
-        </div>
+  const nav = (
+    <>
+      <Link
+        href="/overview/"
+        className={cn(
+          "flex h-12 shrink-0 items-center border-b border-border px-3 hover:bg-muted/60",
+          collapsed ? "justify-center" : "gap-2",
+        )}
+        onClick={onCloseMobile}
+      >
+        <span className={cn("font-semibold tracking-tight text-ink", collapsed ? "text-sm" : "text-sm")}>
+          {collapsed ? "EV" : "EvalVerse"}
+        </span>
       </Link>
       <nav className="flex flex-1 flex-col gap-3 overflow-auto p-2" aria-label="Primary">
-        {GROUPS.map((group) => (
-          <div key={group.label}>
-            <div className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-wide text-ink/40">
-              {group.label}
-            </div>
+        {GROUPS.map((group, gi) => (
+          <div key={group.label || `g-${gi}`}>
+            {group.label && !collapsed ? (
+              <div className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-wide text-ink/40">
+                {group.label}
+              </div>
+            ) : null}
             <div className="flex flex-col gap-0.5">
               {group.items.map((item) => {
-                const active =
-                  pathname === item.href ||
-                  pathname.startsWith(item.href.replace(/\/$/, "") + "/") ||
-                  pathname === item.href.replace(/\/$/, "");
+                const active = isActive(pathname, item);
                 const Icon = item.icon;
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
+                    title={item.label}
+                    onClick={onCloseMobile}
                     className={cn(
-                      "flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30",
+                      "flex items-center rounded-md text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30",
+                      collapsed ? "justify-center px-2 py-2" : "gap-2 px-2.5 py-1.5",
                       active ? "bg-ink text-white" : "text-ink/70 hover:bg-muted hover:text-ink",
                     )}
                   >
-                    <Icon className="h-3.5 w-3.5" />
-                    {item.label}
+                    <Icon className="h-3.5 w-3.5 shrink-0" />
+                    {!collapsed ? <span className="truncate">{item.label}</span> : null}
                   </Link>
                 );
               })}
@@ -103,9 +127,54 @@ export function Sidebar() {
           </div>
         ))}
       </nav>
-      <div className="border-t border-border px-3 py-2 text-[10px] leading-snug text-ink/45">
-        Evaluation data: CORD v2 (CC BY 4.0)
-      </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop / tablet rail */}
+      <aside
+        className={cn(
+          "hidden shrink-0 flex-col border-r border-border bg-white nav:flex",
+          collapsed ? "w-14" : "w-52",
+        )}
+      >
+        {nav}
+      </aside>
+
+      {/* Mobile drawer */}
+      {mobileOpen ? (
+        <div className="fixed inset-0 z-40 nav:hidden">
+          <button
+            type="button"
+            className="absolute inset-0 bg-ink/40"
+            aria-label="Close menu"
+            onClick={onCloseMobile}
+          />
+          <aside className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white shadow-panel">
+            <div className="flex h-12 items-center justify-between border-b border-border px-3">
+              <span className="text-sm font-semibold text-ink">EvalVerse</span>
+              <button type="button" className="rounded p-1 hover:bg-muted" onClick={onCloseMobile} aria-label="Close">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="flex flex-1 flex-col overflow-auto">{nav}</div>
+          </aside>
+        </div>
+      ) : null}
+    </>
+  );
+}
+
+export function MobileMenuButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-white text-ink nav:hidden"
+      onClick={onClick}
+      aria-label="Open menu"
+    >
+      <Menu className="h-4 w-4" />
+    </button>
   );
 }

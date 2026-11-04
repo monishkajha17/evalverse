@@ -110,6 +110,11 @@ export const FRAMEWORK_DIMS = [
     media: ["video", "voice"] as const,
   },
   {
+    name: "Cross-modal consistency",
+    def: "Do the voice, the text and the image agree?",
+    media: ["image", "voice", "text"] as const,
+  },
+  {
     name: "Hallucination",
     def: "Did it say things that are not in the input?",
     media: ["image", "video", "voice", "text"] as const,

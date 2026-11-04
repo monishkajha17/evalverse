@@ -71,6 +71,8 @@ export const OUTCOME_COLORS: Record<string, string> = {
   mislocated: "#D4285C",
   mistimed: "#D4285C",
   heard_wrong: "#6A7B93",
+  misread_image: "#C98512",
+  comparison_error: "#D4285C",
   misunderstood: "#C98512",
   abstained: "#A9B3C1",
   invalid_output: "#D4285C",

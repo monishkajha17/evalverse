@@ -566,10 +566,12 @@ def create_app(
     @app.post("/api/v1/playground/runs", status_code=status.HTTP_202_ACCEPTED)
     async def playground_create_run(
         request: Request,
-        question: str = Form(...),
+        question: str = Form(default=""),
         agent_model: Optional[str] = Form(default="muse-spark-1.3"),
         judge_model: Optional[str] = Form(default="muse-wonder-1.0"),
         mock: bool = Form(default=False),
+        mode: str = Form(default="answer"),
+        text: Optional[str] = Form(default=None),
         files: list[UploadFile] = File(default=[]),
         ctx: tuple[str, str] = Depends(auth),
     ):
@@ -599,15 +601,24 @@ def create_app(
                         dest.extend(str(x) for x in parsed)
                 except _json.JSONDecodeError:
                     pass
+        claim_text = text
+        if claim_text is None:
+            for alt in ("claim_text", "claim"):
+                raw = form.get(alt)
+                if isinstance(raw, str) and raw.strip():
+                    claim_text = raw
+                    break
         return await svc.create_playground_run(
             project,
             files=upload_files,
-            question=question,
+            question=question or "",
             agent_model=agent_model,
             judge_model=judge_model,
             evaluator_ids=eids or None,
             conditions=conds or None,
             mock=mock,
+            mode=mode or "answer",
+            claim_text=claim_text,
         )
 
     @app.get("/api/v1/playground/runs/{run_id}")

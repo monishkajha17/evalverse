@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AudioEvidencePanel, ImageEvidenceOverlay } from "@/components/trace/media-panel";
+import { CrossModalMediaPanel } from "@/components/trace/cross-modal-media-panel";
 import { VideoMediaPanel } from "@/components/trace/video-media-panel";
 import { SpanDag } from "@/components/system/span-dag";
 import type { TraceSpan } from "@/lib/types";
@@ -142,14 +143,31 @@ function TraceViewInner() {
   const lineages = useMemo(() => buildMediaLineage(trace?.media || []), [trace]);
   const tools = useMemo(() => toolSpans(trace?.spans || []), [trace]);
   const promptOut = useMemo(() => (trace ? modelPromptOutput(trace) : { prompt: "—", output: "—" }), [trace]);
+  const perceptionLabel = useMemo(() => {
+    const results = (trace?.results || snap?.results || []) as Array<{
+      evaluator_id?: string;
+      label?: string | null;
+    }>;
+    const perc = results.find((r) => r.evaluator_id === "cross_modal_perception");
+    const stageRes = results.find((r) => r.evaluator_id === "cross_modal_stage_attribution");
+    return perc?.label || stageRes?.label || snap?.run?.label || null;
+  }, [trace?.results, snap?.results, snap?.run?.label]);
 
+  const isCrossModal =
+    snap?.caseRow?.modality === "cross_modal" ||
+    snap?.data.meta.modality === "cross_modal" ||
+    ((trace?.media || []).some((m) => (m.modality || "").includes("image")) &&
+      (trace?.media || []).some((m) => (m.modality || "").includes("audio")) &&
+      !!(snap?.caseRow?.claim_text || snap?.run?.verdict != null));
   const isAudio =
-    snap?.caseRow?.modality === "audio" ||
-    (trace?.media || []).some((m) => (m.modality || "").includes("audio") || (m.mime || "").startsWith("audio/"));
+    !isCrossModal &&
+    (snap?.caseRow?.modality === "audio" ||
+      (trace?.media || []).some((m) => (m.modality || "").includes("audio") || (m.mime || "").startsWith("audio/")));
   const isVideo =
-    snap?.caseRow?.modality === "video" ||
-    !!snap?.caseRow?.video ||
-    (trace?.media || []).some((m) => (m.modality || "").includes("video") || (m.mime || "").startsWith("video/"));
+    !isCrossModal &&
+    (snap?.caseRow?.modality === "video" ||
+      !!snap?.caseRow?.video ||
+      (trace?.media || []).some((m) => (m.modality || "").includes("video") || (m.mime || "").startsWith("video/")));
 
   const imageSrc =
     resolveMediaSrc((trace?.media || []).find((m) => (m.modality || "image").includes("image") || (m.mime || "").startsWith("image/"))) ||
@@ -272,7 +290,16 @@ function TraceViewInner() {
                   {dagSpans.length === 0 ? (
                     <p className="text-xs text-ink/50">No spans.</p>
                   ) : (
-                    <SpanDag spans={dagSpans} title={isVideo ? "video frames → model" : undefined} />
+                    <SpanDag
+                      spans={dagSpans}
+                      title={
+                        isCrossModal
+                          ? "voice + image → join"
+                          : isVideo
+                            ? "video frames → model"
+                            : undefined
+                      }
+                    />
                   )}
                 </CardContent>
               </Card>
@@ -289,7 +316,13 @@ function TraceViewInner() {
                     </TabsList>
 
                     <TabsContent value="media">
-                      {isVideo ? (
+                      {isCrossModal ? (
+                        <CrossModalMediaPanel
+                          caseRow={snap?.caseRow}
+                          run={snap?.run}
+                          perceptionLabel={perceptionLabel}
+                        />
+                      ) : isVideo ? (
                         <VideoMediaPanel
                           caseRow={snap?.caseRow}
                           run={

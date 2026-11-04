@@ -41,21 +41,30 @@ def test_video_label_rules_via_stage_attribution():
     }
     meta = ev.REGISTRY["stage_attribution"]
 
-    def run_label(answer, span):
+    def run_label(c, answer, span):
         run = {
             "answer": answer,
             "span_ms": span,
-            "box": case["truth_box"] if span else None,
-            "correct": vmod.video_answer_correct(case, answer),
+            "box": c.get("truth_box") if span else None,
+            "correct": vmod.video_answer_correct(c, answer),
             "condition": "clean",
         }
-        return ev._call(meta, "a", case["id"], "clean", case=case, run=run)["label"]
+        return ev._call(meta, "a", c["id"], "clean", case=c, run=run)["label"]
 
-    assert run_label("10.0", [10000, 11500]) == "grounded_correct"
-    assert run_label("10.0", [0, 500]) == "correct_ungrounded"
-    assert run_label("4.0", [10000, 11500]) == "misread"
-    assert run_label("4.0", [0, 500]) == "mistimed"
-    assert run_label("unknown", None) == "abstained"
+    assert run_label(case, "10.0", [10000, 11500]) == "grounded_correct"
+    assert run_label(case, "10.0", [0, 500]) == "correct_ungrounded"
+    assert run_label(case, "4.0", [10000, 11500]) == "mistimed"
+    assert run_label(case, "4.0", [0, 500]) == "mistimed"
+    assert run_label(case, "unknown", None) == "abstained"
+
+    third = {
+        **case,
+        "id": "vid_01_third",
+        "answer": "TOMATOES",
+        "answer_type": "text",
+    }
+    assert run_label(third, "BREAD", [10000, 11500]) == "misread"
+    assert run_label(third, "BREAD", [0, 500]) == "mistimed"
 
 
 def test_video_dag_shape_parallel_parents():
@@ -99,12 +108,14 @@ def test_policy_video_mapping():
     assert "temporal_alignment_video" in g
     assert "event_order" in policy["dimensions"]["Reasoning"]["evaluators"]
     assert "media_dependence_guess" in policy["dimensions"]["Media dependence"]["evaluators"]
-    assert policy["profiles"]["balanced"]["Reasoning"] == pytest.approx(0.09)
-    # Completeness/Hallucination at 0.05 each; balanced still sums to 1.0
+    assert policy["profiles"]["balanced"]["Cross-modal consistency"] == pytest.approx(0.15)
+    # Completeness/Hallucination share the remaining mass; balanced still sums to 1.0
     assert sum(policy["profiles"]["balanced"].values()) == pytest.approx(1.0)
-    assert policy["profiles"]["balanced"]["Completeness"] == pytest.approx(0.05)
-    assert policy["profiles"]["balanced"]["Hallucination"] == pytest.approx(0.05)
+    assert policy["profiles"]["balanced"]["Completeness"] == pytest.approx(0.0425)
+    assert policy["profiles"]["balanced"]["Hallucination"] == pytest.approx(0.0425)
     assert "claim_grounding" in policy["dimensions"]["Groundedness"]["evaluators"]
+    assert "cross_modal_perception" in policy["dimensions"]["Perception"]["evaluators"]
+    assert "cross_modal_consistency" in policy["dimensions"]["Cross-modal consistency"]["evaluators"]
 
     results = [
         {

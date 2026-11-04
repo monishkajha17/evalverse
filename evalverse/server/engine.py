@@ -205,6 +205,23 @@ def run_builtin(
             "evidence": [],
             "execution_metadata": {"reason": "no expectation"},
         }
+    # cross_modal_judge requires two modalities on the trace.
+    if evaluator_id == "cross_modal_judge":
+        mods = evmod._trace_media_modalities(case=None, run=None, trace=trace)
+        pair = evmod._cross_modal_pair_key(mods)
+        if pair is None:
+            return {
+                "status": "skipped",
+                "score": None,
+                "verdict": "not_applicable",
+                "label": "skipped",
+                "explanation": "needs two modalities",
+                "evidence": [],
+                "execution_metadata": {"reason": "needs two modalities"},
+                "evaluator_id": meta["id"],
+                "evaluator_version": meta["version"],
+                "dimension": meta["dimension"],
+            }
     tool_spans = [s for s in (trace.get("spans") or []) if s.get("type") == "tool"]
     is_tool_eval = evaluator_id in TOOL_USE_EVALUATOR_IDS or meta.get("category") == "tool_use"
     if is_tool_eval and not tool_spans:
@@ -233,6 +250,13 @@ def run_builtin(
             asr_turns[str(attrs["turn"])] = attrs["text"]
     if asr_turns:
         run["asr_turns"] = asr_turns
+    # Cross-check / claim text from trace input or metadata (never invent from model).
+    tin = trace.get("input") or {}
+    tmeta = trace.get("metadata") or {}
+    if tin.get("transcript") and not run.get("transcript"):
+        run["transcript"] = tin["transcript"]
+    if tin.get("claim_text") or tmeta.get("claim_text"):
+        run["claim_text"] = tin.get("claim_text") or tmeta.get("claim_text")
     agent = trace.get("agent") or "agent"
     case_id = case.get("id") or "case"
     variant = (trace.get("metadata") or {}).get("variant") or "clean"
@@ -438,31 +462,24 @@ def run_rubric_evaluator(
     }
 
 
-def default_judge_fn(prompt: str, image_bytes=None, model: str | None = None, timeout_s: float = 30.0):
-    """Live backend if MODEL_API_KEY set; otherwise a deterministic offline mock."""
-    import os
-
-    if os.environ.get("MODEL_API_KEY"):
-        from evalverse.core import LiveBackend
-
-        backend = LiveBackend()
-        text, usage = backend._chat(model or "muse-spark-1.3", prompt, image_bytes)
-        return text, usage
-
+def offline_mock_judge_fn(
+    prompt: str, image_bytes=None, model: str | None = None, timeout_s: float = 30.0, **_
+):
+    """Deterministic offline judge used for --mock playground / tests without a live key."""
     lower = prompt.lower()
     usage = {"input_tokens": 10, "output_tokens": 20}
-    # claim_grounding: claim extraction
+    # claim_grounding / cross_modal_judge: claim extraction
     if "atomic" in lower and "claims" in lower:
         claims = []
-        # Prefer lines after OUTPUT:
         body = prompt
         if "OUTPUT:" in prompt:
             body = prompt.split("OUTPUT:", 1)[1]
-        for token in ("total", "tax", "date", "amount"):
+        elif "CLAIM SOURCE:" in prompt:
+            body = prompt.split("CLAIM SOURCE:", 1)[1]
+        for token in ("total", "tax", "date", "amount", "subtotal"):
             if token in body.lower():
                 claims.append(f"{token} is present")
         if not claims:
-            # Fall back to first non-empty line as a single claim
             for ln in body.splitlines():
                 ln = ln.strip()
                 if ln and not ln.startswith("{") and len(ln) > 2:
@@ -470,10 +487,21 @@ def default_judge_fn(prompt: str, image_bytes=None, model: str | None = None, ti
                     break
         if not claims:
             claims = ["agent output claim"]
-        return json.dumps({"claims": claims[:12]}), usage
-    # claim_grounding: per-claim verdict
+        limit = 8 if "claim source" in lower else 12
+        return json.dumps({"claims": claims[:limit]}), usage
+    # claim_grounding / cross_modal_judge: per-claim verdict
     if "claim:" in lower and "verdict" in lower:
         claim = prompt.split("CLAIM:", 1)[-1].strip().lower() if "CLAIM:" in prompt else ""
+        # Prefer contradicted when the claim mentions a clear mismatch cue.
+        if any(k in claim for k in ("wrong", "mismatch", "inconsistent", "fake")):
+            return json.dumps(
+                {
+                    "verdict": "contradicted",
+                    "evidence_box": None,
+                    "evidence_time_ms": None,
+                    "explanation": "mock contradiction",
+                }
+            ), usage
         supported = any(k in claim for k in ("total", "tax", "amount", "12", "148")) or bool(image_bytes)
         return json.dumps(
             {
@@ -497,6 +525,19 @@ def default_judge_fn(prompt: str, image_bytes=None, model: str | None = None, ti
         else "mock judge: insufficient support",
     }
     return json.dumps(payload), usage
+
+
+def default_judge_fn(prompt: str, image_bytes=None, model: str | None = None, timeout_s: float = 30.0):
+    """Live backend if MODEL_API_KEY set; otherwise a deterministic offline mock."""
+    import os
+
+    if os.environ.get("MODEL_API_KEY"):
+        from evalverse.core import LiveBackend
+
+        backend = LiveBackend()
+        text, usage = backend._chat(model or "muse-spark-1.3", prompt, image_bytes)
+        return text, usage
+    return offline_mock_judge_fn(prompt, image_bytes=image_bytes, model=model, timeout_s=timeout_s)
 
 
 def rubric_needs_reference(config: dict[str, Any]) -> bool:

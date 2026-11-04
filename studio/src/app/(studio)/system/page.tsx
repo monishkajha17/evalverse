@@ -146,10 +146,37 @@ export default function SystemPage() {
     return { n, agrees, rate: n ? agrees / n : null };
   }, [data.judged]);
 
+  const [crossModalJoin, setCrossModalJoin] = useState<TraceRow | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { loadSuite } = await import("@/lib/data");
+        const cm = await loadSuite("crossmodal");
+        if (!cancelled) setCrossModalJoin(findCrossModalJoinTrace(cm.traces || []));
+      } catch {
+        if (!cancelled) setCrossModalJoin(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const audioExample = useMemo(
-    () => findParallelTranscribeTrace(data.traces || []) || findVideoFrameJoinTrace(data.traces || []),
-    [data.traces],
+    () =>
+      crossModalJoin ||
+      findCrossModalJoinTrace(data.traces || []) ||
+      findParallelTranscribeTrace(data.traces || []) ||
+      findVideoFrameJoinTrace(data.traces || []),
+    [data.traces, crossModalJoin],
   );
+  const joinExampleIsCrossModal = useMemo(() => {
+    const t = audioExample;
+    if (!t) return false;
+    const mods = new Set((t.assets || []).map((a) => a.modality));
+    return mods.has("image") && mods.has("audio");
+  }, [audioExample]);
 
   const umsRows = data.scores?.rows || [];
   const primaryUms: UmsRow | null = umsRows[0] || null;
@@ -179,7 +206,7 @@ export default function SystemPage() {
   if (!plan.length) missingNotes.push("Orchestrator plan");
   if (!conflicts.length) missingNotes.push("Conflicts");
   if (!primaryUms) missingNotes.push("UMS scores");
-  if (!audioExample) missingNotes.push("Audio parallel-transcribe DAG");
+  if (!audioExample) missingNotes.push("Cross-modal / parallel-join DAG");
   if (!judge) missingNotes.push("Judge model in manifest");
   if (mode === "live" && datasetCount === 0) missingNotes.push("Live datasets");
 
@@ -409,20 +436,25 @@ export default function SystemPage() {
           </div>
           <Card>
             <CardHeader>
-              <CardTitle>Real example · parallel joins</CardTitle>
+              <CardTitle>Real example · joins from two modalities</CardTitle>
               <CardDescription>
                 {audioExample
-                  ? `Trace ${audioExample.id} — parallel spans join into model_call`
-                  : "Need an audio/video suite with parallel transcribe or frame spans"}
+                  ? joinExampleIsCrossModal
+                    ? `Trace ${audioExample.id} — voice + image roots join at model_call`
+                    : `Trace ${audioExample.id} — parallel spans join into model_call`
+                  : "Need a cross-modal, audio, or video suite with a join DAG"}
               </CardDescription>
             </CardHeader>
             <CardContent>
               {audioExample ? (
-                <SpanDag spans={audioExample.spans || []} title={audioExample.id} />
+                <SpanDag
+                  spans={audioExample.spans || []}
+                  title={joinExampleIsCrossModal ? "voice + image → join" : audioExample.id}
+                />
               ) : (
                 <EmptyBlock
-                  title="No parallel-join DAG in this suite"
-                  detail="Switch the suite selector to audio or video (parallel transcibes / sample frames joining model_call)."
+                  title="No two-modality join DAG"
+                  detail="Loads the crossmodal suite when available; otherwise audio/video parallel joins."
                 />
               )}
             </CardContent>
@@ -589,6 +621,17 @@ function summarizePlan(plan: PlanJob[]) {
     kinds.set(kind, row);
   }
   return [...kinds.values()].sort((a, b) => a.kind.localeCompare(b.kind));
+}
+
+function findCrossModalJoinTrace(traces: TraceRow[]): TraceRow | null {
+  for (const t of traces) {
+    const spans = t.spans || [];
+    const mods = new Set((t.assets || []).map((a) => a.modality));
+    const join = spans.some((s) => (s.parent_span_ids || []).length >= 2);
+    const roots = spans.filter((s) => !(s.parent_span_ids || []).length);
+    if (mods.has("image") && mods.has("audio") && join && roots.length >= 2) return t;
+  }
+  return null;
 }
 
 function findParallelTranscribeTrace(traces: TraceRow[]): TraceRow | null {

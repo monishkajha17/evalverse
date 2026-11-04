@@ -1,280 +1,303 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Topbar } from "@/components/layout/topbar";
+import { StackedOutcomeBars } from "@/components/charts/overview-charts";
+import {
+  EmptyState,
+  ErrorState,
+  FilterBar,
+  PageHeader,
+  SkeletonBlock,
+} from "@/components/studio/page-chrome";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { EmptyBlock, ErrorBlock, LoadingBlock } from "@/components/state-block";
-import { GroundedLineChart, StackedOutcomeBars } from "@/components/charts/overview-charts";
-import { useApiMode } from "@/context/api-mode";
+import { Hint } from "@/components/ui/tooltip";
 import { useSuite } from "@/context/suite-context";
 import {
-  agentKpis,
+  compareModelsSeries,
+  crossModalByVariant,
+  crossModalFailureStack,
+  crossModalNoImageControl,
+  crossModalOverviewKpis,
   dimensionPivotSparse,
-  groundedSeries,
-  judgeTrust,
-  outcomeStack,
+  failureOutcomeStack,
+  modelOverviewCards,
   videoByQuestionType,
   videoOverviewKpis,
 } from "@/lib/metrics";
-import { getQueue, listSessions, listTraces, type QueueStats, type SessionSummary, type TraceListItem } from "@/lib/api";
 import { pct } from "@/lib/utils";
 
 export default function OverviewPage() {
-  const { mode } = useApiMode();
-  const { entry } = useSuite();
-  // Video suite overview is snapshot-driven (by-question table from /data/video.json).
-  if (mode === "live" && entry?.modality !== "video") return <LiveOverview />;
-  return <SnapshotOverview />;
-}
-
-function LiveOverview() {
-  const [traces, setTraces] = useState<TraceListItem[]>([]);
-  const [sessions, setSessions] = useState<SessionSummary[]>([]);
-  const [queue, setQueue] = useState<QueueStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const [t, s, q] = await Promise.all([listTraces({ limit: 100 }), listSessions(), getQueue()]);
-        if (!cancelled) {
-          setTraces(t);
-          setSessions(s);
-          setQueue(q);
-        }
-      } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "Failed");
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const bySource = useMemo(() => {
-    const m: Record<string, number> = {};
-    for (const t of traces) m[t.source || "unknown"] = (m[t.source || "unknown"] || 0) + 1;
-    return m;
-  }, [traces]);
-
-  return (
-    <>
-      <Topbar title="Overview" />
-      <main className="space-y-4 p-4">
-        {loading ? <LoadingBlock /> : null}
-        {error ? <ErrorBlock title="Live overview failed" detail={error} /> : null}
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <Kpi label="Traces" value={String(traces.length)} hint="latest page" />
-          <Kpi label="Sessions" value={String(sessions.length)} hint="all sessions" />
-          <Kpi label="Queue depth" value={String(queue?.depth ?? "—")} hint="pending jobs" />
-          <Kpi label="Tool calls" value={String(traces.reduce((a, t) => a + (t.tool_call_count || 0), 0))} hint="on listed traces" />
-        </div>
-        <Card>
-          <CardHeader>
-            <CardTitle>Sources</CardTitle>
-            <CardDescription>sdk / otlp / import mix on the latest traces</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-3 text-xs">
-            {Object.entries(bySource).map(([k, v]) => (
-              <div key={k} className="rounded border border-border bg-paper px-3 py-2">
-                <div className="uppercase tracking-wide text-ink/45">{k}</div>
-                <div className="text-lg font-semibold tabular-nums">{v}</div>
-              </div>
-            ))}
-            {!Object.keys(bySource).length ? <EmptyBlock title="No traces yet" /> : null}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent sessions</CardTitle>
-          </CardHeader>
-          <CardContent className="overflow-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="text-ink/60">
-                  <th className="px-2 py-1">Session</th>
-                  <th className="px-2 py-1">Traces</th>
-                  <th className="px-2 py-1">Agents</th>
-                  <th className="px-2 py-1">Errors</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sessions.slice(0, 12).map((s) => (
-                  <tr key={s.session_id} className="border-t border-border">
-                    <td className="px-2 py-1">
-                      <Link
-                        className="text-teal hover:underline"
-                        href={`/sessions/view/?id=${encodeURIComponent(s.session_id)}`}
-                      >
-                        {s.session_id}
-                      </Link>
-                    </td>
-                    <td className="px-2 py-1 tabular-nums">{s.trace_count}</td>
-                    <td className="px-2 py-1">{(s.agents || []).join(", ")}</td>
-                    <td className="px-2 py-1 tabular-nums">{s.error_count ?? 0}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
-        <p className="text-xs text-ink/50">
-          Switch suite in the top bar still powers Snapshot views for Judge / legacy KPIs when the API is down.
-        </p>
-      </main>
-    </>
-  );
-}
-
-function SnapshotOverview() {
-  const { data, loading, error, entry } = useSuite();
-  const isVideo = (entry?.modality || data.meta.modality) === "video";
+  const { data, loading, error, entry, reload } = useSuite();
   const agents = data.meta.agents || [...new Set(data.runs.map((r) => r.agent))];
-  const [agentFilter, setAgentFilter] = useState<string>("all");
-  const kpis = useMemo(() => agentKpis(data), [data]);
-  const videoKpis = useMemo(() => videoOverviewKpis(data), [data]);
-  const byQ = useMemo(() => videoByQuestionType(data), [data]);
+  const [agentFilter, setAgentFilter] = useState("all");
+  const modality = entry?.modality || data.meta.modality || "";
+
+  const cards = useMemo(() => modelOverviewCards(data), [data]);
+  const shownCards = agentFilter === "all" ? cards : cards.filter((c) => c.agent === agentFilter);
   const pivot = useMemo(
     () => dimensionPivotSparse(data, agentFilter === "all" ? undefined : agentFilter),
     [data, agentFilter],
   );
-  const stack = useMemo(() => outcomeStack(data), [data]);
-  const series = useMemo(() => groundedSeries(data), [data]);
-  const trust = useMemo(() => judgeTrust(data.judged || []), [data.judged]);
+  const fail = useMemo(() => failureOutcomeStack(data), [data]);
+  const compare = useMemo(() => compareModelsSeries(data), [data]);
+  const videoKpis = useMemo(() => videoOverviewKpis(data), [data]);
+  const byQ = useMemo(() => videoByQuestionType(data), [data]);
+  const cmKpis = useMemo(() => crossModalOverviewKpis(data), [data]);
+  const cmByVar = useMemo(() => crossModalByVariant(data), [data]);
+  const cmFail = useMemo(() => crossModalFailureStack(data), [data]);
+  const cmNoImage = useMemo(() => crossModalNoImageControl(data), [data]);
+  const isCrossModal = modality === "cross_modal";
 
   return (
     <>
-      <Topbar title="Overview" />
-      <main className="space-y-4 p-4">
-        {loading ? <LoadingBlock /> : null}
-        {error ? <ErrorBlock title="Could not load suite" detail={error} /> : null}
-        {!loading && !error ? (
+      <Topbar title="Home" />
+      <main className="min-w-0 space-y-4 overflow-x-hidden p-4">
+        <PageHeader
+          title="Overview"
+          description="See how each model answered, where it failed, and how each dimension scored."
+          action={
+            <Button asChild size="sm">
+              <Link href="/traces/">Browse traces</Link>
+            </Button>
+          }
+        />
+
+        <FilterBar>
+          <div className="w-44">
+            <Select value={agentFilter} onValueChange={setAgentFilter}>
+              <SelectTrigger aria-label="Filter by model">
+                <SelectValue placeholder="Model" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All models</SelectItem>
+                {agents.map((a) => (
+                  <SelectItem key={a} value={a}>
+                    {a}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </FilterBar>
+
+        {loading ? <SkeletonBlock rows={5} /> : null}
+        {error ? <ErrorState title="Could not load overview" detail={error} onRetry={reload} /> : null}
+
+        {!loading && !error && !data.runs.length ? (
+          <EmptyState
+            title="No evaluation results yet"
+            detail="Pick a demo dataset from the data source control, or connect a live project."
+            action={
+              <Button asChild size="sm" variant="outline">
+                <Link href="/datasets/">Open datasets</Link>
+              </Button>
+            }
+          />
+        ) : null}
+
+        {!loading && !error && data.runs.length ? (
           <>
-            {isVideo ? (
-              <>
-                <p className="rounded-md border border-border bg-paper/80 px-3 py-2 text-xs text-ink/65">
-                  Video is evaluated as timestamped frames.
-                </p>
-                <section className="grid gap-3 sm:grid-cols-3">
-                  <Card>
-                    <CardContent className="pt-4">
-                      <Kpi label="Grounded %" value={pct(videoKpis.grounded, 0)} hint={`${videoKpis.n} runs excl. blind`} />
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="pt-4">
-                      <Kpi label="Abstained %" value={pct(videoKpis.abstained, 0)} />
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="pt-4">
+            <section className="grid gap-3 lg:grid-cols-2">
+              {shownCards.map((c) => (
+                <Card key={c.agent}>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm">{c.agent}</CardTitle>
+                    <CardDescription>Per-model outcome mix</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                       <Kpi
-                        label="Confident-error %"
-                        value={pct(videoKpis.confidentError, 0)}
-                        hint="incorrect, non-abstained"
+                        label="Correct"
+                        value={pct(c.correct, 0)}
+                        tip="Share of runs whose answer matched the expectation"
                       />
-                    </CardContent>
-                  </Card>
+                      <Kpi
+                        label="Confidently wrong"
+                        value={pct(c.confidentlyWrong, 0)}
+                        tip="Wrong answers that were not abstentions, averaged across variants"
+                      />
+                      <Kpi
+                        label="Said it could not read"
+                        value={pct(c.couldNotRead, 0)}
+                        tip="Runs labeled abstained"
+                      />
+                      <Kpi
+                        label="Score (UMS)"
+                        value={c.ums != null ? pct(c.ums, 0) : "—"}
+                        tip="Unified Multimodal Score"
+                        hint={
+                          [
+                            c.ci ? `${pct(c.ci[0], 0)}–${pct(c.ci[1], 0)}` : null,
+                            c.gatePass == null ? null : c.gatePass ? "Gate pass" : "Gate fail",
+                          ]
+                            .filter(Boolean)
+                            .join(" · ") || undefined
+                        }
+                      />
+                    </div>
+                    {c.confidentByVariant.length ? (
+                      <div className="rounded-md border border-border bg-paper/70 px-2.5 py-2">
+                        <div className="mb-1 text-[11px] font-medium text-ink/50">
+                          Confident errors by variant
+                        </div>
+                        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[11px] tabular-nums text-ink/70">
+                          {c.confidentByVariant.map((v) => (
+                            <span key={v.variant}>
+                              {v.variant}: {pct(v.rate, 0)}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+                  </CardContent>
+                </Card>
+              ))}
+            </section>
+
+            {modality === "video" ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">By question type</CardTitle>
+                  <CardDescription>
+                    Overall grounded {pct(videoKpis.grounded, 0)} · abstained {pct(videoKpis.abstained, 0)}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="overflow-auto">
+                  <table className="sticky-table w-full min-w-[560px] text-left text-xs">
+                    <thead>
+                      <tr className="text-ink/55">
+                        <th className="px-2 py-2">Type</th>
+                        <th className="px-2 py-2">Clean</th>
+                        <th className="px-2 py-2">Sparse</th>
+                        <th className="px-2 py-2">Blur</th>
+                        <th className="px-2 py-2">No frames</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {byQ.map((row) => (
+                        <tr key={row.kind} className="border-t border-border">
+                          <td className="px-2 py-1.5 font-medium">{row.kind}</td>
+                          {(["clean", "sparse", "blur", "blind_guess"] as const).map((col) => {
+                            const cell = row.cells[col] || { correct: 0, total: 0 };
+                            return (
+                              <td key={col} className="px-2 py-1.5 tabular-nums">
+                                {cell.total ? `${cell.correct}/${cell.total}` : "—"}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </CardContent>
+              </Card>
+            ) : null}
+
+            {isCrossModal ? (
+              <>
+                <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                  <Kpi
+                    label="Verdict accuracy"
+                    value={pct(cmKpis.verdictAccuracy, 0)}
+                    hint={`${cmKpis.nCorrect} / ${cmKpis.n} runs`}
+                  />
+                  <Kpi label="Missed contradictions" value={`${cmKpis.missedContradictions}`} />
+                  <Kpi label="False alarms" value={`${cmKpis.falseAlarms}`} />
+                  <Kpi label="Abstentions" value={`${cmKpis.abstentions}`} />
                 </section>
                 <Card>
                   <CardHeader>
-                    <CardTitle>By question type</CardTitle>
-                    <CardDescription>
-                      clean · sparse · blur · no frames (forced guess). Chance: order 50%, time/third ≈ 0%.
-                    </CardDescription>
+                    <CardTitle className="text-sm">By variant</CardTitle>
+                    <CardDescription>clean · blur · noisy voice · no image</CardDescription>
                   </CardHeader>
                   <CardContent className="overflow-auto">
-                    <table className="sticky-table w-full min-w-[640px] border-collapse text-left text-xs">
+                    <table className="sticky-table w-full min-w-[400px] text-left text-xs">
                       <thead>
-                        <tr className="text-ink/60">
-                          <th className="px-2 py-2">Type</th>
-                          <th className="px-2 py-2">clean</th>
-                          <th className="px-2 py-2">sparse</th>
-                          <th className="px-2 py-2">blur</th>
-                          <th className="px-2 py-2">no frames (forced guess)</th>
-                          <th className="px-2 py-2">chance level</th>
+                        <tr className="text-ink/55">
+                          <th className="px-2 py-2">Variant</th>
+                          <th className="px-2 py-2">Correct / n</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {byQ.map((row) => (
-                          <tr key={row.kind} className="border-t border-border">
-                            <td className="px-2 py-1.5 font-medium">{row.kind}</td>
-                            {(["clean", "sparse", "blur", "blind_guess"] as const).map((col) => {
-                              const cell = row.cells[col] || { correct: 0, total: 0 };
-                              return (
-                                <td key={col} className="px-2 py-1.5 tabular-nums">
-                                  {cell.total ? `${cell.correct} / ${cell.total}` : "—"}
-                                </td>
-                              );
-                            })}
-                            <td className="px-2 py-1.5 tabular-nums text-ink/60">
-                              {row.chance === 0 ? "~0%" : pct(row.chance, 0)}
+                        {cmByVar.map((v) => (
+                          <tr key={v.variant} className="border-t border-border">
+                            <td className="px-2 py-1.5 font-medium">{v.variant}</td>
+                            <td className="px-2 py-1.5 tabular-nums">
+                              {v.total ? `${v.correct} / ${v.total}` : "—"}
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
-                    <p className="mt-3 text-xs text-ink/55">
-                      Questions whose no-frames score is near chance cannot show that the video was needed.
-                    </p>
                   </CardContent>
                 </Card>
-              </>
-            ) : (
-              <section className="grid gap-3 md:grid-cols-2">
-                {kpis.map((k) => (
-                  <Card key={k.agent}>
+                <div className="grid gap-3 xl:grid-cols-2">
+                  <Card>
                     <CardHeader>
-                      <CardTitle>{k.agent}</CardTitle>
-                      <CardDescription>Snapshot suite KPIs</CardDescription>
+                      <CardTitle className="text-sm">Where it failed</CardTitle>
+                      <CardDescription>
+                        heard wrong · misread image · comparison error · abstained
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                        <Kpi label="Grounded" value={pct(k.grounded, 0)} />
-                        <Kpi label="Confident error" value={pct(k.confidentError, 0)} />
-                        <Kpi label="Media required" value={pct(k.mediaRequired, 0)} />
-                        <Kpi label="Robustness" value={pct(k.robustness, 0)} />
-                      </div>
+                      <StackedOutcomeBars rows={cmFail.rows} labels={cmFail.labels} />
                     </CardContent>
                   </Card>
-                ))}
-              </section>
-            )}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-sm">No-image control</CardTitle>
+                      <CardDescription>Chance line at 50%</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="relative h-10 overflow-hidden rounded border border-border bg-muted/40">
+                        <div
+                          className="absolute inset-y-0 left-0 bg-teal/25"
+                          style={{ width: `${Math.min(100, (cmNoImage.rate ?? 0) * 100)}%` }}
+                        />
+                        <div className="absolute inset-y-0 w-px bg-ink/50" style={{ left: "50%" }} />
+                        <div className="relative flex h-full items-center justify-between px-3 text-xs">
+                          <span className="font-medium tabular-nums">
+                            {cmNoImage.total
+                              ? `${cmNoImage.correct} / ${cmNoImage.total} (${pct(cmNoImage.rate ?? 0, 0)})`
+                              : "—"}
+                          </span>
+                          <span className="text-ink/45">chance 50%</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-ink/55">
+                        A control near 50% means the answer needed the receipt.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </>
+            ) : null}
+
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between gap-3">
-                <div>
-                  <CardTitle>Scores by dimension</CardTitle>
-                  <CardDescription>From dimension_summary (empty dimensions hidden)</CardDescription>
-                </div>
-                <div className="w-40">
-                  <Select value={agentFilter} onValueChange={setAgentFilter}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All agents</SelectItem>
-                      {agents.map((a) => (
-                        <SelectItem key={a} value={a}>
-                          {a}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+              <CardHeader>
+                <CardTitle className="text-sm">How each dimension scores</CardTitle>
+                <CardDescription>Means from completed evaluators. Empty dimensions are hidden.</CardDescription>
               </CardHeader>
               <CardContent className="overflow-auto">
-                {pivot.dims.length === 0 ? (
-                  <EmptyBlock title="No dimension scores" />
+                {!pivot.dims.length ? (
+                  <EmptyState title="No dimension scores yet" detail="Run an evaluation to populate this table." />
                 ) : (
                   <table className="sticky-table w-full min-w-[640px] border-collapse text-left text-xs">
                     <thead>
-                      <tr>
+                      <tr className="text-ink/55">
                         <th className="px-2 py-2">Dimension</th>
                         {pivot.variants.map((v) => (
                           <th key={v} className="px-2 py-2">
@@ -299,41 +322,39 @@ function SnapshotOverview() {
                 )}
               </CardContent>
             </Card>
+
+            {!isCrossModal ? (
             <div className="grid gap-3 xl:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Outcomes by agent × variant</CardTitle>
+                  <CardTitle className="text-sm">Where it failed</CardTitle>
+                  <CardDescription>Stage labels by model and variant</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <StackedOutcomeBars rows={stack.rows} labels={stack.labels} />
+                  <StackedOutcomeBars rows={fail.rows} labels={fail.labels} />
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle>Grounded share vs condition</CardTitle>
+                  <CardTitle className="text-sm">Compare models</CardTitle>
+                  <CardDescription>Overall score (UMS when available)</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <GroundedLineChart series={series} agents={agents} />
+                  <div className="h-64 w-full">
+                    <ResponsiveContainer>
+                      <BarChart data={compare} margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
+                        <CartesianGrid stroke="#E4E9F0" vertical={false} />
+                        <XAxis dataKey="agent" tick={{ fontSize: 10, fill: "#6A7B93" }} interval={0} angle={-20} textAnchor="end" height={50} />
+                        <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: "#6A7B93" }} tickFormatter={(v) => `${v}%`} />
+                        <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} formatter={(v: number) => [`${v}%`, "Score"]} />
+                        <Bar dataKey="ums" fill="#0B8F7A" name="Score" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
                 </CardContent>
               </Card>
             </div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Judge trust</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {trust.n === 0 ? (
-                  <EmptyBlock title="No judge audit rows" />
-                ) : (
-                  <div className="grid gap-3 sm:grid-cols-4">
-                    <Kpi label="False accept" value={`${trust.falseAccept}`} hint={pct(trust.falseAcceptRate, 0)} />
-                    <Kpi label="False reject" value={`${trust.falseReject}`} hint={pct(trust.falseRejectRate, 0)} />
-                    <Kpi label="True accept" value={`${trust.trueAccept}`} />
-                    <Kpi label="True reject" value={`${trust.trueReject}`} />
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            ) : null}
           </>
         ) : null}
       </main>
@@ -341,12 +362,28 @@ function SnapshotOverview() {
   );
 }
 
-function Kpi({ label, value, hint }: { label: string; value: string; hint?: string }) {
-  return (
-    <div className="rounded-md border border-border bg-paper/60 px-2.5 py-2">
-      <div className="text-[11px] uppercase tracking-wide text-ink/45">{label}</div>
-      <div className="text-xl font-semibold tabular-nums text-ink">{value}</div>
-      {hint ? <div className="text-[11px] text-ink/45">{hint}</div> : null}
+function Kpi({
+  label,
+  value,
+  hint,
+  tip,
+}: {
+  label: string;
+  value: string;
+  hint?: string;
+  tip?: string;
+}) {
+  const body = (
+    <div className="rounded-md border border-border bg-paper/70 px-2.5 py-2">
+      <div className="text-[11px] text-ink/45">{label}</div>
+      <div className="text-lg font-semibold tabular-nums text-ink">{value}</div>
+      {hint ? <div className="text-[10px] text-ink/45">{hint}</div> : null}
     </div>
+  );
+  if (!tip) return body;
+  return (
+    <Hint label={tip}>
+      <div className="cursor-help">{body}</div>
+    </Hint>
   );
 }

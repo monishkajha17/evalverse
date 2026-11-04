@@ -254,6 +254,71 @@ def build_video_events(
     return events
 
 
+def build_crossmodal_events(
+    *,
+    case: dict | None,
+    run: dict | None = None,
+    spans: list[dict] | None = None,
+    media_id: str | None = None,
+) -> list[dict[str, Any]]:
+    """ASR transcript text + ground-truth speech span [0, duration_ms]."""
+    events: list[dict[str, Any]] = []
+    case = case or {}
+    run = run or {}
+    spans = spans or []
+    duration = _ms(case.get("duration_ms")) or 0
+    channel = (run.get("channel") or case.get("claim_channel") or "text")
+    if channel == "voice" and duration is not None:
+        events.append(
+            {
+                "client_id": "ground_truth:speech",
+                "source": "ground_truth",
+                "label": str(case.get("claim_text") or "claim"),
+                "start_ms": 0,
+                "end_ms": duration,
+                "time_base": "media",
+                "media_id": media_id,
+                "payload": {"channel": "voice"},
+            }
+        )
+    transcript = run.get("transcript")
+    for sp in spans:
+        name = str(sp.get("name") or "").lower()
+        attrs = sp.get("attributes") or {}
+        if "transcribe" not in name:
+            continue
+        text = attrs.get("text")
+        if text is None:
+            text = transcript
+        events.append(
+            {
+                "client_id": "asr:turn:1",
+                "span_id": sp.get("id"),
+                "source": "asr",
+                "label": str(text) if text is not None else "",
+                "start_ms": _ms(attrs.get("start_ms")) or 0,
+                "end_ms": _ms(attrs.get("end_ms")) or duration,
+                "time_base": "media",
+                "media_id": media_id,
+                "payload": {"wer": attrs.get("wer"), "turn": 1},
+            }
+        )
+    if channel == "voice" and transcript and not any(e["source"] == "asr" for e in events):
+        events.append(
+            {
+                "client_id": "asr:turn:1",
+                "source": "asr",
+                "label": str(transcript),
+                "start_ms": 0,
+                "end_ms": duration,
+                "time_base": "media",
+                "media_id": media_id,
+                "payload": {"wer": run.get("wer"), "turn": 1},
+            }
+        )
+    return events
+
+
 def build_events_for_trace(
     *,
     case: dict | None,
@@ -265,6 +330,11 @@ def build_events_for_trace(
     case = case or {}
     spans = spans or []
     modality = case.get("modality")
+    if modality == "cross_modal" or any(
+        str(s.get("name") or "") in ("attach receipt image", "attach voice clip", "transcribe voice")
+        for s in spans
+    ):
+        return build_crossmodal_events(case=case, run=run, spans=spans, media_id=media_id)
     if modality == "video" or any(
         str(s.get("name") or "").startswith("sample frame") for s in spans
     ):

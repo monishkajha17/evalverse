@@ -3,6 +3,7 @@
     python -m evalverse.playground --image path --question "..."
     python -m evalverse.playground --audio path.wav --question "..."
     python -m evalverse.playground --video path.mp4 --question "..."
+    python -m evalverse.playground --image a.jpg --audio b.wav --mode cross_check
 """
 
 from __future__ import annotations
@@ -37,7 +38,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--image", action="append", default=[], help="image path (repeatable)")
     ap.add_argument("--audio", action="append", default=[], help="audio path (repeatable)")
     ap.add_argument("--video", action="append", default=[], help="video path (repeatable)")
-    ap.add_argument("--question", required=True, help="question text")
+    ap.add_argument("--question", default=None, help="question text (required for --mode answer)")
+    ap.add_argument("--text", default=None, help="claim text for --mode cross_check (image+text)")
+    ap.add_argument("--mode", default="answer", choices=("answer", "cross_check"))
     ap.add_argument("--agent-model", default="muse-spark-1.3")
     ap.add_argument("--judge-model", default="muse-wonder-1.0")
     ap.add_argument("--evaluator", action="append", default=[], dest="evaluators")
@@ -49,6 +52,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--project", default=None)
     args = ap.parse_args(argv)
 
+    if args.mode == "answer" and not (args.question or "").strip():
+        print("--question is required for --mode answer", file=sys.stderr)
+        return 2
+
     paths: list[Path] = []
     for p in args.image + args.audio + args.video:
         path = Path(p)
@@ -59,19 +66,31 @@ def main(argv: list[str] | None = None) -> int:
     if not paths:
         print("provide at least one --image / --audio / --video", file=sys.stderr)
         return 2
+    if args.mode == "cross_check":
+        if not args.image and not args.video:
+            print("cross_check needs --image or --video", file=sys.stderr)
+            return 2
+        if not args.audio and not (args.text or "").strip():
+            print("cross_check needs --audio or --text", file=sys.stderr)
+            return 2
 
     headers = {
         "Authorization": f"Bearer {args.api_key or _api_key()}",
         "X-Project": args.project or _project(),
     }
-    # Build a single multipart body: form fields + file parts (httpx wants files= for mixed).
+    default_evals = (
+        ["cross_modal_judge"] if args.mode == "cross_check" else ["claim_grounding"]
+    )
     multipart: list[tuple[str, Any]] = [
-        ("question", (None, args.question)),
+        ("question", (None, args.question or "")),
         ("agent_model", (None, args.agent_model)),
         ("judge_model", (None, args.judge_model)),
         ("mock", (None, "true" if args.mock else "false")),
+        ("mode", (None, args.mode)),
     ]
-    for eid in args.evaluators or ["claim_grounding"]:
+    if args.text:
+        multipart.append(("text", (None, args.text)))
+    for eid in args.evaluators or default_evals:
         multipart.append(("evaluator_ids", (None, eid)))
     for c in args.conditions:
         multipart.append(("conditions", (None, c)))
@@ -87,7 +106,7 @@ def main(argv: list[str] | None = None) -> int:
         body = r.json()
         run_id = body.get("run_id")
         status_url = body.get("status_url") or f"/api/v1/playground/runs/{run_id}"
-        print(f"run_id={run_id} status={body.get('status')}")
+        print(f"run_id={run_id} status={body.get('status')} mode={args.mode}")
 
         deadline = time.time() + float(args.timeout)
         detail = None
@@ -109,14 +128,31 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(detail, indent=2, default=str))
             return 1
 
-        print(f"answer: {detail.get('answer')}")
         tids = detail.get("trace_ids") or []
         print(f"trace_id: {tids[0] if tids else None}")
-        cg = None
-        for res in detail.get("results") or []:
-            if res.get("evaluator_id") == "claim_grounding":
-                cg = res
-                break
+        if args.mode == "cross_check":
+            cmj = next(
+                (x for x in (detail.get("results") or []) if x.get("evaluator_id") == "cross_modal_judge"),
+                None,
+            )
+            print("cross_modal_judge:")
+            if not cmj:
+                print("null")
+                return 1
+            em = cmj.get("execution_metadata") or cmj.get("meta") or {}
+            print(f"  label={cmj.get('label')} score={cmj.get('score')}")
+            for c in em.get("claims") or []:
+                print(
+                    f"  - [{c.get('verdict') or c.get('status')}] {c.get('claim')}"
+                    + (f"  ({c.get('explanation')})" if c.get("explanation") else "")
+                )
+            return 0
+
+        print(f"answer: {detail.get('answer')}")
+        cg = next(
+            (x for x in (detail.get("results") or []) if x.get("evaluator_id") == "claim_grounding"),
+            None,
+        )
         print("claim_grounding:")
         print(json.dumps(cg, indent=2, default=str) if cg else "null")
         return 0

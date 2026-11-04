@@ -15,16 +15,21 @@ Built from the in-process `REGISTRY` in `evalverse/evaluators.py` (Release 0.1).
 | `answer_correctness` | Perception | run | image, video | 1.0.0 | yes |
 | `audio_stage_attribution` | Failure analysis | run | audio | 1.0.0 | yes |
 | `claim_grounding` | Groundedness | run | image, audio, video | 1.0.0 |  |
+| `cross_modal_consistency` | Cross-modal consistency | run | cross_modal | 1.0.0 | yes |
+| `cross_modal_judge` | Cross-modal consistency | run | image+audio, image+text, video+audio, cross_modal | 1.0.0 |  |
+| `cross_modal_media_dependence` | Media dependence | pair | cross_modal | 1.0.0 | yes |
+| `cross_modal_perception` | Perception | run | cross_modal | 1.0.0 | yes |
+| `cross_modal_stage_attribution` | Cross-modal consistency | run | cross_modal | 1.0.0 | yes |
 | `event_order` | Reasoning | run | video | 1.0.0 | yes |
-| `evidence_grounding` | Groundedness | run | image | 1.0.0 | yes |
+| `evidence_grounding` | Groundedness | run | image, cross_modal | 1.0.0 | yes |
 | `fabrication_check` | Hallucination | run | image | 1.0.0 | yes |
 | `item_recall` | Completeness | run | image | 1.0.0 | yes |
-| `judge_audit` | Judge trust | suite | image, audio, video | 1.0.0 | yes |
+| `judge_audit` | Judge trust | suite | image, audio, video, cross_modal | 1.0.0 | yes |
 | `judge_media_dependence` | Judge trust | suite | image | 1.0.0 | yes |
 | `media_dependence` | Media dependence | pair | image, audio, video | 1.0.0 |  |
 | `media_dependence_guess` | Media dependence | pair | audio, video | 1.0.0 |  |
 | `perception_judge` | Perception | run | image, video | 1.0.0 |  |
-| `robustness_sweep` | Robustness | pair | image, audio, video | 1.0.0 | yes |
+| `robustness_sweep` | Robustness | pair | image, audio, video, cross_modal | 1.0.0 | yes |
 | `stage_attribution` | Failure analysis | run | image, video | 1.0.0 | yes |
 | `temporal_alignment` | Groundedness | run | audio | 1.0.0 | yes |
 | `temporal_alignment_video` | Temporal grounding | run | video | 1.0.0 | yes |

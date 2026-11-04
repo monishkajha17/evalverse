@@ -21,13 +21,23 @@
             "claim": "The total amount due is 148,127",
             "verdict": "supported",
             "explanation": "The total line on the receipt shows 148,127.",
-            "evidence_box": [170, 965, 819, 995]
+            "evidence_box": [
+              170,
+              965,
+              819,
+              995
+            ]
           },
           {
             "claim": "This is a printed sales receipt",
             "verdict": "supported",
             "explanation": "Layout and line items match a retail receipt.",
-            "evidence_box": [40, 40, 960, 900]
+            "evidence_box": [
+              40,
+              40,
+              960,
+              900
+            ]
           }
         ]
       }
@@ -66,6 +76,40 @@
             "verdict": "not_found",
             "explanation": "Transcript is English; no Spanish spans.",
             "evidence_box": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "crossmodal-receipt-claim",
+      "modality": "cross_modal",
+      "mode": "cross_check",
+      "title": "Voice vs receipt (cross-modal)",
+      "question": "Does what was said match what the receipt shows? Answer consistent or inconsistent.",
+      "media_url": "/media/crossmodal/cord_total_30.jpg",
+      "audio_url": "/media/crossmodal/cm_04.wav",
+      "claim_text": "The total on my receipt is 100,000 rupiah.",
+      "answer": "Agent verdict inconsistent (expected inconsistent)",
+      "trace_id": "muse-spark-1.3|cm_04|clean",
+      "claim_grounding": {
+        "score": 0.0,
+        "label": "contradicted",
+        "groundedness": 0.0,
+        "hallucination": 1.0,
+        "completeness": null,
+        "completeness_skipped": true,
+        "completeness_reason": "cross_check example from suite",
+        "claims": [
+          {
+            "claim": "The total on my receipt is 100,000 rupiah.",
+            "verdict": "contradicted",
+            "explanation": "Spoken claim value 100000.0 does not match receipt 74,000. Agent verdict: inconsistent.",
+            "evidence_box": [
+              305,
+              494,
+              734,
+              528
+            ]
           }
         ]
       }

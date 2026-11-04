@@ -1,15 +1,15 @@
 "use client";
 
 import { SuiteProvider } from "@/context/suite-context";
-import { Sidebar } from "@/components/layout/sidebar";
+import { StudioShell } from "@/components/layout/studio-shell";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function StudioLayout({ children }: { children: React.ReactNode }) {
   return (
     <SuiteProvider>
-      <div className="flex min-h-screen bg-paper text-ink">
-        <Sidebar />
-        <div className="flex min-w-0 flex-1 flex-col">{children}</div>
-      </div>
+      <TooltipProvider delayDuration={200}>
+        <StudioShell>{children}</StudioShell>
+      </TooltipProvider>
     </SuiteProvider>
   );
 }

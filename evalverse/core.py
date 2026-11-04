@@ -93,6 +93,48 @@ AUDIO_JUDGE_PROMPT = (
     'Reply with JSON only: {{"verdict":"correct" or "incorrect","reason":"<one sentence>"}}'
 )
 
+CROSS_MODAL_PROMPT = (
+    "You compare what a person claimed about a receipt with what the receipt image shows.\n"
+    "Question: {question}\n\n"
+    "Claim (what was said):\n{claim}\n\n"
+    "Instructions:\n"
+    "1. Extract the amount the speaker claimed (claimed_value) from the claim text alone.\n"
+    "2. Separately read the amount the receipt shows for the field the claim refers to "
+    "(image_value) from the attached image alone.\n"
+    "3. Only then compare the two values and set verdict.\n"
+    "Use verdict \"consistent\" if the amounts agree, \"inconsistent\" if they differ, "
+    "and \"cannot_tell\" only if either value cannot be read.\n"
+    "image_box is the receipt region (0-1000 grid, top-left origin) that shows image_value, "
+    "or null if unknown.\n\n"
+    "Reply with JSON only, no other text:\n"
+    '{{"claimed_value":"<amount the speaker said>",'
+    '"image_value":"<amount the receipt shows for that field>",'
+    '"verdict":"consistent|inconsistent|cannot_tell",'
+    '"image_box":[x0,y0,x1,y1] or null,'
+    '"evidence":"<one sentence>"}}'
+)
+
+CROSS_MODAL_NO_IMAGE_LINE = (
+    "Even if you cannot see the receipt, give your single best guess: consistent or inconsistent. "
+    "cannot_tell is not allowed."
+)
+
+CROSS_MODAL_JUDGE_PROMPT = (
+    "You are auditing a consistency verdict about a receipt claim.\n"
+    "Question: {question}\n"
+    "Claim: {claim}\n"
+    "Proposed verdict: {proposed}\n\n"
+    "Look at the receipt image and the claim. Is the proposed verdict correct?\n"
+    'Reply with JSON only: {{"verdict":"correct" or "incorrect","reason":"<one sentence>"}}'
+)
+
+
+def cross_modal_prompt(question: str, claim: str, condition: str) -> str:
+    prompt = CROSS_MODAL_PROMPT.format(question=question, claim=claim)
+    if condition == "no_image":
+        prompt += "\n" + CROSS_MODAL_NO_IMAGE_LINE
+    return prompt
+
 
 def parse_json(text: str) -> dict | None:
     if not text:
@@ -216,6 +258,106 @@ def _amount(s):
         return float(tok)
     except ValueError:
         return None
+
+
+_WORD_ONES = {
+    "zero": 0,
+    "oh": 0,
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+    "ten": 10,
+    "eleven": 11,
+    "twelve": 12,
+    "thirteen": 13,
+    "fourteen": 14,
+    "fifteen": 15,
+    "sixteen": 16,
+    "seventeen": 17,
+    "eighteen": 18,
+    "nineteen": 19,
+}
+_WORD_TENS = {
+    "twenty": 20,
+    "thirty": 30,
+    "forty": 40,
+    "fifty": 50,
+    "sixty": 60,
+    "seventy": 70,
+    "eighty": 80,
+    "ninety": 90,
+}
+_WORD_SCALES = {
+    "hundred": 100,
+    "thousand": 1_000,
+    "million": 1_000_000,
+    "billion": 1_000_000_000,
+}
+
+
+def words_to_number(s) -> int | None:
+    """English number words -> integer.
+
+    Example: \"one hundred forty-eight thousand one hundred twenty-seven\" -> 148127.
+    Returns None when no number words are present.
+    """
+    if s is None:
+        return None
+    text = str(s).lower().replace("-", " ")
+    text = re.sub(r"[^a-z\s]", " ", text)
+    tokens = [t for t in text.split() if t and t not in ("and", "rupiah", "rp", "dollars", "dollar")]
+    if not tokens:
+        return None
+    total = 0
+    current = 0
+    seen = False
+    i = 0
+    while i < len(tokens):
+        tok = tokens[i]
+        if tok == "a" and i + 1 < len(tokens) and tokens[i + 1] in _WORD_SCALES:
+            # "a hundred" / "a thousand"
+            current = max(current, 1)
+            seen = True
+            i += 1
+            continue
+        if tok in _WORD_ONES:
+            current += _WORD_ONES[tok]
+            seen = True
+        elif tok in _WORD_TENS:
+            current += _WORD_TENS[tok]
+            seen = True
+        elif tok == "hundred":
+            current = (current or 1) * 100
+            seen = True
+        elif tok in _WORD_SCALES and tok != "hundred":
+            scale = _WORD_SCALES[tok]
+            current = (current or 1) * scale
+            total += current
+            current = 0
+            seen = True
+        else:
+            # Unknown token: ignore fillers; do not treat random English as a number.
+            if not seen:
+                return None
+        i += 1
+    if not seen:
+        return None
+    return int(total + current)
+
+
+def parse_amount(s) -> float | None:
+    """Digit parse first; fall back to English number words."""
+    n = _amount(s)
+    if n is not None:
+        return n
+    w = words_to_number(s)
+    return float(w) if w is not None else None
 
 
 def _txt(s: str) -> str:
@@ -468,6 +610,8 @@ class MockBackend:
         usage = {"input_tokens": 900, "output_tokens": 160}
         family = case.get("family") or ""
         want_tools = prompt is not None and "tool_calls" in prompt
+        if case.get("modality") == "cross_modal" or family == "receipt_vs_claim":
+            return self._cross_modal_agent(model, case, image_png, condition), 0.01, usage
         if image_png is None:  # blind
             if family == "unanswerable":
                 ans = "not shown" if r.random() < 0.5 else case.get("distractor", "0")
@@ -520,9 +664,70 @@ class MockBackend:
                 payload["tool_calls"] = []
         return json.dumps(payload), 0.01, usage
 
+    def _cross_modal_agent(self, model, case, image_png, condition):
+        r = self.rng
+        expected = str(case.get("expected_verdict") or "consistent")
+        claim_v = case.get("claim_value")
+        receipt = case.get("receipt_value")
+        t = case.get("truth_box")
+        p_ok = {"clean": 0.92, "blur": 0.7, "noisy_voice": 0.65, "no_image": 0.5}.get(condition, 0.6)
+        if "1.1" in model:
+            p_ok -= 0.15
+        ok = r.random() < p_ok
+        if image_png is None:
+            # Forced guess: cannot_tell not allowed.
+            verdict = expected if ok else ("inconsistent" if expected == "consistent" else "consistent")
+            return json.dumps(
+                {
+                    "claimed_value": str(claim_v),
+                    "image_value": "unknown",
+                    "verdict": verdict,
+                    "image_box": None,
+                    "evidence": "guess without image",
+                }
+            )
+        claimed = str(claim_v) if ok or r.random() < 0.7 else str(receipt)
+        image_val = str(receipt) if ok or r.random() < 0.7 else str(case.get("distractor") or claim_v)
+        if ok:
+            verdict = expected
+            box = list(t) if t else None
+        else:
+            # Mix failure modes so stage labels appear under mock.
+            mode = r.choice(["miss", "false", "abstain", "heard", "misread"])
+            if mode == "abstain":
+                verdict = "cannot_tell"
+                box = None
+                image_val = "unknown"
+            elif mode == "miss":
+                verdict = "consistent"
+                box = list(t) if t else None
+            elif mode == "false":
+                verdict = "inconsistent"
+                box = list(t) if t else None
+            elif mode == "heard":
+                claimed = str(receipt) if expected == "inconsistent" else str(case.get("distractor") or "0")
+                verdict = expected
+                box = list(t) if t else None
+            else:
+                image_val = str(claim_v)
+                verdict = expected
+                box = [0, 0, 80, 80] if t else None
+        return json.dumps(
+            {
+                "claimed_value": claimed,
+                "image_value": image_val,
+                "verdict": verdict,
+                "image_box": box,
+                "evidence": "mock cross-modal",
+            }
+        )
+
     def judge(self, model, case, proposed, image_png):
         r = self.rng
-        truth = answer_correct(case, proposed)
+        if case.get("modality") == "cross_modal" or case.get("family") == "receipt_vs_claim":
+            truth = _txt(proposed) == _txt(case.get("expected_verdict"))
+        else:
+            truth = answer_correct(case, proposed)
         # Without media the mock judge is much less reliable.
         flip = r.random() < (0.45 if image_png is None else 0.1)
         verdict = "correct" if (truth != flip) else "incorrect"

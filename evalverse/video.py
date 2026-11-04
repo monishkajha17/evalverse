@@ -123,7 +123,11 @@ def video_span_match(
     *,
     sampling_interval_ms: int = 2000,
 ) -> bool:
-    """Overlap >= 50% of truth, or midpoint inside truth, with ± one sample interval."""
+    """Overlap >= 50% of truth, or midpoint inside truth, with ± one sample interval.
+
+    A zero-width cited span (start == end) is a point estimate: it passes only if
+    that point lies within the true event span expanded by one sampling interval.
+    """
     if (
         not isinstance(truth_span_ms, (list, tuple))
         or not isinstance(claimed, (list, tuple))
@@ -133,13 +137,17 @@ def video_span_match(
         return False
     try:
         t0, t1 = sorted(float(x) for x in truth_span_ms)
-        c0, c1 = sorted(float(x) for x in claimed)
+        c0_raw, c1_raw = float(claimed[0]), float(claimed[1])
     except (TypeError, ValueError):
         return False
     if t1 <= t0:
         return False
     tol = float(sampling_interval_ms)
     t0e, t1e = t0 - tol, t1 + tol
+    # Point estimate: start == end.
+    if c0_raw == c1_raw:
+        return t0e <= c0_raw <= t1e
+    c0, c1 = sorted((c0_raw, c1_raw))
     overlap = max(0.0, min(t1e, c1) - max(t0e, c0))
     # Compare overlap to the original (unexpanded) truth length.
     midpoint = (c0 + c1) / 2
@@ -186,6 +194,10 @@ def video_label(case: dict, run: dict, *, sampling_interval_ms: int = 2000) -> s
         return "grounded_correct"
     if correct and not span_ok:
         return "correct_ungrounded"
+    # Time questions: a wrong answer is mistimed (not a perception misread).
+    case_id = str(case.get("id") or "")
+    if case_id.endswith("_time"):
+        return "mistimed"
     if not correct and span_ok:
         return "misread"
     return "mistimed"

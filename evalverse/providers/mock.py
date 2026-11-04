@@ -71,4 +71,9 @@ class MockProvider:
         return json.dumps(payload), {"input_tokens": 10, "output_tokens": 5}
 
     def transcribe(self, audio: bytes, *, model: str | None = None, **kwargs: Any) -> dict[str, Any]:
-        return {"text": "mock transcript", "words": [], "model": model or "muse-voice-transcribe-1.0"}
+        # Claim-shaped text so cross_modal_judge / claim_grounding demos extract real claims.
+        return {
+            "text": "The total on my receipt is 148,127 rupiah.",
+            "words": [],
+            "model": model or "muse-voice-transcribe-1.0",
+        }

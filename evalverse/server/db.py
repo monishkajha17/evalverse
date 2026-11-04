@@ -358,6 +358,8 @@ CREATE TABLE IF NOT EXISTS playground_runs (
     created_at TEXT NOT NULL,
     started_at TEXT,
     ended_at TEXT,
+    mode TEXT NOT NULL DEFAULT 'answer',
+    claim_text TEXT,
     FOREIGN KEY (project) REFERENCES projects(name)
 );
 
@@ -401,6 +403,8 @@ class Database:
             _ensure_column(conn, "online_policies", "updated_at", "TEXT")
             _ensure_column(conn, "eval_runs", "progress_json", "TEXT")
             _ensure_column(conn, "dataset_items", "expectation_json", "TEXT")
+            _ensure_column(conn, "playground_runs", "mode", "TEXT NOT NULL DEFAULT 'answer'")
+            _ensure_column(conn, "playground_runs", "claim_text", "TEXT")
             conn.commit()
 
     def execute(self, sql: str, params: Iterable[Any] = ()) -> sqlite3.Cursor:

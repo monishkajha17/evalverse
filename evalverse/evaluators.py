@@ -29,9 +29,12 @@ VARIANT_TRANSFORM = {
     "lowres": "downscale 0.16",
     "blind": "remove_media",
     "bandlimit": "fft_bandpass_300_3400hz",
+    "noisy_voice": "audio_noise_10db",
+    "no_image": "remove_media",
 }
 
 ROBUSTNESS_ORDER = ("blur", "noise", "lowres")
+CROSS_MODAL_ROBUSTNESS_ORDER = ("clean", "blur", "noisy_voice")
 
 
 def evaluator(
@@ -193,6 +196,16 @@ def _recompute(case: dict, run: dict, margin: float = 0) -> tuple[bool, bool, bo
             else False
         )
         return correct, ev_ok, valid
+    if case.get("modality") == "cross_modal":
+        verdict = str(run.get("verdict") or run.get("answer") or "").strip().lower()
+        expected = str(case.get("expected_verdict") or "").strip().lower()
+        correct = bool(valid and verdict == expected and verdict != "cannot_tell")
+        box = run.get("box") or run.get("image_box")
+        truth = case.get("truth_box")
+        ev_ok = (
+            core.evidence_ok(truth, box, margin=margin) if valid and truth and box else False
+        )
+        return correct, ev_ok, valid
     correct = core.answer_correct(case, run.get("answer")) if valid else False
     if case.get("modality") == "audio":
         ev_ok = span_match(case.get("truth_span"), run.get("span_ms")) if valid else False
@@ -227,6 +240,90 @@ def _list_family_label(case: dict, run: dict) -> str:
     return "complete_correct"
 
 
+def _amounts_close(a, b) -> bool:
+    if a is None or b is None:
+        return False
+    return abs(float(a) - float(b)) < 0.0051
+
+
+def cross_modal_consistency_label(case: dict, run: dict) -> str:
+    """Labels: correct_verdict | missed_contradiction | false_alarm | abstained | invalid_output."""
+    if not _is_valid(run):
+        return "invalid_output"
+    verdict = str(run.get("verdict") or run.get("answer") or "").strip().lower()
+    expected = str(case.get("expected_verdict") or "").strip().lower()
+    if verdict == "cannot_tell":
+        return "abstained"
+    if verdict not in ("consistent", "inconsistent"):
+        return "invalid_output"
+    if verdict == expected:
+        return "correct_verdict"
+    if expected == "inconsistent" and verdict == "consistent":
+        return "missed_contradiction"
+    if expected == "consistent" and verdict == "inconsistent":
+        return "false_alarm"
+    return "invalid_output"
+
+
+def cross_modal_perception_parts(case: dict, run: dict) -> tuple[bool | None, bool | None]:
+    """Return (claimed_ok, image_ok). claimed_ok is None for text channel (not scored)."""
+    channel = run.get("channel") or case.get("claim_channel") or "text"
+    claimed_pred = core.parse_amount(run.get("claimed_value"))
+    image_pred = core.parse_amount(run.get("image_value"))
+    claim_true = core.parse_amount(case.get("claim_value"))
+    receipt_true = core.parse_amount(case.get("receipt_value"))
+    image_ok = _amounts_close(image_pred, receipt_true)
+    if channel == "text":
+        return None, image_ok
+    claimed_ok = _amounts_close(claimed_pred, claim_true)
+    return claimed_ok, image_ok
+
+
+def cross_modal_perception_label(case: dict, run: dict) -> str:
+    claimed_ok, image_ok = cross_modal_perception_parts(case, run)
+    channel = run.get("channel") or case.get("claim_channel") or "text"
+    if channel == "text":
+        return "both_read" if image_ok else "misread_image"
+    if claimed_ok and image_ok:
+        return "both_read"
+    if not claimed_ok and image_ok:
+        return "heard_wrong"
+    if claimed_ok and not image_ok:
+        return "misread_image"
+    return "both_wrong"
+
+
+def cross_modal_stage_label(case: dict, run: dict) -> str:
+    """Composite attribution over consistency + perception."""
+    if not _is_valid(run):
+        return "invalid_output"
+    cons = cross_modal_consistency_label(case, run)
+    if cons == "abstained":
+        return "abstained"
+    if cons == "invalid_output":
+        return "invalid_output"
+    perc = cross_modal_perception_label(case, run)
+    channel = run.get("channel") or case.get("claim_channel") or "text"
+    claimed_ok, image_ok = cross_modal_perception_parts(case, run)
+    values_ok = (image_ok if channel == "text" else (bool(claimed_ok) and bool(image_ok)))
+    if cons == "correct_verdict" and values_ok:
+        return "cross_modal_correct"
+    if channel != "text" and claimed_ok is False:
+        return "heard_wrong"
+    if image_ok is False:
+        return "misread_image"
+    if values_ok and cons != "correct_verdict":
+        return "comparison_error"
+    # Fallback: prefer perception failure label
+    if perc == "heard_wrong":
+        return "heard_wrong"
+    if perc == "misread_image":
+        return "misread_image"
+    if perc == "both_wrong":
+        return "heard_wrong"
+    return "comparison_error"
+
+
 def _stage_label(case: dict, run: dict, margin: float = 0) -> str:
     if case.get("modality") == "audio":
         return audio_label(case, run)
@@ -240,6 +337,8 @@ def _stage_label(case: dict, run: dict, margin: float = 0) -> str:
         if payload.get("correct") is None and _is_valid(payload):
             payload["correct"] = vmod.video_answer_correct(case, payload.get("answer"))
         return vmod.video_label(case, payload, sampling_interval_ms=interval)
+    if case.get("modality") == "cross_modal":
+        return cross_modal_stage_label(case, run)
     if case.get("family") in ("menu_list", "unanswerable"):
         return _list_family_label(case, run)
     correct, ev_ok, valid = _recompute(case, run, margin=margin)
@@ -340,14 +439,14 @@ def answer_correctness(*, agent, case_id, variant, meta, case, run, evidence_mar
     version="1.0.0",
     category="deterministic",
     dimension="Groundedness",
-    modalities=["image"],
+    modalities=["image", "cross_modal"],
     needs_reference=True,
     scope="run",
 )
 def evidence_grounding(*, agent, case_id, variant, meta, case, run, evidence_margin=DEFAULT_EVIDENCE_MARGIN, **_):
     if case.get("family") == "unanswerable" or case.get("answer_type") == "unanswerable":
         return _skipped(agent, case_id, variant, meta, "no region expected")
-    box = run.get("box")
+    box = run.get("box") or run.get("image_box")
     truth = case.get("truth_box")
     if truth is None:
         return _skipped(agent, case_id, variant, meta, "no region expected")
@@ -1097,11 +1196,207 @@ def media_dependence_guess(*, agent, case_id, variant, meta, clean_run, case, bl
 
 
 @evaluator(
+    id="cross_modal_consistency",
+    version="1.0.0",
+    category="deterministic",
+    dimension="Cross-modal consistency",
+    modalities=["cross_modal"],
+    needs_reference=True,
+    scope="run",
+)
+def cross_modal_consistency(*, agent, case_id, variant, meta, case, run, **_):
+    label = cross_modal_consistency_label(case, run)
+    if label == "invalid_output":
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="completed",
+            score=0.0,
+            verdict="fail",
+            label=label,
+            explanation="Missing or invalid verdict JSON.",
+        )
+    if label == "abstained":
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="completed",
+            score=0.0,
+            verdict="fail",
+            label="abstained",
+            explanation="Agent returned cannot_tell.",
+        )
+    score = 1.0 if label == "correct_verdict" else 0.0
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=score,
+        verdict="pass" if score == 1.0 else "fail",
+        label=label,
+        explanation=(
+            f"Verdict {run.get('verdict')!r} vs expected {case.get('expected_verdict')!r}."
+        ),
+    )
+
+
+@evaluator(
+    id="cross_modal_perception",
+    version="1.0.0",
+    category="deterministic",
+    dimension="Perception",
+    modalities=["cross_modal"],
+    needs_reference=True,
+    scope="run",
+)
+def cross_modal_perception(*, agent, case_id, variant, meta, case, run, **_):
+    if not _is_valid(run):
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="completed",
+            score=0.0,
+            verdict="fail",
+            label="both_wrong",
+            explanation="Invalid run output.",
+        )
+    channel = run.get("channel") or case.get("claim_channel") or "text"
+    claimed_ok, image_ok = cross_modal_perception_parts(case, run)
+    label = cross_modal_perception_label(case, run)
+    if channel == "text":
+        score = 1.0 if image_ok else 0.0
+        explanation = (
+            f"Text channel: image_value {'matches' if image_ok else 'mismatches'} receipt_value."
+        )
+    else:
+        n_ok = int(bool(claimed_ok)) + int(bool(image_ok))
+        score = n_ok / 2.0
+        explanation = (
+            f"claimed_ok={claimed_ok} image_ok={image_ok} ({n_ok}/2)."
+        )
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=score,
+        verdict="pass" if score >= 1.0 else "fail",
+        label=label,
+        explanation=explanation,
+    )
+
+
+@evaluator(
+    id="cross_modal_stage_attribution",
+    version="1.0.0",
+    category="deterministic",
+    dimension="Cross-modal consistency",
+    modalities=["cross_modal"],
+    needs_reference=True,
+    depends_on=("cross_modal_consistency", "cross_modal_perception"),
+    scope="run",
+)
+def cross_modal_stage_attribution(*, agent, case_id, variant, meta, case, run, **_):
+    label = cross_modal_stage_label(case, run)
+    score = 1.0 if label == "cross_modal_correct" else 0.0
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant=variant,
+        meta=meta,
+        status="completed",
+        score=score,
+        verdict="pass" if score == 1.0 else "fail",
+        label=label,
+        explanation=f"Stage attribution: {label}.",
+    )
+
+
+@evaluator(
+    id="cross_modal_media_dependence",
+    version="1.0.0",
+    category="paired",
+    dimension="Media dependence",
+    modalities=["cross_modal"],
+    needs_reference=True,
+    needs_replay=True,
+    scope="pair",
+)
+def cross_modal_media_dependence(
+    *,
+    agent,
+    case_id,
+    variant,
+    meta,
+    case,
+    clean_run,
+    sibling_runs=None,
+    evidence_margin=0,
+    **_,
+):
+    """Clean vs no_image. The no_image control is expected at chance (50%)."""
+    chance = "Chance level is 50%."
+    sibling_runs = sibling_runs or {}
+    no_image_run = sibling_runs.get("no_image")
+    if clean_run is None or no_image_run is None:
+        missing = "clean" if clean_run is None else "no_image"
+        return _skipped(agent, case_id, "all", meta, f"missing sibling variant: {missing}")
+    clean_ok, _, clean_valid = _recompute(case, clean_run, margin=evidence_margin)
+    guess_ok, _, guess_valid = _recompute(case, no_image_run, margin=evidence_margin)
+    clean_right = bool(clean_valid and clean_ok)
+    guess_right = bool(guess_valid and guess_ok)
+    if not clean_right:
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant="all",
+            meta=meta,
+            status="inconclusive",
+            score=None,
+            verdict="not_applicable",
+            label="inconclusive",
+            explanation=f"Clean variant verdict is wrong; media dependence is inconclusive. {chance}",
+        )
+    if guess_right:
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant="all",
+            meta=meta,
+            status="completed",
+            score=0.0,
+            verdict="fail",
+            label="media_not_required",
+            explanation=f"Correct on clean and on no_image forced guess. {chance}",
+        )
+    return _result(
+        agent=agent,
+        case_id=case_id,
+        variant="all",
+        meta=meta,
+        status="completed",
+        score=1.0,
+        verdict="pass",
+        label="media_required",
+        explanation=f"Correct on clean, wrong on no_image. {chance}",
+    )
+
+
+@evaluator(
     id="robustness_sweep",
     version="1.0.0",
     category="paired",
     dimension="Robustness",
-    modalities=["image", "audio", "video"],
+    modalities=["image", "audio", "video", "cross_modal"],
     needs_reference=True,
     needs_replay=True,
     scope="pair",
@@ -1109,10 +1404,16 @@ def media_dependence_guess(*, agent, case_id, variant, meta, clean_run, case, bl
 def robustness_sweep(*, agent, case_id, variant, meta, case, sibling_runs, evidence_margin=DEFAULT_EVIDENCE_MARGIN, **_):
     if case.get("modality") == "audio":
         order = ("noise", "bandlimit")
+        success_label = "grounded_correct"
     elif case.get("modality") == "video":
         order = ("clean", "sparse", "blur")
+        success_label = "grounded_correct"
+    elif case.get("modality") == "cross_modal":
+        order = CROSS_MODAL_ROBUSTNESS_ORDER
+        success_label = "cross_modal_correct"
     else:
         order = ROBUSTNESS_ORDER
+        success_label = "grounded_correct"
     present = [(v, sibling_runs.get(v)) for v in order if sibling_runs.get(v) is not None]
     if not present:
         return _skipped(agent, case_id, "all", meta, "no robustness variants present")
@@ -1120,17 +1421,17 @@ def robustness_sweep(*, agent, case_id, variant, meta, case, sibling_runs, evide
     first_failure = None
     for v, run in present:
         label = _stage_label(case, run, margin=evidence_margin)
-        ok = label == "grounded_correct"
+        ok = label == success_label
         grounded.append(ok)
         if not ok and first_failure is None:
             first_failure = v
     score = sum(grounded) / len(grounded)
     if first_failure is None:
         label = "robust"
-        explanation = f"All {len(grounded)} degradation variants are grounded_correct."
+        explanation = f"All {len(grounded)} degradation variants are {success_label}."
     else:
         label = f"first_failure:{first_failure}"
-        explanation = f"First non-grounded_correct variant in order {','.join(order)}: {first_failure}."
+        explanation = f"First non-{success_label} variant in order {','.join(order)}: {first_failure}."
     return _result(
         agent=agent,
         case_id=case_id,
@@ -1202,7 +1503,7 @@ def perception_judge(*, agent, case_id, variant, meta, case, run, judged=None, j
     version="1.0.0",
     category="paired",
     dimension="Judge trust",
-    modalities=["image", "audio", "video"],
+    modalities=["image", "audio", "video", "cross_modal"],
     needs_reference=True,
     scope="suite",
 )
@@ -1807,6 +2108,413 @@ def claim_grounding(
     return res
 
 
+# --------------------------------------------------------------------------- cross-modal judge (no ground truth)
+
+
+DEFAULT_CROSS_MODAL_JUDGE_MODEL = "muse-wonder-1.0"
+CROSS_MODAL_JUDGE_MAX_CLAIMS = 8
+CROSS_MODAL_JUDGE_TIMEOUT_S = 60.0
+CROSS_MODAL_JUDGE_MODALITIES = ("image+audio", "image+text", "video+audio")
+
+_CROSS_MODAL_JUDGE_CACHE: dict[tuple[str, str], dict] = {}
+
+
+def _trace_media_modalities(*, case: dict | None, run: dict | None, trace: dict | None) -> set[str]:
+    """Detect present modalities from case / run / trace media + claim channels."""
+    mods: set[str] = set()
+    case = case or {}
+    run = run or {}
+    trace = trace or {}
+    for m in trace.get("media") or []:
+        mod = (m.get("modality") or "").lower()
+        if mod:
+            mods.add(mod)
+        path = str(m.get("path") or "")
+        low = path.lower()
+        if low.endswith((".png", ".jpg", ".jpeg", ".webp", ".gif")):
+            mods.add("image")
+        elif low.endswith((".wav", ".mp3", ".m4a", ".flac")):
+            mods.add("audio")
+        elif low.endswith((".mp4", ".webm", ".mov")):
+            mods.add("video")
+    for asset in trace.get("assets") or []:
+        mod = (asset.get("modality") or "").lower()
+        if mod:
+            mods.add(mod)
+    cm = (case.get("modality") or "").lower()
+    if cm == "cross_modal":
+        mods.add("image")
+        ch = (run.get("channel") or case.get("claim_channel") or "text").lower()
+        mods.add("audio" if ch == "voice" else "text")
+    elif cm in ("image", "audio", "video"):
+        mods.add(cm)
+    if case.get("image"):
+        mods.add("image")
+    if case.get("audio") or run.get("asr_turns") is not None or run.get("transcript"):
+        mods.add("audio")
+    if case.get("video"):
+        mods.add("video")
+    if case.get("claim_text") or run.get("claim_text") or (trace.get("input") or {}).get("claim_text"):
+        if "audio" not in mods:
+            mods.add("text")
+    # Span names as hints
+    for sp in trace.get("spans") or []:
+        name = str(sp.get("name") or "").lower()
+        if "image" in name or name.startswith("attach receipt"):
+            mods.add("image")
+        if "voice" in name or "audio" in name or "transcribe" in name:
+            mods.add("audio")
+        if "video" in name or name.startswith("sample frame"):
+            mods.add("video")
+        if "claim text" in name or name == "attach claim text":
+            mods.add("text")
+    return mods
+
+
+def _cross_modal_pair_key(mods: set[str]) -> str | None:
+    if "video" in mods and "audio" in mods:
+        return "video+audio"
+    if "image" in mods and "audio" in mods:
+        return "image+audio"
+    if "image" in mods and "text" in mods:
+        return "image+text"
+    return None
+
+
+def _non_image_claim_source(*, case: dict | None, run: dict | None, trace: dict | None) -> str:
+    """Text to extract claims from: transcript / claim text / input — never the model answer."""
+    case = case or {}
+    run = run or {}
+    trace = trace or {}
+    parts: list[str] = []
+    # Explicit claim text
+    for src in (
+        run.get("claim_text"),
+        case.get("claim_text"),
+        (trace.get("input") or {}).get("claim_text"),
+        (trace.get("input") or {}).get("claim"),
+        (trace.get("metadata") or {}).get("claim_text"),
+    ):
+        if src and str(src).strip():
+            parts.append(str(src).strip())
+    # Transcript / ASR (not final agent answer)
+    asr = run.get("asr_turns") or {}
+    if asr:
+        for k in sorted(asr, key=lambda x: int(x) if str(x).isdigit() else str(x)):
+            if str(asr[k]).strip():
+                parts.append(str(asr[k]).strip())
+    if run.get("transcript") and str(run["transcript"]).strip():
+        parts.append(str(run["transcript"]).strip())
+    if (trace.get("input") or {}).get("transcript"):
+        parts.append(str(trace["input"]["transcript"]).strip())
+    for sp in trace.get("spans") or []:
+        name = str(sp.get("name") or "").lower()
+        attrs = sp.get("attributes") or {}
+        out = sp.get("output") or {}
+        if "transcribe" in name or name == "attach claim text":
+            text = None
+            if isinstance(attrs, dict) and attrs.get("text"):
+                text = attrs["text"]
+            elif isinstance(out, dict) and (out.get("transcript") or out.get("text")):
+                text = out.get("transcript") or out.get("text")
+            if text and str(text).strip():
+                parts.append(str(text).strip())
+    # De-dupe preserving order
+    seen: set[str] = set()
+    uniq = []
+    for p in parts:
+        if p not in seen:
+            seen.add(p)
+            uniq.append(p)
+    return "\n".join(uniq)
+
+
+def _cross_modal_visual_context(
+    *, case: dict | None, run: dict | None, trace: dict | None
+) -> tuple[list[bytes], str, str]:
+    """Return (images_or_frames, media_desc, media_sha)."""
+    case = case or {}
+    run = run or {}
+    trace = trace or {}
+    images: list[bytes] = []
+    sha = None
+    frame_bits: list[str] = []
+
+    for m in trace.get("media") or []:
+        path = m.get("path")
+        mid_sha = m.get("sha256")
+        if mid_sha and sha is None:
+            sha = mid_sha
+        if not path:
+            continue
+        p = Path(path)
+        if not p.is_file():
+            continue
+        data = p.read_bytes()
+        mod = (m.get("modality") or "").lower()
+        if mod == "image" or p.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp"):
+            images.append(data)
+            if sha is None:
+                sha = hashlib.sha256(data).hexdigest()
+        elif mod == "video" or p.suffix.lower() in (".mp4", ".webm", ".mov"):
+            if sha is None:
+                sha = hashlib.sha256(data).hexdigest()
+
+    if case.get("image"):
+        ip = ROOT / case["image"] if not Path(str(case["image"])).is_absolute() else Path(case["image"])
+        if ip.is_file() and not images:
+            data = ip.read_bytes()
+            images.append(data)
+            sha = hashlib.sha256(data).hexdigest()
+
+    for sp in trace.get("spans") or []:
+        attrs = sp.get("attributes") or {}
+        if isinstance(attrs, dict) and attrs.get("t_ms") is not None:
+            frame_bits.append(f"frame at t_ms={attrs['t_ms']}")
+            thumb = attrs.get("thumb_path") or attrs.get("path")
+            if thumb and Path(str(thumb)).is_file():
+                images.append(Path(str(thumb)).read_bytes())
+
+    if frame_bits:
+        media_desc = "VIDEO FRAMES:\n" + "\n".join(frame_bits) + "\n"
+    elif images:
+        media_desc = "IMAGE: (attached)\n"
+    else:
+        media_desc = "IMAGE: (none)\n"
+    if sha is None:
+        sha = hashlib.sha256(b"".join(images) if images else b"").hexdigest()
+    return images, media_desc, sha
+
+
+@evaluator(
+    id="cross_modal_judge",
+    version="1.0.0",
+    category="model_judge",
+    dimension="Cross-modal consistency",
+    modalities=["image+audio", "image+text", "video+audio", "cross_modal"],
+    needs_reference=False,
+    scope="run",
+)
+def cross_modal_judge(
+    *,
+    agent,
+    case_id,
+    variant,
+    meta,
+    case=None,
+    run=None,
+    trace=None,
+    judge_fn=None,
+    judge_model=None,
+    **_,
+):
+    """Ground claims from speech/text against image/video — no ground truth required."""
+    if judge_fn is None:
+        return _skipped(agent, case_id, variant, meta, "no judge_fn (offline)")
+
+    mods = _trace_media_modalities(case=case, run=run, trace=trace)
+    pair = _cross_modal_pair_key(mods)
+    if pair is None or pair not in CROSS_MODAL_JUDGE_MODALITIES:
+        return _skipped(agent, case_id, variant, meta, "needs two modalities")
+
+    source = _non_image_claim_source(case=case, run=run, trace=trace)
+    if not source.strip():
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="inconclusive",
+            score=None,
+            verdict="not_applicable",
+            label="inconclusive",
+            explanation="No non-image claim text (transcript or claim) available.",
+        )
+
+    model = judge_model or DEFAULT_CROSS_MODAL_JUDGE_MODEL
+    images, media_desc, media_sha = _cross_modal_visual_context(case=case, run=run, trace=trace)
+    claim_details: list[dict] = []
+
+    extract_prompt = (
+        "Extract up to 8 atomic factual claims from the following spoken or written claim. "
+        "Do not invent claims that are not present. "
+        'Reply with JSON only: {"claims":["..."]}.\n\n'
+        f"CLAIM SOURCE:\n{source}"
+    )
+    raw_ext, _, err = _invoke_claim_judge(
+        judge_fn,
+        extract_prompt,
+        images=None,
+        model=model,
+        timeout_s=CROSS_MODAL_JUDGE_TIMEOUT_S,
+    )
+    if err:
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="error",
+            score=None,
+            verdict="not_applicable",
+            label="error",
+            explanation=err,
+        )
+    parsed = _parse_json_obj(raw_ext or "")
+    if not parsed or not isinstance(parsed.get("claims"), list):
+        return _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="error",
+            score=None,
+            verdict="not_applicable",
+            label="error",
+            explanation="invalid JSON from claim extraction judge",
+        )
+    claims = [str(c).strip() for c in parsed["claims"] if str(c).strip()][:CROSS_MODAL_JUDGE_MAX_CLAIMS]
+    if not claims:
+        res = _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="inconclusive",
+            score=None,
+            verdict="not_applicable",
+            label="inconclusive",
+            explanation="No atomic claims extracted from the non-image channel.",
+        )
+        res["execution_metadata"]["claims"] = []
+        res["execution_metadata"]["modality_pair"] = pair
+        res["execution_metadata"]["media_sha256"] = media_sha
+        return res
+
+    n_supported = n_contradicted = n_not_found = n_error = 0
+    evidence: list[dict] = []
+    explanation_lines: list[str] = []
+
+    for claim in claims:
+        cache_key = (claim, media_sha)
+        cached = _CROSS_MODAL_JUDGE_CACHE.get(cache_key)
+        if cached is not None:
+            verdict_obj = cached
+        else:
+            ground_prompt = (
+                "Judge whether the claim is supported by the attached image or video frames. "
+                "The claim came from speech or text, not from a model answer. "
+                'Reply JSON only: {"verdict":"supported|contradicted|not_found",'
+                '"evidence_box":[x0,y0,x1,y1]|null,'
+                '"evidence_time_ms":[start,end]|null,'
+                '"explanation":"..."}.\n\n'
+                f"{media_desc}\nCLAIM: {claim}"
+            )
+            raw_g, _, gerr = _invoke_claim_judge(
+                judge_fn,
+                ground_prompt,
+                images=images,
+                model=model,
+                timeout_s=CROSS_MODAL_JUDGE_TIMEOUT_S,
+            )
+            if gerr:
+                claim_details.append({"claim": claim, "status": "error", "reason": gerr})
+                n_error += 1
+                explanation_lines.append(f"- {claim}: error ({gerr})")
+                continue
+            verdict_obj = _parse_json_obj(raw_g or "")
+            if not verdict_obj or verdict_obj.get("verdict") not in (
+                "supported",
+                "contradicted",
+                "not_found",
+            ):
+                claim_details.append({"claim": claim, "status": "error", "reason": "invalid JSON"})
+                n_error += 1
+                explanation_lines.append(f"- {claim}: error (invalid JSON)")
+                continue
+            _CROSS_MODAL_JUDGE_CACHE[cache_key] = verdict_obj
+
+        verdict = str(verdict_obj["verdict"])
+        detail = {
+            "claim": claim,
+            "status": "completed",
+            "verdict": verdict,
+            "evidence_box": verdict_obj.get("evidence_box"),
+            "evidence_time_ms": verdict_obj.get("evidence_time_ms"),
+            "explanation": verdict_obj.get("explanation"),
+        }
+        claim_details.append(detail)
+        explanation_lines.append(f"- {claim}: {verdict}")
+        rec: dict[str, Any] = {
+            "type": "claim",
+            "locator": claim,
+            "judge_claimed": True,
+        }
+        if verdict_obj.get("evidence_box"):
+            rec["evidence_box"] = verdict_obj["evidence_box"]
+        if verdict_obj.get("evidence_time_ms"):
+            rec["evidence_time_ms"] = verdict_obj["evidence_time_ms"]
+        if verdict == "supported":
+            n_supported += 1
+            rec["role"] = "supports"
+            evidence.append(rec)
+        elif verdict == "contradicted":
+            n_contradicted += 1
+            rec["role"] = "contradicts"
+            evidence.append(rec)
+        else:
+            n_not_found += 1
+
+    total = n_supported + n_contradicted + n_not_found
+    if total == 0:
+        res = _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="inconclusive",
+            score=None,
+            verdict="not_applicable",
+            label="inconclusive",
+            explanation="All claims errored; no verdicts to score.\n" + "\n".join(explanation_lines),
+            evidence=evidence,
+        )
+    else:
+        score = 1.0 - (n_contradicted / total)
+        if n_contradicted > 0:
+            label = "contradictions_found"
+            verdict = "fail"
+        else:
+            label = "consistent"
+            verdict = "pass"
+        res = _result(
+            agent=agent,
+            case_id=case_id,
+            variant=variant,
+            meta=meta,
+            status="completed",
+            score=score,
+            verdict=verdict,
+            label=label,
+            explanation="\n".join(explanation_lines),
+            evidence=evidence,
+        )
+    res["execution_metadata"].update(
+        {
+            "claims": claim_details,
+            "n_supported": n_supported,
+            "n_contradicted": n_contradicted,
+            "n_not_found": n_not_found,
+            "n_error": n_error,
+            "media_sha256": media_sha,
+            "modality_pair": pair,
+            "judge_model": model,
+            "source_preview": source[:300],
+        }
+    )
+    return res
+
+
 # --------------------------------------------------------------------------- orchestration
 
 
@@ -1815,6 +2523,7 @@ def case_has_reference(case: dict) -> bool:
         case.get("truth_box")
         or case.get("truth_span")
         or case.get("truth_span_ms")
+        or case.get("expected_verdict") is not None
         or case.get("answer") is not None
     )
 
@@ -1923,7 +2632,18 @@ def evaluate_all(
             skip_reasons = {m["id"]: reason for m, reason in skipped_sel}
             siblings = {
                 v: indexed.get((agent, case_id, v))
-                for v in ("clean", "blur", "noise", "lowres", "bandlimit", "blind", "blind_guess")
+                for v in (
+                    "clean",
+                    "blur",
+                    "noise",
+                    "lowres",
+                    "bandlimit",
+                    "blind",
+                    "blind_guess",
+                    "noisy_voice",
+                    "no_image",
+                    "sparse",
+                )
             }
             for meta in pair_metas:
                 if meta["id"] not in selected_ids:
@@ -2029,7 +2749,11 @@ def detect_conflicts(results: list[dict], disagreements: list[dict] | None = Non
 
 
 def _confident_error_rows(cases, runs, agents, margin: float = 0) -> list[dict]:
-    """Share of runs whose answer is wrong and not an abstention, per agent × variant."""
+    """Share of runs whose answer is wrong and not an abstention, per agent × variant.
+
+    Uses modality-aware correctness (_recompute), so image/audio/video suites do not
+    share a single cross-variant rate from core.answer_correct.
+    """
     by_id = {c["id"]: c for c in cases}
     variants = sorted({_variant(r) for r in runs})
     rows = []
@@ -2044,9 +2768,9 @@ def _confident_error_rows(cases, runs, agents, margin: float = 0) -> list[dict]:
                 case = by_id.get(r["case_id"])
                 if case is None:
                     continue
+                correct, _ev_ok, valid = _recompute(case, r, margin=margin)
                 label = _stage_label(case, run=r, margin=margin)
-                correct = core.answer_correct(case, r.get("answer")) if _is_valid(r) else False
-                if _is_valid(r) and not correct and label != "abstained":
+                if valid and not correct and label != "abstained":
                     n_err += 1
                     labels["confident_error"] += 1
                 else:
@@ -2395,6 +3119,11 @@ def build_traces(cases, runs, results) -> list[dict]:
         agent, case_id, variant = run["agent"], run["case_id"], _variant(run)
         case = by_id.get(case_id)
         result_ids = _collect_result_ids(agent, case_id, variant, run_results, pair_results, suite_ids)
+        if case and case.get("modality") == "cross_modal":
+            from .crossmodal_run import build_crossmodal_trace
+
+            traces.append(build_crossmodal_trace(case, run, result_ids))
+            continue
         if _is_audio_run(case, run):
             traces.append(build_audio_trace(case, run, result_ids))
             continue

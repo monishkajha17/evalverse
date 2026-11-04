@@ -50,6 +50,12 @@ export interface CaseRow {
   tags?: string[] | string | null;
   keyword?: string;
   tolerance_s?: number;
+  /** Cross-modal: spoken/typed claim and receipt fields. */
+  claim_text?: string;
+  claim_value?: number | string | null;
+  claim_channel?: string;
+  receipt_value?: number | string | null;
+  expected_verdict?: string | null;
 }
 
 export interface RunRow {
@@ -58,6 +64,8 @@ export interface RunRow {
   condition: string;
   answer?: string | null;
   box?: Box | null;
+  /** Cross-modal: agent-cited receipt region (alias of box in some exports). */
+  image_box?: Box | null;
   span_ms?: SpanMs | null;
   correct?: boolean;
   evidence_ok?: boolean;
@@ -69,6 +77,15 @@ export interface RunRow {
   evidence?: string | null;
   error?: string | null;
   asr_turns?: Record<string, string> | null;
+  /** Cross-modal run fields. */
+  claimed_value?: string | number | null;
+  image_value?: string | number | null;
+  verdict?: string | null;
+  expected_verdict?: string | null;
+  error_type?: string | null;
+  transcript?: string | null;
+  wer?: number | null;
+  channel?: string | null;
 }
 
 export interface EvalEvidence {

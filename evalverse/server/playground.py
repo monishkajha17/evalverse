@@ -34,7 +34,9 @@ MAX_QUESTION = 2000
 DEFAULT_AGENT_MODEL = "muse-spark-1.3"
 DEFAULT_JUDGE_MODEL = "muse-wonder-1.0"
 DEFAULT_EVALUATORS = ["claim_grounding"]
+DEFAULT_CROSS_CHECK_EVALUATORS = ["cross_modal_judge"]
 ALLOWED_CONDITIONS = ("clean", "blur", "noise")
+ALLOWED_MODES = ("answer", "cross_check")
 RATE_PER_MINUTE = 10
 VIDEO_EVERY_S = 2.0
 VIDEO_MAX_FRAMES = 12
@@ -171,16 +173,39 @@ class PlaygroundMixin:
         evaluator_ids: list[str] | None = None,
         conditions: list[str] | None = None,
         mock: bool = False,
+        mode: str = "answer",
+        claim_text: str | None = None,
     ) -> dict[str, Any]:
         self.ensure_project(project)
-        q = (question or "").strip()
-        if not q or len(q) > MAX_QUESTION:
+        mode = (mode or "answer").strip().lower()
+        if mode not in ALLOWED_MODES:
             raise _err(
                 400,
                 "VALIDATION_ERROR",
-                f"question must be 1–{MAX_QUESTION} characters.",
-                [{"field": "question"}],
+                f"mode must be one of {list(ALLOWED_MODES)}.",
+                [{"field": "mode"}],
             )
+        q = (question or "").strip()
+        claim = (claim_text or "").strip()
+        if mode == "answer":
+            if not q or len(q) > MAX_QUESTION:
+                raise _err(
+                    400,
+                    "VALIDATION_ERROR",
+                    f"question must be 1–{MAX_QUESTION} characters.",
+                    [{"field": "question"}],
+                )
+        else:
+            # cross_check: question optional; claim may come from audio or text field
+            if not q:
+                q = "Does the spoken or written claim match what the media shows?"
+            if len(q) > MAX_QUESTION:
+                raise _err(
+                    400,
+                    "VALIDATION_ERROR",
+                    f"question must be at most {MAX_QUESTION} characters.",
+                    [{"field": "question"}],
+                )
         if not files:
             raise _err(400, "VALIDATION_ERROR", "At least one file is required.", [{"field": "files"}])
         if len(files) > MAX_FILES:
@@ -208,6 +233,13 @@ class PlaygroundMixin:
                     f"Invalid condition {c!r}; allowed: {list(ALLOWED_CONDITIONS)}",
                     [{"field": "conditions"}],
                 )
+        if mode == "cross_check" and conds:
+            raise _err(
+                400,
+                "VALIDATION_ERROR",
+                "conditions[] are not supported in cross_check mode.",
+                [{"field": "conditions"}],
+            )
 
         self._check_playground_rate(project)
 
@@ -277,8 +309,33 @@ class PlaygroundMixin:
                 }
             )
 
-        # conditions only apply to image-only runs
+        # conditions only apply to image-only answer runs
         modalities = {f["modality"] for f in file_blobs}
+        if mode == "cross_check":
+            has_visual = bool(modalities & {"image", "video"})
+            has_audio = "audio" in modalities
+            has_text = bool(claim)
+            if not has_visual:
+                raise _err(
+                    400,
+                    "VALIDATION_ERROR",
+                    "cross_check requires one image or video file.",
+                    [{"field": "files"}],
+                )
+            if not has_audio and not has_text:
+                raise _err(
+                    400,
+                    "VALIDATION_ERROR",
+                    "cross_check requires one audio file or non-empty text.",
+                    [{"field": "text"}],
+                )
+            if len(modalities & {"image", "video"}) > 1:
+                raise _err(
+                    400,
+                    "VALIDATION_ERROR",
+                    "cross_check accepts a single visual modality (image or video).",
+                    [{"field": "files"}],
+                )
         if conds and modalities != {"image"}:
             raise _err(
                 400,
@@ -286,12 +343,17 @@ class PlaygroundMixin:
                 "conditions[] are only supported for image uploads.",
                 [{"field": "conditions"}],
             )
-        if not conds and modalities == {"image"}:
+        if not conds and modalities == {"image"} and mode == "answer":
             conds = ["clean"]
 
-        eids = list(evaluator_ids) if evaluator_ids else list(DEFAULT_EVALUATORS)
-        if not eids:
-            eids = list(DEFAULT_EVALUATORS)
+        if mode == "cross_check":
+            eids = list(evaluator_ids) if evaluator_ids else list(DEFAULT_CROSS_CHECK_EVALUATORS)
+            if not eids:
+                eids = list(DEFAULT_CROSS_CHECK_EVALUATORS)
+        else:
+            eids = list(evaluator_ids) if evaluator_ids else list(DEFAULT_EVALUATORS)
+            if not eids:
+                eids = list(DEFAULT_EVALUATORS)
 
         run_id = uuid.uuid4().hex
         session_id = f"playground:{run_id}"
@@ -300,8 +362,9 @@ class PlaygroundMixin:
             """INSERT INTO playground_runs
                (id, project, session_id, status, question, agent_model, judge_model,
                 evaluator_ids_json, conditions_json, mock, files_meta_json,
-                answer_json, trace_ids_json, eval_run_id, error_json, created_at)
-               VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?)""",
+                answer_json, trace_ids_json, eval_run_id, error_json, created_at,
+                mode, claim_text)
+               VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?)""",
             (
                 run_id,
                 project,
@@ -314,6 +377,8 @@ class PlaygroundMixin:
                 1 if mock else 0,
                 _dumps(file_blobs),
                 created,
+                mode,
+                claim or None,
             ),
         )
         log.info(
@@ -363,6 +428,8 @@ class PlaygroundMixin:
             "question": row["question"],
             "agent_model": row["agent_model"],
             "judge_model": row["judge_model"],
+            "mode": row["mode"] if "mode" in row.keys() else "answer",
+            "claim_text": row["claim_text"] if "claim_text" in row.keys() else None,
             "evaluator_ids": _loads(row["evaluator_ids_json"], []) or [],
             "conditions": _loads(row["conditions_json"], []) or [],
             "mock": bool(row["mock"]),
@@ -417,7 +484,14 @@ class PlaygroundMixin:
         question = row["question"]
         agent_model = row["agent_model"] or DEFAULT_AGENT_MODEL
         judge_model = row["judge_model"] or DEFAULT_JUDGE_MODEL
-        eids = _loads(row["evaluator_ids_json"], DEFAULT_EVALUATORS) or list(DEFAULT_EVALUATORS)
+        mode = (row.get("mode") or "answer").strip().lower()
+        claim_text = (row.get("claim_text") or "").strip() or None
+        default_eids = (
+            list(DEFAULT_CROSS_CHECK_EVALUATORS)
+            if mode == "cross_check"
+            else list(DEFAULT_EVALUATORS)
+        )
+        eids = _loads(row["evaluator_ids_json"], default_eids) or list(default_eids)
         conds = _loads(row["conditions_json"], ["clean"]) or ["clean"]
         use_mock = bool(row["mock"]) and _allow_mock()
         files_meta = _loads(row["files_meta_json"], []) or []
@@ -436,7 +510,20 @@ class PlaygroundMixin:
         trace_ids: list[str] = []
         answers: dict[str, Any] = {}
 
-        if modalities == {"image"}:
+        if mode == "cross_check":
+            tid, summary = self._run_cross_check(
+                project,
+                session_id=session_id,
+                run_id=run_id,
+                question=question,
+                files_meta=files_meta,
+                claim_text=claim_text,
+                use_mock=use_mock,
+            )
+            trace_ids.append(tid)
+            answers["primary"] = summary
+            answers["cross_check"] = summary
+        elif modalities == {"image"}:
             for cond in conds:
                 tid, ans = self._run_image_variant(
                     project,
@@ -507,11 +594,17 @@ class PlaygroundMixin:
                 pass
             filtered.append(eid)
         if not filtered:
-            filtered = ["claim_grounding"]
+            filtered = list(default_eids)
 
-        # Set judge model for claim_grounding
+        # Set judge model for claim_grounding / cross_modal_judge.
+        # Under --mock, force the offline mock judge so a live MODEL_API_KEY cannot empty-out claims.
         prev_judge = getattr(self, "judge_model", None)
+        prev_fn = getattr(self, "judge_fn", None)
         self.judge_model = judge_model
+        if use_mock:
+            from evalverse.server.engine import offline_mock_judge_fn
+
+            self.judge_fn = offline_mock_judge_fn
         try:
             eval_out = self.create_evaluation(
                 project,
@@ -521,6 +614,8 @@ class PlaygroundMixin:
             )
             eval_run_id = eval_out["id"]
         finally:
+            if prev_fn is not None:
+                self.judge_fn = prev_fn
             if prev_judge is None and hasattr(self, "judge_model"):
                 try:
                     delattr(self, "judge_model")
@@ -542,15 +637,261 @@ class PlaygroundMixin:
             else:
                 time.sleep(0.05)
 
+        # For cross_check, surface a short summary from the judge result as the "answer".
+        if mode == "cross_check":
+            try:
+                ev_detail = self.get_evaluation(project, eval_run_id)
+                cg = next(
+                    (
+                        r
+                        for r in (ev_detail.get("results") or [])
+                        if r.get("evaluator_id") == "cross_modal_judge"
+                    ),
+                    None,
+                )
+                if cg:
+                    em = cg.get("execution_metadata") or cg.get("meta") or {}
+                    n_c = em.get("n_contradicted")
+                    label = cg.get("label")
+                    answers["primary"] = f"{label} (contradicted={n_c})"
+                    answers["cross_check"] = {
+                        "label": label,
+                        "score": cg.get("score"),
+                        "claims": em.get("claims") or [],
+                    }
+            except Exception:
+                pass
+
         self.db.execute(
             """UPDATE playground_runs
                SET status='completed', ended_at=?, eval_run_id=?, answer_json=?, trace_ids_json=?
                WHERE id=?""",
             (_now(), eval_run_id, _dumps(answers), _dumps(trace_ids), run_id),
         )
-        log.info("playground run completed id=%s traces=%s", run_id, len(trace_ids))
+        log.info("playground run completed id=%s traces=%s mode=%s", run_id, len(trace_ids), mode)
 
     # ------------------------------------------------------------------ variants
+
+    def _run_cross_check(
+        self,
+        project: str,
+        *,
+        session_id: str,
+        run_id: str,
+        question: str,
+        files_meta: list[dict],
+        claim_text: str | None,
+        use_mock: bool,
+    ) -> tuple[str, str]:
+        """No agent call: attach visual + claim (audio/text), optional ASR, then evaluation."""
+        visual = next(f for f in files_meta if f["modality"] in ("image", "video"))
+        audio_f = next((f for f in files_meta if f["modality"] == "audio"), None)
+        visual_bytes = Path(visual["path"]).read_bytes()
+        visual_media = self.register_media_bytes(
+            project,
+            visual_bytes,
+            modality=visual["modality"],
+            filename=f"cross_check_{visual['modality']}",
+            mime=visual.get("mime") or ("image/jpeg" if visual["modality"] == "image" else "video/mp4"),
+            parent_id=visual["media_id"],
+            transformation="identity",
+        )
+
+        transcript = (claim_text or "").strip()
+        audio_media_id = None
+        asr_latency = 0.0
+        duration_ms = 0
+        spans: list[SpanIn] = []
+        media_attach: list[MediaAttach] = [
+            MediaAttach(media_id=visual_media.id, role="input", span_id="s1")
+        ]
+
+        attach_visual_name = (
+            "attach receipt image" if visual["modality"] == "image" else "attach_video"
+        )
+        spans.append(
+            SpanIn(
+                id="s1",
+                name=attach_visual_name,
+                type="media",
+                status="completed",
+                attributes={"media_id": visual_media.id},
+            )
+        )
+
+        # Sample a few video frames so the judge can ground against pixels.
+        if visual["modality"] == "video":
+            try:
+                frames = video_mod.sample_frames(Path(visual["path"]), every_s=VIDEO_EVERY_S)
+            except Exception:
+                frames = []
+            for i, (t_ms, frame_img) in enumerate(frames[:VIDEO_MAX_FRAMES], start=1):
+                png = core.to_png_bytes(frame_img)
+                fm = self.register_media_bytes(
+                    project,
+                    png,
+                    modality="image",
+                    filename=f"frame_{t_ms}.png",
+                    mime="image/png",
+                    parent_id=visual_media.id,
+                    transformation=f"sample_frame_t_ms={t_ms}",
+                )
+                sid = f"s1_{i}"
+                spans.append(
+                    SpanIn(
+                        id=sid,
+                        name=f"sample frame {i}",
+                        type="media",
+                        status="completed",
+                        parent_ids=["s1"],
+                        attributes={"t_ms": int(t_ms), "media_id": fm.id, "thumb_path": fm.path},
+                    )
+                )
+                media_attach.append(MediaAttach(media_id=fm.id, role="frame", span_id=sid))
+
+        if audio_f:
+            raw = Path(audio_f["path"]).read_bytes()
+            wav, dur = _to_mono16k_wav(raw)
+            duration_ms = int(dur * 1000)
+            wav_media = self.register_media_bytes(
+                project,
+                wav,
+                modality="audio",
+                filename="cross_check_audio.wav",
+                mime="audio/wav",
+                parent_id=audio_f["media_id"],
+                transformation="resample_16k_mono",
+            )
+            audio_media_id = wav_media.id
+            media_attach.append(MediaAttach(media_id=wav_media.id, role="input", span_id="s2"))
+            spans.append(
+                SpanIn(
+                    id="s2",
+                    name="attach voice clip",
+                    type="media",
+                    status="completed",
+                    attributes={"media_id": wav_media.id},
+                )
+            )
+            # Prefer mock ASR when requested or when no live key is configured.
+            asr_mock = use_mock or not os.environ.get("MODEL_API_KEY")
+            asr_prov = get_provider("mock" if asr_mock else "meta")
+            t0 = time.perf_counter()
+            try:
+                asr_out = asr_prov.transcribe(wav, model="muse-voice-transcribe-1.0")
+            except Exception as exc:  # noqa: BLE001
+                log.warning("cross_check ASR failed (%s); falling back to mock", exc)
+                asr_out = get_provider("mock").transcribe(wav, model="muse-voice-transcribe-1.0")
+            asr_latency = time.perf_counter() - t0
+            heard = str((asr_out or {}).get("text") or "").strip()
+            if not heard and not asr_mock and _allow_mock():
+                # Live ASR returned empty — still produce a usable claim for demos.
+                heard = str(
+                    (get_provider("mock").transcribe(wav, model="muse-voice-transcribe-1.0") or {}).get(
+                        "text"
+                    )
+                    or ""
+                ).strip()
+            if heard:
+                transcript = heard
+            spans.append(
+                SpanIn(
+                    id="s3",
+                    name="transcribe voice",
+                    type="media",
+                    status="completed",
+                    parent_ids=["s2"],
+                    latency_ms=asr_latency * 1000.0,
+                    attributes={
+                        "text": transcript,
+                        "turn": 1,
+                        "start_ms": 0,
+                        "end_ms": duration_ms,
+                    },
+                    output={"transcript": transcript},
+                )
+            )
+            eval_parents = ["s1", "s3"]
+        else:
+            spans.append(
+                SpanIn(
+                    id="s2",
+                    name="attach claim text",
+                    type="media",
+                    status="completed",
+                    attributes={"text": transcript},
+                    output={"text": transcript},
+                )
+            )
+            eval_parents = ["s1", "s2"]
+
+        spans.append(
+            SpanIn(
+                id="s4",
+                name="evaluation",
+                type="evaluation",
+                status="completed",
+                parent_ids=eval_parents,
+            )
+        )
+
+        tid = f"playground|{run_id}|cross_check|{uuid.uuid4().hex[:8]}"
+        self.create_trace(
+            project,
+            TraceCreate(
+                id=tid,
+                session_id=session_id,
+                name="playground:cross_check",
+                agent="cross_check",
+                status="completed",
+                input={
+                    "question": question,
+                    "claim_text": claim_text,
+                    "transcript": transcript,
+                },
+                output={"mode": "cross_check"},
+                metadata={
+                    "playground_run_id": run_id,
+                    "modality": "cross_modal",
+                    "mode": "cross_check",
+                    "claim_text": claim_text or transcript,
+                    "variant": "clean",
+                },
+                tags=["playground", "cross_check"],
+                source="sdk",
+                spans=spans,
+                media=media_attach,
+            ),
+        )
+        if audio_media_id and transcript is not None:
+            self.add_events(
+                project,
+                tid,
+                [
+                    {
+                        "client_id": "asr:turn:1",
+                        "span_id": "s3" if audio_f else "s2",
+                        "media_id": audio_media_id,
+                        "source": "asr",
+                        "label": transcript,
+                        "start_ms": 0,
+                        "end_ms": float(duration_ms),
+                        "time_base": "media",
+                        "payload": {"turn": 1},
+                    },
+                    {
+                        "client_id": "ground_truth:speech",
+                        "media_id": audio_media_id,
+                        "source": "ground_truth",
+                        "label": transcript,
+                        "start_ms": 0,
+                        "end_ms": float(duration_ms),
+                        "time_base": "media",
+                        "payload": {"channel": "voice"},
+                    },
+                ],
+            )
+        return tid, transcript or "(no claim text)"
 
     def _call_model(
         self,

@@ -27,6 +27,20 @@ def temporal_alignment_video(*, agent, case_id, variant, meta, case, run, **_):
     if not truth:
         return ev._skipped(agent, case_id, variant, meta, "no truth_span_ms")
     ok = vmod.video_span_match(truth, claimed, sampling_interval_ms=interval)
+    is_point = (
+        isinstance(claimed, (list, tuple))
+        and len(claimed) == 2
+        and claimed[0] == claimed[1]
+    )
+    if is_point:
+        explanation = (
+            f"Point estimate {claimed[0]} vs truth {truth} "
+            f"(sample interval {interval} ms)."
+        )
+    else:
+        explanation = (
+            f"Cited span {claimed} vs truth {truth} (sample interval {interval} ms)."
+        )
     return ev._result(
         agent=agent,
         case_id=case_id,
@@ -36,9 +50,7 @@ def temporal_alignment_video(*, agent, case_id, variant, meta, case, run, **_):
         score=1.0 if ok else 0.0,
         verdict="pass" if ok else "fail",
         label="aligned" if ok else "misaligned",
-        explanation=(
-            f"Cited span {claimed} vs truth {truth} (sample interval {interval} ms)."
-        ),
+        explanation=explanation,
         evidence=[
             {"type": "time_span", "role": "expected", "locator": list(truth)},
             {"type": "time_span", "role": "claimed", "locator": list(claimed) if claimed else None},

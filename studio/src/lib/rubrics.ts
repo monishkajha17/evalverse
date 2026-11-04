@@ -87,6 +87,48 @@ const RUBRICS: Record<string, Rubric> = {
       "abstained",
     ],
   },
+  cross_modal_consistency: {
+    id: "cross_modal_consistency",
+    checks: "Whether the agent's consistent/inconsistent/cannot_tell verdict matches the expected cross-modal verdict.",
+    scores: "Score is 1 for correct_verdict; 0 for missed_contradiction, false_alarm, abstained, or invalid_output.",
+    threshold: "Pass when the verdict matches the expected label.",
+    labels: ["correct_verdict", "missed_contradiction", "false_alarm", "abstained", "invalid_output"],
+  },
+  cross_modal_perception: {
+    id: "cross_modal_perception",
+    checks: "Whether the agent heard the claim value and read the receipt value correctly (per channel).",
+    scores: "Voice: 0.5 per side (claimed + image). Text channel: 1 if image_value matches receipt.",
+    threshold: "Pass when score ≥ 1.0 (both sides correct).",
+    labels: ["both_read", "heard_wrong", "misread_image", "both_wrong"],
+  },
+  cross_modal_stage_attribution: {
+    id: "cross_modal_stage_attribution",
+    checks: "Attributes the failure to heard_wrong, misread_image, comparison_error, abstained, or cross_modal_correct.",
+    scores: "Score is 1 only for cross_modal_correct.",
+    threshold: "Pass when the stage label is cross_modal_correct.",
+    labels: [
+      "cross_modal_correct",
+      "heard_wrong",
+      "misread_image",
+      "comparison_error",
+      "abstained",
+      "invalid_output",
+    ],
+  },
+  cross_modal_media_dependence: {
+    id: "cross_modal_media_dependence",
+    checks: "Compares clean vs no_image for the same case. The no-image control is expected near chance (50%).",
+    scores: "Score is 1 when clean is correct and no_image is not (receipt was required).",
+    threshold: "Pass / media_required when the agent needs the receipt to decide.",
+    labels: ["media_required", "media_optional", "inconclusive"],
+  },
+  cross_modal_judge: {
+    id: "cross_modal_judge",
+    checks: "Model judge: extract claims from speech/text and grade each as supported, contradicted, or not_found against the image/video.",
+    scores: "Score reflects grounded share of claims; contradicted claims should cite evidence boxes.",
+    threshold: "Use for playground cross_check; no offline ground truth required.",
+    labels: ["grounded", "partially_grounded", "ungrounded", "contradicted"],
+  },
 };
 
 export function rubricFor(id: string): Rubric {

@@ -21,6 +21,18 @@ import type { SuiteData } from "@/lib/types";
 
 type DimMark = "measured in this release" | "defined, no data yet";
 
+type CrossModalExample = {
+  caseId: string;
+  claimText: string;
+  claimValue: string;
+  receiptValue: string;
+  expected: string;
+  agentVerdict: string;
+  caught: boolean;
+  image: string;
+  traceId: string;
+};
+
 type LandingData = {
   measuredDims: Set<string>;
   wonder: {
@@ -40,6 +52,7 @@ type LandingData = {
     n: number;
   }>;
   exampleTraces: Array<{ id: string; agent: string; variant: string }>;
+  crossModalExample: CrossModalExample | null;
   ums: typeof CORD_UMS_CLEAN;
   source: "data" | "snapshot";
 };
@@ -49,6 +62,7 @@ const FALLBACK: LandingData = {
     "Perception",
     "Groundedness",
     "Temporal grounding",
+    "Cross-modal consistency",
     "Reasoning",
   ]),
   wonder: {
@@ -69,9 +83,41 @@ const FALLBACK: LandingData = {
     { id: "muse-spark-1.3|cord_total_01|clean", agent: "muse-spark-1.3", variant: "clean" },
     { id: "muse-spark-1.1|cord_total_02|blur", agent: "muse-spark-1.1", variant: "blur" },
   ],
+  crossModalExample: null,
   ums: CORD_UMS_CLEAN,
   source: "snapshot",
 };
+
+function pickCrossModalExample(suite: SuiteData): CrossModalExample | null {
+  const cases = suite.cases || [];
+  const runs = suite.runs || [];
+  const preferred =
+    runs.find(
+      (r) =>
+        r.condition === "clean" &&
+        String(r.expected_verdict || cases.find((c) => c.id === r.case_id)?.expected_verdict || "")
+          .toLowerCase() === "inconsistent",
+    ) || runs.find((r) => r.condition === "clean");
+  if (!preferred) return null;
+  const c = cases.find((x) => x.id === preferred.case_id);
+  if (!c) return null;
+  const expected = String(preferred.expected_verdict || c.expected_verdict || "");
+  const got = String(preferred.verdict || "");
+  const trace = (suite.traces || []).find(
+    (t) => t.case_id === c.id && t.variant === preferred.condition && t.agent === preferred.agent,
+  );
+  return {
+    caseId: c.id,
+    claimText: String(c.claim_text || ""),
+    claimValue: String(c.claim_value ?? ""),
+    receiptValue: String(c.receipt_value ?? ""),
+    expected,
+    agentVerdict: got,
+    caught: expected.toLowerCase() === got.toLowerCase() && expected.toLowerCase() === "inconsistent",
+    image: String(c.image || ""),
+    traceId: trace?.id || `${preferred.agent}|${c.id}|${preferred.condition}`,
+  };
+}
 
 function boxToPct(
   box: [number, number, number, number],
@@ -215,6 +261,12 @@ function useLandingData(): LandingData {
 
         const cord = await loadSuite("cord");
         const wonderSuite = await loadSuite("wonder");
+        let crossModalExample: CrossModalExample | null = null;
+        try {
+          crossModalExample = pickCrossModalExample(await loadSuite("crossmodal"));
+        } catch {
+          crossModalExample = null;
+        }
         const ums = umsFromSuite(cord) || CORD_UMS_CLEAN;
         const traces = (cord.traces || [])
           .filter((t) => t.variant === "clean" || t.variant === "blur")
@@ -227,6 +279,7 @@ function useLandingData(): LandingData {
             wonder: parseWonderAudit(wonderSuite),
             compare: degradedCompare(cord),
             exampleTraces: traces.length ? traces : FALLBACK.exampleTraces,
+            crossModalExample,
             ums,
             source: "data",
           });
@@ -881,7 +934,7 @@ export function LandingSections() {
       <FadeUp id="framework" className="border-t border-[var(--mk-line)]">
         <div className="mx-auto max-w-[1120px] px-4 py-20 sm:px-6">
           <SectionHead
-            title="Six questions we ask about every run"
+            title="Questions we ask about every run"
             def="The evaluation framework. Each row is one dimension we score when the suite has data for it."
           />
           <div className="mt-10">
@@ -917,6 +970,59 @@ export function LandingSections() {
           </div>
         </div>
       </FadeUp>
+
+      {data.crossModalExample ? (
+        <FadeUp id="cross-modal" className="border-t border-[var(--mk-line)]">
+          <div className="mx-auto grid max-w-[1120px] items-start gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2">
+            <SectionHead
+              title="When the voice and the picture disagree"
+              def="Cross-modal consistency checks whether a spoken or typed claim matches what the receipt shows — and whether the agent catches the mismatch."
+            />
+            <div className="mk-panel-grad p-1">
+              <div className="rounded-[calc(var(--mk-radius)-2px)] bg-[var(--mk-bg)] p-5">
+                <p className="mk-label">Case {data.crossModalExample.caseId}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--mk-fg)]">
+                  <span className="text-[var(--mk-muted)]">Said: </span>
+                  {data.crossModalExample.claimText || data.crossModalExample.claimValue}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--mk-fg)]">
+                  <span className="text-[var(--mk-muted)]">Receipt shows: </span>
+                  {data.crossModalExample.receiptValue}
+                </p>
+                <p className="mt-3 text-sm leading-relaxed">
+                  Expected <span className="font-medium">{data.crossModalExample.expected}</span>
+                  {" · "}
+                  agent said{" "}
+                  <span className="font-medium">{data.crossModalExample.agentVerdict}</span>
+                  {" — "}
+                  {data.crossModalExample.caught
+                    ? "the agent caught the contradiction."
+                    : data.crossModalExample.expected.toLowerCase() ===
+                        data.crossModalExample.agentVerdict.toLowerCase()
+                      ? "verdict matched expectation."
+                      : "the agent missed it."}
+                </p>
+                {data.crossModalExample.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={data.crossModalExample.image}
+                    alt=""
+                    className="mt-4 max-h-48 w-full rounded object-contain"
+                  />
+                ) : null}
+                <div className="mt-4">
+                  <Link
+                    href={`/traces/view/?id=${encodeURIComponent(data.crossModalExample.traceId)}&suite=crossmodal`}
+                    className="mk-link-arrow"
+                  >
+                    Open the trace <span aria-hidden>→</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </FadeUp>
+      ) : null}
 
       {/* 03 Trust */}
       <FadeUp id="trust" className="border-t border-[var(--mk-line)]">

@@ -73,6 +73,7 @@ def test_seconds_tolerance():
 
 def test_label_logic():
     case = {
+        "id": "vid_01_time",
         "answer": "10.0",
         "answer_type": "seconds",
         "tolerance_s": 1.0,
@@ -80,23 +81,38 @@ def test_label_logic():
     }
     interval = 2000
 
-    def lab(answer, span, correct=None):
+    def lab(c, answer, span, correct=None):
         run = {
             "answer": answer,
             "span_ms": span,
-            "correct": vmod.video_answer_correct(case, answer) if correct is None else correct,
+            "correct": vmod.video_answer_correct(c, answer) if correct is None else correct,
         }
         run["evidence_ok"] = vmod.video_span_match(
-            case["truth_span_ms"], span, sampling_interval_ms=interval
+            c["truth_span_ms"], span, sampling_interval_ms=interval
         )
-        return vmod.video_label(case, run, sampling_interval_ms=interval)
+        return vmod.video_label(c, run, sampling_interval_ms=interval)
 
-    assert lab("10.0", [10000, 11500]) == "grounded_correct"
-    assert lab("10.0", [0, 500]) == "correct_ungrounded"
-    assert lab("4.0", [10000, 11500]) == "misread"
-    assert lab("4.0", [0, 500]) == "mistimed"
-    assert lab("unknown", None) == "abstained"
-    assert vmod.video_label(case, {"label": "invalid_output", "answer": "", "span_ms": None}) == "invalid_output"
+    assert lab(case, "10.0", [10000, 11500]) == "grounded_correct"
+    assert lab(case, "10.0", [0, 500]) == "correct_ungrounded"
+    # Time questions: wrong answer is mistimed even when the span matches.
+    assert lab(case, "4.0", [10000, 11500]) == "mistimed"
+    assert lab(case, "4.0", [0, 500]) == "mistimed"
+    assert lab(case, "unknown", None) == "abstained"
+    assert (
+        vmod.video_label(case, {"label": "invalid_output", "answer": "", "span_ms": None})
+        == "invalid_output"
+    )
+
+    third = {
+        "id": "vid_01_third",
+        "answer": "TOMATOES",
+        "answer_type": "text",
+        "truth_span_ms": [10000, 11500],
+    }
+    assert lab(third, "BREAD", [10000, 11500]) == "misread"
+    assert lab(third, "BREAD", [0, 500]) == "mistimed"
+    assert lab(third, "TOMATOES", [10000, 11500]) == "grounded_correct"
+    assert lab(third, "unknown", None) == "abstained"
 
 
 def test_video_span_match_with_sampling_tolerance():
@@ -105,6 +121,104 @@ def test_video_span_match_with_sampling_tolerance():
     assert vmod.video_span_match(truth, [8000, 8500], sampling_interval_ms=2000)
     # Far away
     assert not vmod.video_span_match(truth, [0, 500], sampling_interval_ms=2000)
+
+
+def test_video_span_match_point_estimate():
+    truth = [10000, 11500]
+    # Zero-width citation: point must lie in truth ± one sample interval.
+    assert vmod.video_span_match(truth, [10000, 10000], sampling_interval_ms=2000)
+    assert vmod.video_span_match(truth, [9000, 9000], sampling_interval_ms=2000)
+    assert vmod.video_span_match(truth, [8000, 8000], sampling_interval_ms=2000)  # t0 - interval
+    assert vmod.video_span_match(truth, [13500, 13500], sampling_interval_ms=2000)  # t1 + interval
+    assert not vmod.video_span_match(truth, [7999, 7999], sampling_interval_ms=2000)
+    assert not vmod.video_span_match(truth, [13501, 13501], sampling_interval_ms=2000)
+
+
+def test_temporal_alignment_video_point_estimate_explanation():
+    from evalverse import evaluators as ev
+
+    meta = ev.REGISTRY["temporal_alignment_video"]
+    case = {
+        "id": "vid_01_time",
+        "modality": "video",
+        "truth_span_ms": [10000, 11500],
+    }
+    res = ev._call(
+        meta,
+        "a",
+        "vid_01_time",
+        "clean",
+        case=case,
+        run={"span_ms": [10000, 10000]},
+    )
+    assert res["status"] == "completed"
+    assert res["label"] == "aligned"
+    assert "point estimate" in res["explanation"].lower()
+
+    miss = ev._call(
+        meta,
+        "a",
+        "vid_01_time",
+        "clean",
+        case=case,
+        run={"span_ms": [0, 0]},
+    )
+    assert miss["label"] == "misaligned"
+    assert "point estimate" in miss["explanation"].lower()
+
+
+def test_confident_errors_differ_per_variant():
+    from evalverse import evaluators as ev
+
+    cases = [
+        {
+            "id": "vid_01_time",
+            "modality": "video",
+            "answer": "10.0",
+            "answer_type": "seconds",
+            "tolerance_s": 1.0,
+            "truth_span_ms": [10000, 11500],
+        }
+    ]
+    runs = [
+        {
+            "agent": "a",
+            "case_id": "vid_01_time",
+            "condition": "clean",
+            "answer": "10.0",
+            "span_ms": [10000, 11500],
+            "correct": True,
+            "label": "grounded_correct",
+        },
+        {
+            "agent": "a",
+            "case_id": "vid_01_time",
+            "condition": "blur",
+            "answer": "4.0",
+            "span_ms": [10000, 11500],
+            "correct": False,
+            "label": "mistimed",
+        },
+        {
+            "agent": "a",
+            "case_id": "vid_01_time",
+            "condition": "sparse",
+            "answer": "unknown",
+            "span_ms": None,
+            "correct": False,
+            "label": "abstained",
+        },
+    ]
+    _results, summary, _dis, _conf = ev.evaluate_all(cases, runs, [], ["a"])
+    ce = {
+        r["variant"]: r["mean_score"]
+        for r in summary
+        if r["dimension"] == "Confident errors" and r["agent"] == "a"
+    }
+    assert ce["clean"] == pytest.approx(0.0)
+    assert ce["blur"] == pytest.approx(1.0)
+    assert ce["sparse"] == pytest.approx(0.0)
+    assert len(set(ce.values())) > 1
 
 
 def test_event_order_evaluator_skips_non_order():

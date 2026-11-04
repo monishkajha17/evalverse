@@ -17,6 +17,16 @@ POLICY_PATH = Path(__file__).resolve().parent / "policy.json"
 
 BLIND_DEFAULT = ("blind", "blind_guess")
 
+# Stage attribution feeds the outcome / failure bar only — never UMS dimensions.
+SCORE_EXCLUDED_EVALUATORS = frozenset(
+    {
+        "stage_attribution",
+        "audio_stage_attribution",
+        "cross_modal_stage_attribution",
+    }
+)
+SCORE_EXCLUDED_DIMENSIONS = frozenset({"Failure analysis"})
+
 
 def load_policy(path: Path | None = None) -> dict[str, Any]:
     p = path or POLICY_PATH
@@ -40,12 +50,23 @@ def _result_target(r: dict) -> tuple[str, str, str]:
     return str(agent), str(case_id), str(variant)
 
 
+def _excluded_from_scores(r: dict) -> bool:
+    eid = r.get("evaluator_id") or ""
+    if eid in SCORE_EXCLUDED_EVALUATORS or eid.endswith("_stage_attribution"):
+        return True
+    if (r.get("dimension") or "") in SCORE_EXCLUDED_DIMENSIONS:
+        return True
+    return False
+
+
 def _completed_scores(results: Iterable[dict], evaluator_ids: set[str] | None = None) -> list[float]:
     out = []
     for r in results:
         if r.get("status") != "completed":
             continue
         if r.get("score") is None:
+            continue
+        if _excluded_from_scores(r):
             continue
         eid = r.get("evaluator_id") or ""
         if evaluator_ids is not None and eid not in evaluator_ids:
@@ -62,7 +83,7 @@ def _dim_evaluators(dim_cfg: dict, all_eids: set[str] | None = None) -> set[str]
     prefix = dim_cfg.get("match_prefix")
     if prefix and all_eids is not None:
         eids |= {e for e in all_eids if e.startswith(prefix)}
-    return eids
+    return {e for e in eids if e not in SCORE_EXCLUDED_EVALUATORS}
 
 
 def honesty_score(results: list[dict]) -> tuple[float | None, int]:
@@ -70,7 +91,22 @@ def honesty_score(results: list[dict]) -> tuple[float | None, int]:
 
     Uses completed answer_correctness rows: label incorrect => confident error;
     abstained / correct are not confident errors.
+
+    For cross-modal suites, uses cross_modal_consistency: missed_contradiction and
+    false_alarm count as confident errors; abstained / correct_verdict do not.
     """
+    cm_rows = [
+        r
+        for r in results
+        if r.get("evaluator_id") == "cross_modal_consistency" and r.get("status") == "completed"
+    ]
+    if cm_rows:
+        n_err = sum(
+            1
+            for r in cm_rows
+            if r.get("label") in ("missed_contradiction", "false_alarm", "invalid_output")
+        )
+        return 1.0 - (n_err / len(cm_rows)), len(cm_rows)
     rows = [
         r
         for r in results
@@ -87,11 +123,20 @@ def dimension_scores_from_results(
     results: list[dict],
     policy: dict[str, Any],
 ) -> dict[str, dict[str, Any]]:
-    """Map results -> per-dimension {score, n, status}."""
+    """Map results -> per-dimension {score, n, status}.
+
+    Stage attribution / Failure analysis never appear as scored dimensions.
+    """
     dims_cfg = policy.get("dimensions") or {}
-    all_eids = {r.get("evaluator_id") for r in results if r.get("evaluator_id")}
+    all_eids = {
+        r.get("evaluator_id")
+        for r in results
+        if r.get("evaluator_id") and not _excluded_from_scores(r)
+    }
     out: dict[str, dict[str, Any]] = {}
     for dim, cfg in dims_cfg.items():
+        if dim in SCORE_EXCLUDED_DIMENSIONS:
+            continue
         if cfg.get("kind") == "honesty_from_answer_correctness":
             score, n = honesty_score(results)
         else:
